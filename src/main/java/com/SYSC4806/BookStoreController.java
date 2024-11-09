@@ -49,7 +49,6 @@ public class BookStoreController {
     @PostMapping("/login")
     public String login(@RequestParam(name="username")String username, @RequestParam(name="password")String password) {
 
-        // TODO move logic from controller into separate service class (for we'll keep things simple)
         Optional<AppUser> user = userRepository.findByUsername(username);
         if (user.isPresent() && password.equals(user.get().getPassword())) {
             return "redirect:/home"; // redirects to home page of
@@ -70,7 +69,7 @@ public class BookStoreController {
     public String showHomePage(Model model) {
         Iterable<Book> books = bookRepository.findAll();
         model.addAttribute("books",books);
-        return "home-page"; // TODO CHANGE ME
+        return "home-page";
     }
 
     /**
