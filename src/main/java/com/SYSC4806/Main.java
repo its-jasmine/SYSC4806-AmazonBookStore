@@ -44,7 +44,7 @@ public class Main {
 
 
             ////////////////////////////////////////////////////////////////////////////////////
-            userRepository.save(new AppUser("admin1", "password"));
+            userRepository.save(new Admin("admin1", "password"));
             userRepository.save(new Admin("admin2", "password1"));
             Customer customer = new Customer("customer1", "password2");
 

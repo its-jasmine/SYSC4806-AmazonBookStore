@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
 @Entity
-public class AppUser {
+public abstract class AppUser {
     @Id
     @GeneratedValue
     private Integer id;
