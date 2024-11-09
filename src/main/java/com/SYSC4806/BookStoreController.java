@@ -3,6 +3,7 @@ package com.SYSC4806;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -84,7 +85,7 @@ public class BookStoreController {
      * @param numCopies in stock
      * @return redirect to home page template
      */
-    @PostMapping("/add-book")
+    @PostMapping("/book")
     public String addBook(@RequestParam(name="title")String title, @RequestParam(name="author")String author,
                           @RequestParam(name="publisher")String publisher, @RequestParam(name="genre")String genre,
                           @RequestParam(name="numCopies")int numCopies) {
@@ -92,6 +93,20 @@ public class BookStoreController {
         Book newBook = new Book(title, author, publisher, genre, numCopies);
         bookRepository.save(newBook);
 
+        return "redirect:/home";
+    }
+    /**
+     * Handles the DELETE request to remove a book by its ID.
+     *
+     * Deletes the book with the specified ID from the repository
+     * and then redirects to the home page.
+     *
+     * @param id The ID of the book to be removed.
+     * @return redirect to home page template
+     */
+    @DeleteMapping("/book")
+    public String removeBook(@RequestParam(name="id")Integer id) {
+        bookRepository.deleteById(id);
         return "redirect:/home";
     }
 }
