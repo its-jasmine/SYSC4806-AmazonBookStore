@@ -1,10 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>HOME PAGE</title>
 </head>
 <body>
-<p>I am a home page, change me! I should display all the books and allow you to add/remove them!</p>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Genre</th>
+            <th>Stock</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.getTitle()}">Title</td>
+            <td th:text="${book.getAuthor()}">Author</td>
+            <td th:text="${book.getPublisher()}">Publisher</td>
+            <td th:text="${book.getGenre()}">Genre</td>
+            <td th:text="${book.getNumCopies()}">Stock</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 </body>
 </html>

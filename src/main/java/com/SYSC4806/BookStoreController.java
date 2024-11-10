@@ -94,18 +94,42 @@ public class BookStoreController {
 
         return "redirect:/home";
     }
+
     /**
      * Handles the DELETE request to remove a book by its ID.
      *
      * Deletes the book with the specified ID from the repository
      * and then redirects to the home page.
      *
-     * @param id The ID of the book to be removed.
+     * @param title The title of the book to be removed
+     * @param author The Author of the book to be removed
      * @return redirect to home page template
      */
-    @DeleteMapping("/books")
-    public String removeBook(@RequestParam(name="id")Integer id) {
-        bookRepository.deleteById(id);
+    @PostMapping("/remove-books")
+    public String removeBook(@RequestParam(name="title") String title,
+                             @RequestParam(name="author") String author) {
+        // Find the book by title and author and delete it if exists
+        Optional<Book> bookToRemove = bookRepository.findByTitleAndAuthor(title, author);
+        if (bookToRemove.isPresent()) {
+            Book book = bookToRemove.get();
+            if (book.getNumCopies() > 0) {
+                book.setNumCopies(book.getNumCopies() - 1);
+                bookRepository.save(book);
+            }
+        }
+
         return "redirect:/home";
+    }
+
+    /**
+     * Handles the GET request to handle showing the adding/removing books page
+     *
+     * Shows a form for adding a new book to the system as well as removing books
+     *
+     * @return template name for book-management
+     */
+    @GetMapping("/book-management")
+    public String showBookManagementPage() {
+        return "book-management";
     }
 }
