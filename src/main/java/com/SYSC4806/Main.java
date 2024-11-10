@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootApplication
@@ -20,9 +22,13 @@ public class Main {
     @Bean
     public CommandLineRunner demo(BookRepository bookRepository, AppUserRepository userRepository) {
         return (args) -> {
-            bookRepository.save(new Book("Book1", "author1", "pub1", "mystery", 1));
-            bookRepository.save(new Book("Book2", "author2", "pub2", "fantasy", 4));
-            bookRepository.save(new Book("Book3", "author3", "pub3", "horror", 6));
+
+            Book[] demoBooks = {
+                    new Book("Book1", "author1", "pub1", "mystery", 1),
+                    new Book("Book2", "author2", "pub2", "fantasy", 4),
+                    new Book("Book3", "author3", "pub3", "horror", 6)
+            };
+            Arrays.stream(demoBooks).forEach(book -> bookRepository.save(book));
 
             // Fetch all books
             log.info("Books found with findAll():");
@@ -46,16 +52,27 @@ public class Main {
 
 
             ////////////////////////////////////////////////////////////////////////////////////
-            userRepository.save(new Admin("admin1", "password"));
-            userRepository.save(new Admin("admin2", "password1"));
-            Customer customer = new Customer("customer1", "password2");
+            AppUser[] demoAdminAccounts = {
+                    new Admin("admin1", "password"),
+                    new Admin("admin2", "password1")
 
-            ArrayList<Book> books = new ArrayList<>();
-            books.add(new Book("Book1", "author1", "pub1", "mystery", 1));
-            books.add(new Book("Book2", "author2", "pub2", "fantasy", 6));
+            };
+            Customer[] demoCustomerAccounts = {
+                    new Customer("customer1", "password2"),
+                    new Customer("customer2", "password3")
+            };
+            Arrays.stream(demoAdminAccounts).forEach(account -> userRepository.save(account));
+
+            /* // TODO when saving customer books works properly (currently, it causes an error because it tries to save book again)
+            List<Book> books = Arrays.asList(demoBooks[0], demoBooks[1]);
+            Customer customer = demoCustomerAccounts[0];
             customer.setBooks(books);
 
-            userRepository.save(customer);
+            books = Arrays.asList(demoBooks[2]);
+            customer = demoCustomerAccounts[1];
+            customer.setBooks(books);*/
+
+            Arrays.stream(demoCustomerAccounts).forEach(account -> userRepository.save(account));
 
             // Fetch all users
             log.info("User found with findAll():");
@@ -78,13 +95,7 @@ public class Main {
             if (user.isPresent()) {
                 log.info(user.get().toString());
                 log.info("");
-            } else {
-                throw new RuntimeException("Expected to find user with wusername 'admin1'.");
             }
-
-
-
-
         };
 
     }

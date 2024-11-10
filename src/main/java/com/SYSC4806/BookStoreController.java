@@ -89,9 +89,18 @@ public class BookStoreController {
                           @RequestParam(name="publisher")String publisher, @RequestParam(name="genre")String genre,
                           @RequestParam(name="numCopies")int numCopies) {
 
-        Book newBook = new Book(title, author, publisher, genre, numCopies);
-        bookRepository.save(newBook);
+        // Find the book by title and author, if exists simply update copies
+        Optional<Book> book = bookRepository.findByTitleAndAuthor(title, author);
+        Book bookToSave;
+        if (book.isPresent()){
+            Book existingBook = book.get();
+            existingBook.setNumCopies(existingBook.getNumCopies() + numCopies);
+            bookToSave = existingBook;
+        } else {
+            bookToSave = new Book(title, author, publisher, genre, numCopies);
+        }
 
+        bookRepository.save(bookToSave);
         return "redirect:/home";
     }
 
