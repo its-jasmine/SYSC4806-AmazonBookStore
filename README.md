@@ -47,7 +47,8 @@ The homepage provides book information along with how many copies are available.
 7. Integrating Front-End & Back-End for Admin Use Case
 8. UML class diagrams
 9. Database schema diagrams
-10. README
+10. Unit Testing
+11. README
 
 **Open issues**
 1. Investigate use of Logging (Kafka, DataDog, Splunk): 
