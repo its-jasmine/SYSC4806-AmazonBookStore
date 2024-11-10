@@ -2,11 +2,13 @@ package com.SYSC4806;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @SpringBootApplication
 public class Main {
@@ -70,10 +72,17 @@ public class Main {
             });
 
             // Fetch user by name
-            log.info("user found with findByName('Book1'):");
+            log.info("user found with findByUsername('admin1'):");
             log.info("--------------------------------------------");
-            userRepository.findByUsername("User").forEach(user -> log.info(user.toString()));
-            log.info("");
+            Optional<AppUser> user = userRepository.findByUsername("admin1");
+            if (user.isPresent()) {
+                log.info(user.get().toString());
+                log.info("");
+            } else {
+                throw new RuntimeException("Expected to find user with wusername 'admin1'.");
+            }
+
+
 
 
         };
