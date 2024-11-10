@@ -84,7 +84,7 @@ public class BookStoreController {
      * @param numCopies in stock
      * @return redirect to home page template
      */
-    @PostMapping("/book")
+    @PostMapping("/books")
     public String addBook(@RequestParam(name="title")String title, @RequestParam(name="author")String author,
                           @RequestParam(name="publisher")String publisher, @RequestParam(name="genre")String genre,
                           @RequestParam(name="numCopies")int numCopies) {
@@ -103,7 +103,7 @@ public class BookStoreController {
      * @param id The ID of the book to be removed.
      * @return redirect to home page template
      */
-    @DeleteMapping("/book")
+    @DeleteMapping("/books")
     public String removeBook(@RequestParam(name="id")Integer id) {
         bookRepository.deleteById(id);
         return "redirect:/home";
