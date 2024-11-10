@@ -48,7 +48,8 @@ The homepage provides book information along with how many copies are available.
 8. UML class diagrams
 9. Database schema diagrams
 10. Unit Testing
-11. README
+11. Bug fix for duplicate books in DB
+12. README
 
 **Open issues**
 1. Investigate use of Logging (Kafka, DataDog, Splunk): 
@@ -66,7 +67,6 @@ The homepage provides book information along with how many copies are available.
 ## Plan for Next Sprint
 **Jasmine**
 1. Book Browsing & Filtering use case
-2. No duplicate additions to the DB
 
 **Nivetha**
 1. Book Recommendations use case
