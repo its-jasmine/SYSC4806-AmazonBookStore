@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Management</title>
+    <style>
+
+        body {
+            font-family: Cambria, sans-serif;
+            padding: 20px;
+            background-color: white;
+        }
+        .form-container {
+            background-color: whitesmoke;
+            border: 1px solid #000;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .form-container h2 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: cornflowerblue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: Cambria, sans-serif;
+        }
+        button:hover {
+            background-color: royalblue;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Bookstore Management</h1>
+
+<div class="form-container">
+    <h2>Add New Book</h2>
+    <form id="addBookForm" action="/books" method="POST">
+        <div class="form-group">
+            <label for="title">Book Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+        </div>
+        <div class="form-group">
+            <label for="publisher">Publisher:</label>
+            <input type="text" id="publisher" name="publisher" required>
+        </div>
+        <div class="form-group">
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre" required>
+        </div>
+        <div class="form-group">
+            <label for="numCopies">Stock Quantity:</label>
+            <input type="number" id="numCopies" name="numCopies" required>
+        </div>
+        <button type="submit">Add Book</button>
+    </form>
+</div>
+
+<div class="form-container">
+    <h2>Remove Book</h2>
+    <form id="removeBookForm" action="/remove-books" method="POST">
+        <div class="form-group">
+            <label for="removeTitle">Book Title:</label>
+            <input type="text" id="removeTitle" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="removeAuthor">Author:</label>
+            <input type="text" id="removeAuthor" name="author" required>
+        </div>
+        <button type="submit">Remove Book</button>
+    </form>
+</div>
+
+
+</body>
+</html>
