@@ -50,6 +50,33 @@
         button:hover {
             background-color: royalblue;
         }
+        select {
+            width: 100%; /* Full-width to match other inputs */
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #fff; /* White background */
+            font-size: 1em; /* Consistent font size */
+            font-family: Cambria, sans-serif; /* Match form styles */
+            appearance: none; /* Removes the default browser arrow */
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px;
+            cursor: pointer; /* Pointer cursor for better UX */
+        }
+
+        select:hover {
+            border-color: #888; /* Slightly darker border on hover */
+        }
+
+        select:focus {
+            border-color: cornflowerblue; /* Blue outline on focus */
+            outline: none; /* Remove default focus outline */
+            box-shadow: 0 0 5px rgba(100, 149, 237, 0.5); /* Subtle glow */
+        }
+
     </style>
 </head>
 <body>
@@ -73,7 +100,10 @@
         </div>
         <div class="form-group">
             <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre" required>
+            <select id = "genre" name="genre" required>
+                <option value="" disabled selected>Select a genre</option>
+                <option th:each="genre : ${genres}" th:value="${genre}" th:text="${genre.name()}"></option>
+            </select>
         </div>
         <div class="form-group">
             <label for="numCopies">Stock Quantity:</label>

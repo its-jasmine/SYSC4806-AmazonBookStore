@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Catalog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+        }
+
+        .categories-container, .new-releases-container,.bestsellers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .itemDisplay {
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .category img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .category:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .category span {
+            display: block;
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="catalog-sections-container">
+    <h1>Featured Categories</h1>
+    <div class="categories-container">
+        <!-- Example of a single category -->
+        <div class="itemDisplay" th:each="genre : ${genres}">
+            <img src="https://via.placeholder.com/100" th:alt="${genre}" />
+            <p th:text="${genre}"></p>
+        </div>
+    </div>
+
+    <h1>Hot New Releases</h1>
+    <div class="new-releases-container">
+        <!-- Example of a single category -->
+        <div class="itemDisplay" th:each="book : ${newReleases}">
+            <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+            <p th:text="${book.getTitle()}"></p>
+            <p class="price">$19.99</p>
+            <p><button>Add to Cart</button></p>
+        </div>
+    </div>
+    <h1>Bestsellers</h1>
+    <div class="bestsellers-container">
+        <!-- Example of a single category -->
+        <div class="itemDisplay" th:each="book : ${bestSellers}">
+            <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+            <p th:text="${book.getTitle()}"></p>
+            <p class="price">$19.99</p>
+            <p><button>Add to Cart</button></p>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -142,4 +142,19 @@ public class BookStoreController {
         model.addAttribute("genres", Book.Genre.values());
         return "book-management";
     }
+
+    /**
+     * Handles the GET request to handle showing catalog of books page
+     *
+     * @return template name for book-browsing
+     */
+    @GetMapping("/book-browsing")
+    public String showBookBrowsingPage(Model model) {
+        model.addAttribute("genres", Book.Genre.values());
+
+        Iterable<Book> books = bookRepository.findAll();
+        model.addAttribute("newReleases",books); // TODO change to get proper list
+        model.addAttribute("bestSellers", books); // TODO change to get proper list
+        return "book-browsing";
+    }
 }
