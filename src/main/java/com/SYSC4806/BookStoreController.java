@@ -86,7 +86,7 @@ public class BookStoreController {
      */
     @PostMapping("/books")
     public String addBook(@RequestParam(name="title")String title, @RequestParam(name="author")String author,
-                          @RequestParam(name="publisher")String publisher, @RequestParam(name="genre")String genre,
+                          @RequestParam(name="publisher")String publisher, @RequestParam(name="genre") Book.Genre genre,
                           @RequestParam(name="numCopies")int numCopies) {
 
         // Find the book by title and author, if exists simply update copies
@@ -138,7 +138,8 @@ public class BookStoreController {
      * @return template name for book-management
      */
     @GetMapping("/book-management")
-    public String showBookManagementPage() {
+    public String showBookManagementPage(Model model) {
+        model.addAttribute("genres", Book.Genre.values());
         return "book-management";
     }
 }

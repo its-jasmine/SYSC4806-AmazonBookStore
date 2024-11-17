@@ -24,9 +24,9 @@ public class Main {
         return (args) -> {
 
             Book[] demoBooks = {
-                    new Book("Book1", "author1", "pub1", "mystery", 1),
-                    new Book("Book2", "author2", "pub2", "fantasy", 4),
-                    new Book("Book3", "author3", "pub3", "horror", 6)
+                    new Book("Book1", "author1", "pub1", Book.Genre.Mystery, 1),
+                    new Book("Book2", "author2", "pub2", Book.Genre.Fantasy, 4),
+                    new Book("Book3", "author3", "pub3", Book.Genre.NonFiction, 6)
             };
             Arrays.stream(demoBooks).forEach(book -> bookRepository.save(book));
 

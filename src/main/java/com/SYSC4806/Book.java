@@ -8,6 +8,16 @@ import jakarta.persistence.*;
         uniqueConstraints = @UniqueConstraint(columnNames = {"title", "author", "publisher", "genre"})
 )
 public class Book {
+    public enum Genre {
+        Fiction,
+        NonFiction,
+        Mystery,
+        SciFi,
+        Fantasy,
+        Romance,
+        Memoirs,
+        SelfHelp
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensure you have the right strategy for your database
@@ -16,13 +26,14 @@ public class Book {
     private String title;
     private String author;
     private String publisher;
-    private String genre;
+    @Enumerated(EnumType.STRING)
+    private Genre genre;
     private int numCopies;
 
     public Book() {}
 
 
-    public Book(String title, String author, String publisher, String genre, int numCopies) {
+    public Book(String title, String author, String publisher, Genre genre, int numCopies) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -61,10 +72,10 @@ public class Book {
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 

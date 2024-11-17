@@ -92,7 +92,7 @@ class BookStoreControllerTest {
         String title = "Some Book";
         String author = "Some Author";
         String publisher = "Some Publisher";
-        String genre = "Some Genre";
+        Book.Genre genre = Book.Genre.Fantasy;
         int existingNumCopies = 1;
 
         Book book = new Book(title, author, publisher, genre, existingNumCopies);
@@ -104,7 +104,7 @@ class BookStoreControllerTest {
                         .param("title", title)
                         .param("author", author)
                         .param("publisher", publisher)
-                        .param("genre", genre)
+                        .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numOfNewCopies)))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
                 .andExpect(redirectedUrl("/home"));
@@ -120,7 +120,7 @@ class BookStoreControllerTest {
     @Test
     public void removeBook() throws Exception{
         // Mock a book in the repository
-        Book book = new Book("Some Book", "Some Author", "Some Publisher", "Some Genre", 1);
+        Book book = new Book("Some Book", "Some Author", "Some Publisher", Book.Genre.Fiction, 1);
         when(bookRepository.findByTitleAndAuthor("Some Book", "Some Author")).thenReturn(Optional.of(book));
 
         mockMvc.perform(post("/remove-books")
