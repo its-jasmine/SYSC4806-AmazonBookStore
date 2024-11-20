@@ -62,45 +62,50 @@ class BookStoreControllerTest {
 
     @Test
     void addNewBooks() throws Exception {
+        String ISBN = "1234567890";
         String title = "Some Book";
         String author = "Some Author";
         String publisher = "Some Publisher";
-        String genre = "Some Genre";
+        Book.Genre genre = Book.Genre.Memoirs;
         int numCopies = 2;
 
         when(bookRepository.findByTitleAndAuthor(title, author)).thenReturn(Optional.empty());
 
         // Verifying that adding a book will successfully redirect to home page
         mockMvc.perform(post("/books")
+                        .param("ISBN", ISBN)
                         .param("title", title)
                         .param("author", author)
                         .param("publisher", publisher)
-                        .param("genre", genre)
+                        .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numCopies)))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
                 .andExpect(redirectedUrl("/home"));
 
         // Verify that the book with specified values is saved in the repository
-        verify(bookRepository).save(argThat(b -> b.getTitle().equals(title) &&
+        verify(bookRepository).save(argThat(b -> b.getISBN().equals(ISBN) &&
+                b.getTitle().equals(title) &&
                 b.getAuthor().equals(author) &&
                 b.getPublisher().equals(publisher) &&
                 b.getGenre().equals(genre) &&
-                b.getNumCopies() == numCopies));
+                b.getNumCopiesInStock() == numCopies));
     }
     @Test
     public void addToExistingBooks() throws Exception{
+        String ISBN = "1234567890";
         String title = "Some Book";
         String author = "Some Author";
         String publisher = "Some Publisher";
         Book.Genre genre = Book.Genre.Fantasy;
         int existingNumCopies = 1;
 
-        Book book = new Book(title, author, publisher, genre, existingNumCopies);
+        Book book = new Book(ISBN,title, author, publisher, genre, existingNumCopies);
         when(bookRepository.findByTitleAndAuthor(title, author)).thenReturn(Optional.of(book));
 
         int numOfNewCopies = 1;
         // Verifying that adding copies to an existing book will successfully redirect to home page
         mockMvc.perform(post("/books")
+                        .param("ISBN", ISBN)
                         .param("title", title)
                         .param("author", author)
                         .param("publisher", publisher)
@@ -114,13 +119,13 @@ class BookStoreControllerTest {
                 b.getAuthor().equals(author) &&
                 b.getPublisher().equals(publisher) &&
                 b.getGenre().equals(genre) &&
-                b.getNumCopies() == (existingNumCopies + numOfNewCopies)));
+                b.getNumCopiesInStock() == (existingNumCopies + numOfNewCopies)));
     }
 
     @Test
     public void removeBook() throws Exception{
         // Mock a book in the repository
-        Book book = new Book("Some Book", "Some Author", "Some Publisher", Book.Genre.Fiction, 1);
+        Book book = new Book("1234567890","Some Book", "Some Author", "Some Publisher", Book.Genre.Fiction, 1);
         when(bookRepository.findByTitleAndAuthor("Some Book", "Some Author")).thenReturn(Optional.of(book));
 
         mockMvc.perform(post("/remove-books")
@@ -130,7 +135,7 @@ class BookStoreControllerTest {
                 .andExpect(redirectedUrl("/home"));
 
         // Verify that the book’s stock count was updated
-        verify(bookRepository).save(argThat(b -> b.getNumCopies() == 0));
+        verify(bookRepository).save(argThat(b -> b.getNumCopiesInStock() == 0));
 
 
     }

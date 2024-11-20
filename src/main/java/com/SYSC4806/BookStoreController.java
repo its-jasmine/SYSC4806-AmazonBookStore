@@ -3,7 +3,6 @@ package com.SYSC4806;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,7 +84,7 @@ public class BookStoreController {
      * @return redirect to home page template
      */
     @PostMapping("/books")
-    public String addBook(@RequestParam(name="title")String title, @RequestParam(name="author")String author,
+    public String addBook(@RequestParam(name="ISBN")String ISBN,@RequestParam(name="title")String title, @RequestParam(name="author")String author,
                           @RequestParam(name="publisher")String publisher, @RequestParam(name="genre") Book.Genre genre,
                           @RequestParam(name="numCopies")int numCopies) {
 
@@ -94,10 +93,10 @@ public class BookStoreController {
         Book bookToSave;
         if (book.isPresent()){
             Book existingBook = book.get();
-            existingBook.setNumCopies(existingBook.getNumCopies() + numCopies);
+            existingBook.setNumCopiesInStock(existingBook.getNumCopiesInStock() + numCopies);
             bookToSave = existingBook;
         } else {
-            bookToSave = new Book(title, author, publisher, genre, numCopies);
+            bookToSave = new Book(ISBN,title, author, publisher, genre, numCopies);
         }
 
         bookRepository.save(bookToSave);
@@ -121,8 +120,8 @@ public class BookStoreController {
         Optional<Book> bookToRemove = bookRepository.findByTitleAndAuthor(title, author);
         if (bookToRemove.isPresent()) {
             Book book = bookToRemove.get();
-            if (book.getNumCopies() > 0) {
-                book.setNumCopies(book.getNumCopies() - 1);
+            if (book.getNumCopiesInStock() > 0) {
+                book.setNumCopiesInStock(book.getNumCopiesInStock() - 1);
                 bookRepository.save(book);
             }
         }
@@ -141,20 +140,5 @@ public class BookStoreController {
     public String showBookManagementPage(Model model) {
         model.addAttribute("genres", Book.Genre.values());
         return "book-management";
-    }
-
-    /**
-     * Handles the GET request to handle showing catalog of books page
-     *
-     * @return template name for book-browsing
-     */
-    @GetMapping("/book-browsing")
-    public String showBookBrowsingPage(Model model) {
-        model.addAttribute("genres", Book.Genre.values());
-
-        Iterable<Book> books = bookRepository.findAll();
-        model.addAttribute("newReleases",books); // TODO change to get proper list
-        model.addAttribute("bestSellers", books); // TODO change to get proper list
-        return "book-browsing";
     }
 }

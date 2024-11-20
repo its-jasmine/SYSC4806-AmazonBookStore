@@ -2,6 +2,11 @@ package com.SYSC4806;
 
 import jakarta.persistence.*;
 
+import java.text.DateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 @Entity
 @Table(
         name = "book",
@@ -23,31 +28,86 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensure you have the right strategy for your database
     private Integer id;
 
+    // TODO get confirmation from team: I'm thinking ISBN could be used as the @Id instead?
+
+    private String ISBN; // ISBN-10 value (using string rather than integer or long, values can go beyond the maximum)
     private String title;
+
     private String author;
     private String publisher;
     @Enumerated(EnumType.STRING)
     private Genre genre;
-    private int numCopies;
+    private int numCopiesInStock;
+    private int numCopiesSold;
+    private LocalDateTime dateAdded;
 
     public Book() {}
 
 
-    public Book(String title, String author, String publisher, Genre genre, int numCopies) {
+    public Book(String ISBN, String title, String author, String publisher, Genre genre, int numCopiesInStock) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.genre = genre;
-        this.numCopies = numCopies;
+        this.numCopiesInStock = numCopiesInStock;
+        this.numCopiesSold = 0;
+        this.dateAdded = LocalDateTime.now();
+        this.ISBN = validateISBN(ISBN);
+    }
+
+    public void incrementNumCopiesSold() {
+        setNumCopiesSold(this.numCopiesSold + 1);
+    }
+
+    @Override
+    public String toString() {
+        return "Book [id=" + id + ", title=" + title + ", author=" + author + ", publisher=" + publisher +
+                ", genre=" + genre + ", numCopiesInStock=" + numCopiesInStock + ", numCopiesSold=" + numCopiesSold +
+                ", dateAdded=" + dateAdded.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +"]";
 
     }
 
+    /**
+     * Validates and normalizes ISBN value.
+     * @param isbn - international standard book number
+     * @return normalized ISBN value
+     */
+    private static String validateISBN(String isbn) {
+        if (isbn == null || isbn.isEmpty()) {
+            throw new IllegalArgumentException("ISBN cannot be null or empty.");
+        }
+
+        // Normalize ISBN by removing spaces and dashes
+        String normalizedIsbn = isbn.replace("-", "").replace(" ", "");
+
+        // Check length
+        if (normalizedIsbn.length() != 10 && normalizedIsbn.length() != 13) {
+            throw new IllegalArgumentException("ISBN must be either 10 or 13 characters long.");
+        }
+
+        // Ensure only digits (and possibly 'X' for ISBN-10)
+        if (!normalizedIsbn.matches("\\d{9}[\\dX]|\\d{13}")) {
+            throw new IllegalArgumentException("ISBN contains invalid characters.");
+        }
+
+        return normalizedIsbn;
+    }
+
+    // ############################################### Setters & Getters ###############################################
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public void setISBN(String ISBN) {
+        this.ISBN = ISBN;
     }
 
     public String getTitle() {
@@ -69,6 +129,7 @@ public class Book {
     public String getPublisher() {
         return publisher;
     }
+
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
@@ -78,18 +139,28 @@ public class Book {
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
-
-    public int getNumCopies() {
-        return numCopies;
+    public int getNumCopiesInStock() {
+        return numCopiesInStock;
     }
 
-    public void setNumCopies(int numCopies) {
-        this.numCopies = numCopies;
+    public void setNumCopiesInStock(int numCopies) {
+        this.numCopiesInStock = numCopies;
     }
 
-    @Override
-    public String toString() {
-        return "Book [id=" + id + ", title=" + title + ", author=" + author + ", publisher=" + publisher + ", genre=" + genre + "]";
+    public int getNumCopiesSold() {
+        return numCopiesSold;
+    }
+
+    public void setNumCopiesSold(int numCopiesSold) {
+        this.numCopiesSold = numCopiesSold;
+    }
+
+    public LocalDateTime getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(LocalDateTime dateAdded) {
+        this.dateAdded = dateAdded;
     }
 
 }

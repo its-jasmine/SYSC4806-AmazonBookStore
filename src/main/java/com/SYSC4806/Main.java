@@ -7,10 +7,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.context.annotation.Profile;
+
+import java.time.LocalDateTime;
+import java.util.*;
 
 @SpringBootApplication
 public class Main {
@@ -20,15 +20,25 @@ public class Main {
     }
 
     @Bean
+    @Profile("!test") // This bean will not run when the "test" profile is active
     public CommandLineRunner demo(BookRepository bookRepository, AppUserRepository userRepository) {
         return (args) -> {
+            // Generating 100 random books to populate the book store
+            // Bounds were selected such that some books may have the same author, publisher, and/or genre.
+            // Book names however, are all unique (however this isn't strictly required by the system, i.e., the combination of all book values is what must be unique)
+            Random random = new Random();
+            List<Book> demoBooks = new ArrayList<>();
+            Book.Genre[] genres = Book.Genre.values();
+            int baseISBN = 1000000000;
+            Book demoBook;
+            for (int i = 0; i<100; i++) {
+                demoBook = new Book((baseISBN+i)+"","Book" + i, "author" + random.nextInt(90), "pub" + random.nextInt(5), genres[random.nextInt(genres.length)], random.nextInt(100));
+                demoBook.setNumCopiesSold(random.nextInt(10000));
+                demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
+                demoBooks.add(demoBook);
+            }
 
-            Book[] demoBooks = {
-                    new Book("Book1", "author1", "pub1", Book.Genre.Mystery, 1),
-                    new Book("Book2", "author2", "pub2", Book.Genre.Fantasy, 4),
-                    new Book("Book3", "author3", "pub3", Book.Genre.NonFiction, 6)
-            };
-            Arrays.stream(demoBooks).forEach(book -> bookRepository.save(book));
+            demoBooks.forEach(book -> bookRepository.save(book));
 
             // Fetch all books
             log.info("Books found with findAll():");
@@ -48,6 +58,12 @@ public class Main {
             log.info("Buddy found with findByName('Book1'):");
             log.info("--------------------------------------------");
             bookRepository.findByTitle("Book1").forEach(book -> log.info(book.toString()));
+            log.info("");
+
+            // Fetch top 10 best seller books
+            log.info("Top 10 Bestseller Books found with findTop10ByOrderByNumCopiesSoldDesc():");
+            log.info("-------------------------------");
+            bookRepository.findTop10ByOrderByNumCopiesSoldDesc().forEach(book -> log.info(book.toString()));
             log.info("");
 
 
