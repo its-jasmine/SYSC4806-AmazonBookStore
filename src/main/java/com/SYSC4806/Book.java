@@ -13,6 +13,8 @@ import java.util.Date;
         uniqueConstraints = @UniqueConstraint(columnNames = {"title", "author", "publisher", "genre"})
 )
 public class Book {
+
+
     public enum Genre {
         Fiction,
         NonFiction,
@@ -21,30 +23,30 @@ public class Book {
         Fantasy,
         Romance,
         Memoirs,
-        SelfHelp
+        SelfHelp;
     }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensure you have the right strategy for your database
     private Integer id;
 
+
     // TODO get confirmation from team: I'm thinking ISBN could be used as the @Id instead?
+    private String ISBN;
 
-    private String ISBN; // ISBN-10 value (using string rather than integer or long, values can go beyond the maximum)
     private String title;
-
+    private double price;
     private String author;
+
     private String publisher;
     @Enumerated(EnumType.STRING)
     private Genre genre;
     private int numCopiesInStock;
     private int numCopiesSold;
     private LocalDateTime dateAdded;
-
     public Book() {}
 
 
-    public Book(String ISBN, String title, String author, String publisher, Genre genre, int numCopiesInStock) {
+    public Book(String ISBN, String title, String author, String publisher, double price, Genre genre, int numCopiesInStock) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -53,6 +55,7 @@ public class Book {
         this.numCopiesSold = 0;
         this.dateAdded = LocalDateTime.now();
         this.ISBN = validateISBN(ISBN);
+        this.price = Math.round(price * 100.0) / 100.0; // rounds value to 2 decimal places
     }
 
     public void incrementNumCopiesSold() {
@@ -62,7 +65,7 @@ public class Book {
     @Override
     public String toString() {
         return "Book [id=" + id + ", title=" + title + ", author=" + author + ", publisher=" + publisher +
-                ", genre=" + genre + ", numCopiesInStock=" + numCopiesInStock + ", numCopiesSold=" + numCopiesSold +
+                ", genre=" + genre + ", numCopiesInStock=" + numCopiesInStock + ", price=" + price + ", numCopiesSold=" + numCopiesSold +
                 ", dateAdded=" + dateAdded.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +"]";
 
     }
@@ -94,10 +97,10 @@ public class Book {
     }
 
     // ############################################### Setters & Getters ###############################################
+
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -133,6 +136,7 @@ public class Book {
     public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
+
     public Genre getGenre() {
         return genre;
     }
@@ -142,7 +146,6 @@ public class Book {
     public int getNumCopiesInStock() {
         return numCopiesInStock;
     }
-
     public void setNumCopiesInStock(int numCopies) {
         this.numCopiesInStock = numCopies;
     }
@@ -161,6 +164,14 @@ public class Book {
 
     public void setDateAdded(LocalDateTime dateAdded) {
         this.dateAdded = dateAdded;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
 }

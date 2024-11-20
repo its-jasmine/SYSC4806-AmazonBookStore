@@ -30,9 +30,10 @@ public class Main {
             List<Book> demoBooks = new ArrayList<>();
             Book.Genre[] genres = Book.Genre.values();
             int baseISBN = 1000000000;
+            double cents = 0.99;
             Book demoBook;
             for (int i = 0; i<100; i++) {
-                demoBook = new Book((baseISBN+i)+"","Book" + i, "author" + random.nextInt(90), "pub" + random.nextInt(5), genres[random.nextInt(genres.length)], random.nextInt(100));
+                demoBook = new Book((baseISBN+i)+"","Book" + i, "author" + random.nextInt(90), "pub" + random.nextInt(5), cents + ((random.nextInt(40) + 10)),genres[random.nextInt(genres.length)], random.nextInt(100));
                 demoBook.setNumCopiesSold(random.nextInt(10000));
                 demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
                 demoBooks.add(demoBook);

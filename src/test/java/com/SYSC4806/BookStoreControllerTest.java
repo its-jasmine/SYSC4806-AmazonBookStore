@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-
+@ActiveProfiles("test") // Activates the "test" profile for this test class
 @WebMvcTest(BookStoreController.class)
 class BookStoreControllerTest {
     @Autowired
@@ -66,10 +67,11 @@ class BookStoreControllerTest {
         String title = "Some Book";
         String author = "Some Author";
         String publisher = "Some Publisher";
+        double price = 19.99;
         Book.Genre genre = Book.Genre.Memoirs;
         int numCopies = 2;
 
-        when(bookRepository.findByTitleAndAuthor(title, author)).thenReturn(Optional.empty());
+        when(bookRepository.findByISBN(ISBN)).thenReturn(Optional.empty());
 
         // Verifying that adding a book will successfully redirect to home page
         mockMvc.perform(post("/books")
@@ -77,6 +79,7 @@ class BookStoreControllerTest {
                         .param("title", title)
                         .param("author", author)
                         .param("publisher", publisher)
+                        .param("price", price + "")
                         .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numCopies)))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
@@ -87,6 +90,7 @@ class BookStoreControllerTest {
                 b.getTitle().equals(title) &&
                 b.getAuthor().equals(author) &&
                 b.getPublisher().equals(publisher) &&
+                b.getPrice() == price &&
                 b.getGenre().equals(genre) &&
                 b.getNumCopiesInStock() == numCopies));
     }
@@ -96,11 +100,12 @@ class BookStoreControllerTest {
         String title = "Some Book";
         String author = "Some Author";
         String publisher = "Some Publisher";
+        double price = 19.99;
         Book.Genre genre = Book.Genre.Fantasy;
         int existingNumCopies = 1;
 
-        Book book = new Book(ISBN,title, author, publisher, genre, existingNumCopies);
-        when(bookRepository.findByTitleAndAuthor(title, author)).thenReturn(Optional.of(book));
+        Book book = new Book(ISBN,title, author, publisher, price,genre, existingNumCopies);
+        when(bookRepository.findByISBN(ISBN)).thenReturn(Optional.of(book));
 
         int numOfNewCopies = 1;
         // Verifying that adding copies to an existing book will successfully redirect to home page
@@ -109,6 +114,7 @@ class BookStoreControllerTest {
                         .param("title", title)
                         .param("author", author)
                         .param("publisher", publisher)
+                        .param("price", price + "")
                         .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numOfNewCopies)))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
@@ -118,19 +124,20 @@ class BookStoreControllerTest {
         verify(bookRepository).save(argThat(b -> b.getTitle().equals(title) &&
                 b.getAuthor().equals(author) &&
                 b.getPublisher().equals(publisher) &&
+                b.getPrice() == price &&
                 b.getGenre().equals(genre) &&
                 b.getNumCopiesInStock() == (existingNumCopies + numOfNewCopies)));
     }
 
     @Test
     public void removeBook() throws Exception{
+        String ISBN = "1234567890";
         // Mock a book in the repository
-        Book book = new Book("1234567890","Some Book", "Some Author", "Some Publisher", Book.Genre.Fiction, 1);
-        when(bookRepository.findByTitleAndAuthor("Some Book", "Some Author")).thenReturn(Optional.of(book));
+        Book book = new Book(ISBN, "Some Title", "Some Author", "Some Publisher", 19.99, Book.Genre.Fiction, 1);
+        when(bookRepository.findByISBN("1234567890")).thenReturn(Optional.of(book));
 
         mockMvc.perform(post("/remove-books")
-                        .param("title", "Some Book")
-                        .param("author", "Some Author"))
+                        .param("ISBN", ISBN))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
                 .andExpect(redirectedUrl("/home"));
 

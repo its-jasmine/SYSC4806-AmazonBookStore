@@ -19,7 +19,7 @@ public class BookRepositoryTest {
     @Test
     public void testSaveAndFindById() {
         // Arrange
-        Book book = new Book("1234567890","Effective Java", "Joshua Bloch", "Programming", Book.Genre.Fantasy, 100);
+        Book book = new Book("1234567890","Effective Java", "Joshua Bloch", "Programming", 19.99,Book.Genre.Fantasy, 100);
         book = bookRepository.save(book);
 
         // Act
@@ -34,8 +34,8 @@ public class BookRepositoryTest {
     @Test
     public void testFindByTitle() {
         // Arrange
-        bookRepository.save(new Book("1234567890","Clean Code", "Robert C. Martin", "Programming", Book.Genre.Mystery, 50));
-        bookRepository.save(new Book("1234567891","Clean Code", "Someone Else", "Programming", Book.Genre.NonFiction, 20));
+        bookRepository.save(new Book("1234567890","Clean Code", "Robert C. Martin", "Programming", 19.99,Book.Genre.Mystery, 50));
+        bookRepository.save(new Book("1234567891","Clean Code", "Someone Else", "Programming", 19.99,Book.Genre.NonFiction, 20));
 
         // Act
         Iterable<Book> books = bookRepository.findByTitle("Clean Code");
@@ -63,7 +63,7 @@ public class BookRepositoryTest {
         int copiesSold = 0;
 
         for (int i = 1; i <= numberOfBooks; i++) {
-            Book book = new Book((baseISBN+i)+"",baseTitle + i, "author", "publisher", Book.Genre.Memoirs, 1);
+            Book book = new Book((baseISBN+i)+"",baseTitle + i, "author", "publisher", 19.99, Book.Genre.Memoirs, 1);
             book.setNumCopiesSold(copiesSold);
             if (i == 1) eleventhBestSeller = book; // The first book has the fewest copies sold
             bookRepository.save(book);
@@ -110,6 +110,7 @@ public class BookRepositoryTest {
                     baseTitle + i,
                     "author",
                     "publisher",
+                    19.99,
                     Book.Genre.Fiction,
                     1
             );
@@ -140,10 +141,10 @@ public class BookRepositoryTest {
     @Test
     public void testFindByTitleAndAuthor() {
         // Arrange
-        bookRepository.save(new Book("1234567890","The Pragmatic Programmer", "Andrew Hunt", "Programming", Book.Genre.Memoirs, 70));
+        bookRepository.save(new Book("1234567890","The Pragmatic Programmer", "Andrew Hunt", "Programming", 19.99, Book.Genre.Memoirs, 70));
 
         // Act
-        Optional<Book> book = bookRepository.findByTitleAndAuthor("The Pragmatic Programmer", "Andrew Hunt");
+        Optional<Book> book = bookRepository.findByISBN("1234567890");
 
         // Assert
         assertTrue(book.isPresent());
@@ -154,10 +155,10 @@ public class BookRepositoryTest {
     @Test
     public void testFindByTitleAndAuthor_NotFound() {
         // Arrange
-        bookRepository.save(new Book("1234567890","Book A", "Author A", "Category A", Book.Genre.Fiction, 50));
+        bookRepository.save(new Book("1234567890","Book A", "Author A", "Category A", 19.99, Book.Genre.Fiction, 50));
 
         // Act
-        Optional<Book> book = bookRepository.findByTitleAndAuthor("Nonexistent Book", "Nonexistent Author");
+        Optional<Book> book = bookRepository.findByISBN("1234567891");
 
         // Assert
         assertFalse(book.isPresent());

@@ -22,6 +22,6 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
      */
     List<Book> findTop10ByOrderByDateAddedDesc();
 
-    Optional<Book> findByTitleAndAuthor(String title, String author);
+    Optional<Book> findByISBN(String ISBN);
 }
 

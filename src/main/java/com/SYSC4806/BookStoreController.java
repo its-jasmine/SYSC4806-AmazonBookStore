@@ -84,19 +84,20 @@ public class BookStoreController {
      * @return redirect to home page template
      */
     @PostMapping("/books")
-    public String addBook(@RequestParam(name="ISBN")String ISBN,@RequestParam(name="title")String title, @RequestParam(name="author")String author,
-                          @RequestParam(name="publisher")String publisher, @RequestParam(name="genre") Book.Genre genre,
-                          @RequestParam(name="numCopies")int numCopies) {
+    public String addBook(@RequestParam(name="ISBN")String ISBN, @RequestParam(name="title")String title,
+                          @RequestParam(name="author")String author, @RequestParam(name="publisher")String publisher,
+                          @RequestParam(name="price")double price, @RequestParam(name="genre") Book.Genre genre,
+                          @RequestParam(name="numCopies")int numCopies) { // TODO make use of form object
 
         // Find the book by title and author, if exists simply update copies
-        Optional<Book> book = bookRepository.findByTitleAndAuthor(title, author);
+        Optional<Book> book = bookRepository.findByISBN(ISBN);
         Book bookToSave;
         if (book.isPresent()){
             Book existingBook = book.get();
             existingBook.setNumCopiesInStock(existingBook.getNumCopiesInStock() + numCopies);
             bookToSave = existingBook;
         } else {
-            bookToSave = new Book(ISBN,title, author, publisher, genre, numCopies);
+            bookToSave = new Book(ISBN,title, author, publisher, price, genre, numCopies);
         }
 
         bookRepository.save(bookToSave);
@@ -109,15 +110,13 @@ public class BookStoreController {
      * Deletes the book with the specified ID from the repository
      * and then redirects to the home page.
      *
-     * @param title The title of the book to be removed
-     * @param author The Author of the book to be removed
+     * @param ISBN The ISBN of the book to be removed
      * @return redirect to home page template
      */
     @PostMapping("/remove-books")
-    public String removeBook(@RequestParam(name="title") String title,
-                             @RequestParam(name="author") String author) {
+    public String removeBook(@RequestParam(name="ISBN") String ISBN) {
         // Find the book by title and author and delete it if exists
-        Optional<Book> bookToRemove = bookRepository.findByTitleAndAuthor(title, author);
+        Optional<Book> bookToRemove = bookRepository.findByISBN(ISBN);
         if (bookToRemove.isPresent()) {
             Book book = bookToRemove.get();
             if (book.getNumCopiesInStock() > 0) {
