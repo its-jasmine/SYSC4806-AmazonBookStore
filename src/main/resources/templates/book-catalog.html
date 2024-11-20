@@ -33,7 +33,7 @@
         }
 
         .arrow {
-            background-color: #232f3e;
+            background-color: cornflowerblue;
             color: white;
             border: none;
             font-size: 2rem;
@@ -53,6 +53,7 @@
 
         .arrow:hover {
             opacity: 1;
+            background-color: cornflowerblue;
         }
 
         .arrow.left {
@@ -148,18 +149,22 @@
     <script>
         const scrollAmount = 300; // Adjust scroll amount per click
 
-        function scrollLeft(button) {
+        function scrollLeftCarousel(button) {
+            console.log("Left clicked!")
+            console.log(button.nextElementSibling)
             // Find the `.new-releases-container` between the buttons
             const container = button.nextElementSibling;
-            if (container && container.classList.contains('new-releases-container')) {
+            if (container && container.classList.contains('books-container')) {
                 container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
             }
         }
 
-        function scrollRight(button) {
+        function scrollRightCarousel(button) {
+            console.log("Right clicked!")
+            console.log(button.previousElementSibling)
             // Find the `.new-releases-container` between the buttons
             const container = button.previousElementSibling;
-            if (container && container.classList.contains('new-releases-container')) {
+            if (container && container.classList.contains('books-container')) {
                 container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
         }
@@ -192,7 +197,7 @@
     <div class="catalog-section">
         <h1>New Releases</h1>
         <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeft(this)">&#8249;</button>
+            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
             <div class="books-container">
                 <button class="browse-card item-display" th:each="book : ${newReleases}">
                     <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
@@ -200,14 +205,14 @@
                     <p class="price" th:text="|$ ${book.getPrice()}|"></p>
                 </button>
             </div>
-            <button class="arrow right" onclick="scrollRight(this)">&#8250;</button>
+            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
         </div>
     </div>
 
     <div class="catalog-section">
         <h1>Bestsellers</h1>
         <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeft(this)">&#8249;</button>
+            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
             <div class="books-container">
                 <button class="browse-card item-display" th:each="book : ${bestSellers}">
                     <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
@@ -215,7 +220,7 @@
                     <p class="price" th:text="|$ ${book.getPrice()}|"></p>
                 </button>
             </div>
-            <button class="arrow right" onclick="scrollRight(this)">&#8250;</button>
+            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
         </div>
     </div>
 
