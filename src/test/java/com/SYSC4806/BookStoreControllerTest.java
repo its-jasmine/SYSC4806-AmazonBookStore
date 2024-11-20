@@ -24,6 +24,10 @@ class BookStoreControllerTest {
     @MockBean
     private AppUserRepository appUserRepository;
     @MockBean
+    private CustomerRepository customerRepository;
+    @MockBean
+    private AdminRepository adminRepository;
+    @MockBean
     private BookRepository bookRepository;
 
     @Test
@@ -37,7 +41,7 @@ class BookStoreControllerTest {
     @Test
     void login() throws Exception {
         // Verifying that logging in with valid user credentials will redirect the user to the home page
-        when(appUserRepository.findByUsername("validUser")).thenReturn(Optional.of(new Admin("validUser", "validPass"))); // mocking valid user
+        when(adminRepository.findAdminByUsername("validUser")).thenReturn(Optional.of(new Admin("validUser", "validPass"))); // mocking valid user
         mockMvc.perform(post("/login")
                         .param("username", "validUser")
                         .param("password", "validPass"))

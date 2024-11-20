@@ -17,6 +17,11 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
+    private Book getBookById(Integer id, BookRepository bookRepository) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Book with ID " + id + " not found"));
+    }
+
     @Bean
     public CommandLineRunner demo(BookRepository bookRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
         return (args) -> {
@@ -68,27 +73,26 @@ public class Main {
                     new Customer("customer3", "password4")
             };
 
-//            Book book1 = bookRepository.findById(1).orElse(null);
-//            demoCustomerAccounts[0].addToHistory(book1);
-//            log.info("hweiuhrqiuweh");
-//            log.info(demoCustomerAccounts[0].getPurchaseHistory().toString());
-            demoCustomerAccounts[0].addToHistory(bookRepository.findById(1).get());
-            demoCustomerAccounts[0].addToHistory(bookRepository.findById(2).get());
-            demoCustomerAccounts[0].addToHistory(bookRepository.findById(4).get());
-            demoCustomerAccounts[0].addToHistory(bookRepository.findById(6).get());
+            try {
+                demoCustomerAccounts[0].addToHistory(getBookById(1, bookRepository));
+                demoCustomerAccounts[0].addToHistory(getBookById(2, bookRepository));
+                demoCustomerAccounts[0].addToHistory(getBookById(4, bookRepository));
+                demoCustomerAccounts[0].addToHistory(getBookById(6, bookRepository));
 
-            demoCustomerAccounts[1].addToHistory(bookRepository.findById(1).get());
-            demoCustomerAccounts[1].addToHistory(bookRepository.findById(3).get());
-            demoCustomerAccounts[1].addToHistory(bookRepository.findById(4).get());
-            demoCustomerAccounts[1].addToHistory(bookRepository.findById(6).get());
-            demoCustomerAccounts[1].addToHistory(bookRepository.findById(7).get());
-            demoCustomerAccounts[1].addToHistory(bookRepository.findById(9).get());
+                demoCustomerAccounts[1].addToHistory(getBookById(1, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(3, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(4, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(6, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(7, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(9, bookRepository));
 
-            demoCustomerAccounts[2].addToHistory(bookRepository.findById(2).get());
-            demoCustomerAccounts[2].addToHistory(bookRepository.findById(3).get());
-            demoCustomerAccounts[2].addToHistory(bookRepository.findById(6).get());
-            demoCustomerAccounts[2].addToHistory(bookRepository.findById(10).get());
-
+                demoCustomerAccounts[2].addToHistory(getBookById(2, bookRepository));
+                demoCustomerAccounts[2].addToHistory(getBookById(3, bookRepository));
+                demoCustomerAccounts[2].addToHistory(getBookById(6, bookRepository));
+                demoCustomerAccounts[2].addToHistory(getBookById(10, bookRepository));
+            } catch (IllegalStateException e) {
+                System.out.println(e.getMessage()); // Log missing book
+            }
 
             //test recommendation
             BookRecommendation bookRecommendation = new BookRecommendation(Arrays.stream(demoCustomerAccounts).toList());
