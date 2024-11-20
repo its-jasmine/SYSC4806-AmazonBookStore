@@ -21,7 +21,11 @@ public class BookStoreController {
     @Autowired
     AppUserRepository userRepository;
     @Autowired
+    CustomerRepository customerRepository;
+    @Autowired
     BookRepository bookRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     /**
      * Handles the GET request to display the login page.
@@ -49,7 +53,7 @@ public class BookStoreController {
     @PostMapping("/login")
     public String login(@RequestParam(name="username")String username, @RequestParam(name="password")String password) {
 
-        Optional<AppUser> user = userRepository.findByUsername(username);
+        Optional<Admin> user = adminRepository.findAdminByUsername(username);
         if (user.isPresent() && password.equals(user.get().getPassword())) {
             return "redirect:/home"; // redirects to home page of
         }
