@@ -14,6 +14,8 @@
             <th>Publisher</th>
             <th>Genre</th>
             <th>Stock</th>
+            <th>Price</th>
+
         </tr>
         </thead>
 
@@ -24,6 +26,8 @@
             <td th:text="${book.getPublisher()}">Publisher</td>
             <td th:text="${book.getGenre()}">Genre</td>
             <td th:text="${book.getNumCopiesInStock()}">Stock</td>
+            <td th:text="${book.getPrice()}">Price</td>
+
         </tr>
         </tbody>
     </table>
