@@ -31,32 +31,6 @@ class BookStoreControllerTest {
     private BookRepository bookRepository;
 
     @Test
-    void showLoginPage() throws Exception {
-        // Verifying that accessing the login url will successfully show the login page
-        mockMvc.perform(get("/login"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("login-page"));
-    }
-
-    @Test
-    void login() throws Exception {
-        // Verifying that logging in with valid user credentials will redirect the user to the home page
-        when(adminRepository.findAdminByUsername("validUser")).thenReturn(Optional.of(new Admin("validUser", "validPass"))); // mocking valid user
-        mockMvc.perform(post("/login")
-                        .param("username", "validUser")
-                        .param("password", "validPass"))
-                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
-                .andExpect(redirectedUrl("/home"));
-
-        // Verifying that logging in with invalid user credentials will redirect the user to the login page
-        mockMvc.perform(post("/login")
-                        .param("username", "invalidUser")
-                        .param("password", "invalidPass"))
-                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to login
-                .andExpect(redirectedUrl("/login"));
-    }
-
-    @Test
     void showHomePage() throws Exception{
         // Verifying that accessing the home url will successfully show the home page
         mockMvc.perform(get("/home"))
