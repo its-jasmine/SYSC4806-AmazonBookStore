@@ -24,6 +24,10 @@ class BookStoreControllerTest {
     @MockBean
     private AppUserRepository appUserRepository;
     @MockBean
+    private CustomerRepository customerRepository;
+    @MockBean
+    private AdminRepository adminRepository;
+    @MockBean
     private BookRepository bookRepository;
 
     @Test

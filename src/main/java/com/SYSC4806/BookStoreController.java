@@ -22,7 +22,11 @@ public class BookStoreController {
     @Autowired
     AppUserRepository userRepository;
     @Autowired
+    CustomerRepository customerRepository;
+    @Autowired
     BookRepository bookRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     /**
      * Handles the GET request to show the home page
