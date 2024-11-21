@@ -61,7 +61,7 @@ class BookStoreControllerTest {
                         .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numCopies)))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
-                .andExpect(redirectedUrl("/home"));
+                .andExpect(redirectedUrl("/inventory"));
 
         // Verify that the book with specified values is saved in the repository
         verify(bookRepository).save(argThat(b -> b.getISBN().equals(ISBN) &&
@@ -96,7 +96,7 @@ class BookStoreControllerTest {
                         .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numOfNewCopies)))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
-                .andExpect(redirectedUrl("/home"));
+                .andExpect(redirectedUrl("/inventory"));
 
         // Verify that the book’s stock count was updated
         verify(bookRepository).save(argThat(b -> b.getTitle().equals(title) &&
@@ -117,7 +117,7 @@ class BookStoreControllerTest {
         mockMvc.perform(post("/remove-books")
                         .param("ISBN", ISBN))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
-                .andExpect(redirectedUrl("/home"));
+                .andExpect(redirectedUrl("/inventory"));
 
         // Verify that the book’s stock count was updated
         verify(bookRepository).save(argThat(b -> b.getNumCopiesInStock() == 0));
