@@ -33,7 +33,19 @@ public class BookStoreController {
      * @return template name for home page
      */
     @GetMapping("/home")
-    public String showHomePage() {
+    public String showHomePage(Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            model.addAttribute("username", username); // Add username to model
+        }
+
+        model.addAttribute("genres", Book.Genre.values());
+
+        Iterable<Book> books = bookRepository.findTop10ByOrderByDateAddedDesc();
+        model.addAttribute("newReleases",books);
+
+        books = bookRepository.findTop10ByOrderByNumCopiesSoldDesc(); // top 10 best sellers
+        model.addAttribute("bestSellers", books);
         return "home-page";
     }
 
@@ -47,7 +59,7 @@ public class BookStoreController {
      * @return template name for home page
      */
     @GetMapping("/inventory")
-    public String showHomePage(Model model, HttpSession session) {
+    public String showInventoryPage(Model model, HttpSession session) {
         Iterable<Book> books = bookRepository.findAll();
         model.addAttribute("books",books);
 
@@ -88,7 +100,7 @@ public class BookStoreController {
         }
 
         bookRepository.save(bookToSave);
-        return "redirect:/home";
+        return "redirect:/inventory";
     }
 
     /**
@@ -112,7 +124,7 @@ public class BookStoreController {
             }
         }
 
-        return "redirect:/home";
+        return "redirect:/inventory";
     }
 
     /**

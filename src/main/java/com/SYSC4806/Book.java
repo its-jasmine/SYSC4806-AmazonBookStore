@@ -28,11 +28,6 @@ public class Book {
         SelfHelp;
     }
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Ensure you have the right strategy for your database
-    private Integer id;
-
-
-    // TODO get confirmation from team: I'm thinking ISBN could be used as the @Id instead?
     private String ISBN;
 
     private String title;
@@ -66,7 +61,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book [id=" + id + ", title=" + title + ", author=" + author + ", publisher=" + publisher +
+        return "Book [ ISBN=" + ISBN + ", title=" + title + ", author=" + author + ", publisher=" + publisher +
                 ", genre=" + genre + ", numCopiesInStock=" + numCopiesInStock + ", price=" + price + ", numCopiesSold=" + numCopiesSold +
                 ", dateAdded=" + dateAdded.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +"]";
 
@@ -99,13 +94,6 @@ public class Book {
     }
 
     // ############################################### Setters & Getters ###############################################
-
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getISBN() {
         return ISBN;

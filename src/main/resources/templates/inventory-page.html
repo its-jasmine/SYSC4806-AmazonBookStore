@@ -29,20 +29,27 @@
     <table>
         <thead>
         <tr>
+            <th>ISBN</th>
             <th>Title</th>
             <th>Author</th>
             <th>Publisher</th>
             <th>Genre</th>
             <th>Stock</th>
+            <th>Price</th>
+
         </tr>
         </thead>
+
         <tbody>
         <tr th:each="book : ${books}">
+            <td th:text="${book.getISBN()}">Title</td>
             <td th:text="${book.getTitle()}">Title</td>
             <td th:text="${book.getAuthor()}">Author</td>
             <td th:text="${book.getPublisher()}">Publisher</td>
             <td th:text="${book.getGenre()}">Genre</td>
-            <td th:text="${book.getNumCopies()}">Stock</td>
+            <td th:text="${book.getNumCopiesInStock()}">Stock</td>
+            <td th:text="${book.getPrice()}">Price</td>
+
         </tr>
         </tbody>
     </table>

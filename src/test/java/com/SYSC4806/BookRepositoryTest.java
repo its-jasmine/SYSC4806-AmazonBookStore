@@ -23,7 +23,7 @@ public class BookRepositoryTest {
         book = bookRepository.save(book);
 
         // Act
-        Optional<Book> retrievedBook = bookRepository.findById(book.getId());
+        Optional<Book> retrievedBook = bookRepository.findByISBN(book.getISBN());
 
         // Assert
         assertTrue(retrievedBook.isPresent());
