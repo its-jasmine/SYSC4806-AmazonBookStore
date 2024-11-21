@@ -12,12 +12,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 
-@WebMvcTest
+@WebMvcTest(BookCatalogController.class)
 public class BookStoreCatalogControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private AppUserRepository appUserRepository;
+    private CustomerRepository customerRepository;
+    @MockBean
+    private AdminRepository adminRepository;
 
     @MockBean
     private BookRepository bookRepository;
