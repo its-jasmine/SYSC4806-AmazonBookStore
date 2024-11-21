@@ -6,7 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
+import org.springframework.context.annotation.Profile;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -23,22 +25,25 @@ public class Main {
     }
 
     @Bean
+    @Profile("!test") // This bean will not run when the "test" profile is active
     public CommandLineRunner demo(BookRepository bookRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
         return (args) -> {
-
-            Book[] demoBooks = {
-                    new Book("Book1", "author1", "pub1", "mystery", 1),
-                    new Book("Book2", "author2", "pub2", "fantasy", 4),
-                    new Book("Book3", "author3", "pub3", "horror", 6),
-                    new Book("Book4", "author4", "pub4", "romance", 2),
-                    new Book("Book5", "author5", "pub5", "science fiction", 5),
-                    new Book("Book6", "author6", "pub6", "thriller", 3),
-                    new Book("Book7", "author7", "pub7", "mystery", 7),
-                    new Book("Book8", "author8", "pub8", "fantasy", 8),
-                    new Book("Book9", "author9", "pub9", "horror", 4),
-                    new Book("Book10", "author10", "pub10", "non-fiction", 10)
-            };
-            bookRepository.saveAll(Arrays.asList(demoBooks));
+            // Generating 100 random books to populate the book store
+            // Bounds were selected such that some books may have the same author, publisher, and/or genre.
+            // Book names however, are all unique (however this isn't strictly required by the system, i.e., the combination of all book values is what must be unique)
+            Random random = new Random();
+            List<Book> demoBooks = new ArrayList<>();
+            Book.Genre[] genres = Book.Genre.values();
+            int baseISBN = 1000000000;
+            double cents = 0.99;
+            Book demoBook;
+            for (int i = 0; i<100; i++) {
+                demoBook = new Book((baseISBN+i)+"","Book" + i, "author" + random.nextInt(90), "pub" + random.nextInt(5), cents + ((random.nextInt(40) + 10)),genres[random.nextInt(genres.length)], random.nextInt(100));
+                demoBook.setNumCopiesSold(random.nextInt(10000));
+                demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
+                demoBooks.add(demoBook);
+            }
+            demoBooks.forEach(book -> bookRepository.save(book));
 
             // Fetch all books
             log.info("Books found with findAll():");
@@ -58,6 +63,12 @@ public class Main {
             log.info("Buddy found with findByName('Book1'):");
             log.info("--------------------------------------------");
             bookRepository.findByTitle("Book1").forEach(book -> log.info(book.toString()));
+            log.info("");
+
+            // Fetch top 10 best seller books
+            log.info("Top 10 Bestseller Books found with findTop10ByOrderByNumCopiesSoldDesc():");
+            log.info("-------------------------------");
+            bookRepository.findTop10ByOrderByNumCopiesSoldDesc().forEach(book -> log.info(book.toString()));
             log.info("");
 
 

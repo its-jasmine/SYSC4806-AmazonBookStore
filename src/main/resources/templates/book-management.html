@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookstore Management</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
     <style>
 
         body {
@@ -50,6 +52,33 @@
         button:hover {
             background-color: royalblue;
         }
+        select {
+            width: 100%; /* Full-width to match other inputs */
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #fff; /* White background */
+            font-size: 1em; /* Consistent font size */
+            font-family: Cambria, sans-serif; /* Match form styles */
+            appearance: none; /* Removes the default browser arrow */
+            background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"%3E%3Cpath fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 10px;
+            cursor: pointer; /* Pointer cursor for better UX */
+        }
+
+        select:hover {
+            border-color: #888; /* Slightly darker border on hover */
+        }
+
+        select:focus {
+            border-color: cornflowerblue; /* Blue outline on focus */
+            outline: none; /* Remove default focus outline */
+            box-shadow: 0 0 5px rgba(100, 149, 237, 0.5); /* Subtle glow */
+        }
+
     </style>
 </head>
 <body>
@@ -59,6 +88,10 @@
 <div class="form-container">
     <h2>Add New Book</h2>
     <form id="addBookForm" action="/books" method="POST">
+        <div class="form-group">
+            <label for="ISBN">ISBN:</label>
+            <input type="text" id="ISBN" name="ISBN" required>
+        </div>
         <div class="form-group">
             <label for="title">Book Title:</label>
             <input type="text" id="title" name="title" required>
@@ -73,11 +106,18 @@
         </div>
         <div class="form-group">
             <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre" required>
+            <select id = "genre" name="genre" required>
+                <option value="" disabled selected>Select a genre</option>
+                <option th:each="genre : ${genres}" th:value="${genre}" th:text="${genre.name()}"></option>
+            </select>
         </div>
         <div class="form-group">
             <label for="numCopies">Stock Quantity:</label>
             <input type="number" id="numCopies" name="numCopies" required>
+        </div>
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" required>
         </div>
         <button type="submit">Add Book</button>
     </form>
@@ -87,12 +127,8 @@
     <h2>Remove Book</h2>
     <form id="removeBookForm" action="/remove-books" method="POST">
         <div class="form-group">
-            <label for="removeTitle">Book Title:</label>
-            <input type="text" id="removeTitle" name="title" required>
-        </div>
-        <div class="form-group">
-            <label for="removeAuthor">Author:</label>
-            <input type="text" id="removeAuthor" name="author" required>
+            <label for="removeISBN">Book ISBN:</label>
+            <input type="text" id="removeISBN" name="ISBN" required>
         </div>
         <button type="submit">Remove Book</button>
     </form>
