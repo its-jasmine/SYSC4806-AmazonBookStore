@@ -2,10 +2,12 @@ package com.SYSC4806;
 
 import jakarta.persistence.*;
 
-import java.text.DateFormat;
+
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.Objects;
+
 
 @Entity
 @Table(
@@ -172,6 +174,31 @@ public class Book {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    /**
+     * Checks if two Books are equal
+     * @param o the other book to compare to
+     * @return if they are equal or not
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equals(title, book.title) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(publisher, book.publisher) &&
+                Objects.equals(genre, book.genre);
+    }
+
+    /**
+     * Override the hashing function for Book
+     * @return integer hash of Book
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, author, publisher, genre);
     }
 
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazing Bookstore</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+<header>
+    <img src="/images/book-logo.png" alt="Bookstore Logo">
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <div class="cart" th:href="@{/cart}">
+            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <h1>Welcome to the Amazing Amazon Bookstore!</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Genre</th>
+            <th>Stock</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.getTitle()}">Title</td>
+            <td th:text="${book.getAuthor()}">Author</td>
+            <td th:text="${book.getPublisher()}">Publisher</td>
+            <td th:text="${book.getGenre()}">Genre</td>
+            <td th:text="${book.getNumCopies()}">Stock</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+
+</body>
+</html>
+

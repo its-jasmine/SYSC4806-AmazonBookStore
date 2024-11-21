@@ -2,15 +2,15 @@ package com.SYSC4806;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
 
 @SpringBootApplication
 public class Main {
@@ -19,9 +19,14 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
+    private Book getBookById(Integer id, BookRepository bookRepository) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Book with ID " + id + " not found"));
+    }
+
     @Bean
     @Profile("!test") // This bean will not run when the "test" profile is active
-    public CommandLineRunner demo(BookRepository bookRepository, AppUserRepository userRepository) {
+    public CommandLineRunner demo(BookRepository bookRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
         return (args) -> {
             // Generating 100 random books to populate the book store
             // Bounds were selected such that some books may have the same author, publisher, and/or genre.
@@ -38,7 +43,6 @@ public class Main {
                 demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
                 demoBooks.add(demoBook);
             }
-
             demoBooks.forEach(book -> bookRepository.save(book));
 
             // Fetch all books
@@ -50,7 +54,7 @@ public class Main {
             // Fetch an individual book  by ID
             bookRepository.findById(2).ifPresent(book -> {
                 log.info("Book found with findById(2):");
-                log.info("--------------------------------");
+                log.info("---------------------------------");
                 log.info(book.toString());
                 log.info("");
             });
@@ -69,16 +73,51 @@ public class Main {
 
 
             ////////////////////////////////////////////////////////////////////////////////////
-            AppUser[] demoAdminAccounts = {
+            Admin[] demoAdminAccounts = {
                     new Admin("admin1", "password"),
                     new Admin("admin2", "password1")
 
             };
             Customer[] demoCustomerAccounts = {
                     new Customer("customer1", "password2"),
-                    new Customer("customer2", "password3")
+                    new Customer("customer2", "password3"),
+                    new Customer("customer3", "password4")
             };
-            Arrays.stream(demoAdminAccounts).forEach(account -> userRepository.save(account));
+
+            try {
+                demoCustomerAccounts[0].addToHistory(getBookById(1, bookRepository));
+                demoCustomerAccounts[0].addToHistory(getBookById(2, bookRepository));
+                demoCustomerAccounts[0].addToHistory(getBookById(4, bookRepository));
+                demoCustomerAccounts[0].addToHistory(getBookById(6, bookRepository));
+
+                demoCustomerAccounts[1].addToHistory(getBookById(1, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(3, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(4, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(6, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(7, bookRepository));
+                demoCustomerAccounts[1].addToHistory(getBookById(9, bookRepository));
+
+                demoCustomerAccounts[2].addToHistory(getBookById(2, bookRepository));
+                demoCustomerAccounts[2].addToHistory(getBookById(3, bookRepository));
+                demoCustomerAccounts[2].addToHistory(getBookById(6, bookRepository));
+                demoCustomerAccounts[2].addToHistory(getBookById(10, bookRepository));
+            } catch (IllegalStateException e) {
+                System.out.println(e.getMessage()); // Log missing book
+            }
+
+            //test recommendation
+            BookRecommendation bookRecommendation = new BookRecommendation(Arrays.stream(demoCustomerAccounts).toList());
+            log.info("These are recommendations for customer 1");
+            for (Book book: demoCustomerAccounts[0].getPurchaseHistory()) {
+                log.info(book.toString());
+            }
+            log.info("should be 3 7 9");
+            for (Book book: bookRecommendation.getRecommendation(demoCustomerAccounts[0])) {
+                log.info(book.toString());
+            }
+
+            adminRepository.saveAll(Arrays.asList(demoAdminAccounts));
+
 
             /* // TODO when saving customer books works properly (currently, it causes an error because it tries to save book again)
             List<Book> books = Arrays.asList(demoBooks[0], demoBooks[1]);
@@ -89,16 +128,24 @@ public class Main {
             customer = demoCustomerAccounts[1];
             customer.setBooks(books);*/
 
-            Arrays.stream(demoCustomerAccounts).forEach(account -> userRepository.save(account));
+//            customerRepository.save(demoCustomerAccounts[0]);
+            customerRepository.saveAll(Arrays.asList(demoCustomerAccounts));
+
 
             // Fetch all users
-            log.info("User found with findAll():");
+            log.info("Customers found with findAll():");
             log.info("-------------------------------");
-            userRepository.findAll().forEach(user-> log.info(user.toString()));
+            customerRepository.findAll().forEach(user-> log.info(user.toString()));
+            log.info("");
+
+            // Fetch all users
+            log.info("Admins found with findAll():");
+            log.info("-------------------------------");
+            adminRepository.findAll().forEach(user-> log.info(user.toString()));
             log.info("");
 
             // Fetch an individual user by ID
-            userRepository.findById(2).ifPresent(user-> {
+            adminRepository.findById(2).ifPresent(user-> {
                 log.info("User found with findById(2):");
                 log.info("--------------------------------");
                 log.info(user.toString());
@@ -108,9 +155,17 @@ public class Main {
             // Fetch user by name
             log.info("user found with findByUsername('admin1'):");
             log.info("--------------------------------------------");
-            Optional<AppUser> user = userRepository.findByUsername("admin1");
+            Optional<Admin> user = adminRepository.findAdminByUsername("admin1");
             if (user.isPresent()) {
                 log.info(user.get().toString());
+                log.info("");
+            }
+
+            log.info("user found with findByUsername('customer1'):");
+            log.info("--------------------------------------------");
+            Optional<Customer> user2 = customerRepository.findCustomerByUsername("customer1");
+            if (user2.isPresent()) {
+                log.info(user2.get().toString());
                 log.info("");
             }
         };

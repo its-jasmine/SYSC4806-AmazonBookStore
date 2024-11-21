@@ -1,37 +1,51 @@
 package com.SYSC4806;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Customer extends AppUser {
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "purchase_history",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Book> purchaseHistory;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Book> books;
-
+    /**
+     * Constructor for Customer
+     */
     public Customer(){
         super();
+        purchaseHistory = new ArrayList<>();
     }
+
+    /**
+     * Constructor for Customer
+     * @param username of Customer
+     * @param password of Customer
+     */
     public Customer(String username, String password) {
         super(username, password);
+        purchaseHistory = new ArrayList<>();
     }
 
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    /**
+     * Adds a book to the purchase history
+     * @param book to add to purchase history
+     */
+    public void addToHistory(Book book) {
+        this.purchaseHistory.add(book);
     }
 
-    public List getBooks() {
-        return books;
+    /**
+     * @return the customer's purchase history
+     */
+    public List<Book> getPurchaseHistory() {
+        return purchaseHistory;
     }
 
-    public void addBook(Book book) {
-        books.add(book);
-    }
-
-    public void removeBook(Book book) {
-        books.remove(book);
-    }
 }

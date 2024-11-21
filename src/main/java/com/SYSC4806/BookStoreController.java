@@ -1,5 +1,6 @@
 package com.SYSC4806;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,43 +21,24 @@ public class BookStoreController {
     @Autowired
     AppUserRepository userRepository;
     @Autowired
+    CustomerRepository customerRepository;
+    @Autowired
     BookRepository bookRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     /**
-     * Handles the GET request to display the login page.
+     * Handles the GET request to show the home page
      *
-     * Returns the name of the template for the login page, allowing the user
-     * to enter their credentials.
-     *
-     * @return template name for the login page
+     * @return template name for home page
      */
-    @GetMapping("/login")
-    public String showLoginPage() {return "login-page";}
-
-
-    /**
-     * Handles the POST request for user login by verifying the provided credentials.
-     *
-     * Retrieves the user by username, checks if the provided password matches,
-     * and redirects to the home page if successful. If the login fails, it redirects back
-     * to the login page.
-     *
-     * @param username The username entered by the user.
-     * @param password The password entered by the user.
-     * @return redirect to the home page if login is successful; otherwise, redirect to the login page.
-     */
-    @PostMapping("/login")
-    public String login(@RequestParam(name="username")String username, @RequestParam(name="password")String password) {
-
-        Optional<AppUser> user = userRepository.findByUsername(username);
-        if (user.isPresent() && password.equals(user.get().getPassword())) {
-            return "redirect:/home"; // redirects to home page of
-        }
-        return "redirect:/login";
+    @GetMapping("/home")
+    public String showHomePage() {
+        return "home-page";
     }
 
     /**
-     * Handles the GET request to show the home page, which displays a list of all books.
+     * Handles the GET request to show the inventory page, which displays a list of all books.
      *
      * Retrieves all books from the repository and adds them to the model
      * to be displayed on the home page.
@@ -64,11 +46,16 @@ public class BookStoreController {
      * @param model the Model object to hold attributes for the view
      * @return template name for home page
      */
-    @GetMapping("/home")
-    public String showHomePage(Model model) {
+    @GetMapping("/inventory")
+    public String showHomePage(Model model, HttpSession session) {
         Iterable<Book> books = bookRepository.findAll();
         model.addAttribute("books",books);
-        return "home-page";
+
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            model.addAttribute("username", username); // Add username to model
+        }
+        return "inventory-page";
     }
 
     /**
