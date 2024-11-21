@@ -22,6 +22,10 @@ public class LoginControllerTest {
 
     @MockBean
     private BookRepository bookRepository;
+    @MockBean
+    private CustomerRepository customerRepository;
+    @MockBean
+    private AdminRepository adminRepository;
 
     @MockBean
     private LoginService loginService;

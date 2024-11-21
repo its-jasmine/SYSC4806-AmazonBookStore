@@ -6,10 +6,13 @@ import java.util.Optional;
 
 @Service
 public class LoginService {
-    final AppUserRepository userRepository;
+    final AdminRepository adminRepository;
 
-    public LoginService(AppUserRepository userRepository) {
-        this.userRepository = userRepository;
+    final CustomerRepository customerRepository;
+
+    public LoginService(AdminRepository adminRepository, CustomerRepository customerRepository) {
+        this.adminRepository = adminRepository;
+        this.customerRepository = customerRepository;
     }
 
     /**
@@ -19,10 +22,16 @@ public class LoginService {
      * @return true if the credentials are valid, false otherwise.
      */
     public boolean authenticate(String username, String password) {
-        Optional<AppUser> user = userRepository.findByUsername(username);
-        if (user.isPresent() && password.equals(user.get().getPassword())) {
+        Optional<Admin> admin = adminRepository.findAdminByUsername(username);
+        if (admin.isPresent() && password.equals(admin.get().getPassword())) {
             return true;
         }
+
+        Optional<Customer> customer = customerRepository.findCustomerByUsername(username);
+        if (customer.isPresent() && password.equals(customer.get().getPassword())) {
+            return true;
+        }
+
         return false;
     }
 
