@@ -27,20 +27,21 @@ public class BookRecommendation {
         for (Customer user2 : users) {
             Set<Book> books2 = new HashSet<>(user2.getPurchaseHistory());
             double jaccardDist = (double) intersectionSize(books1, books2) / unionSize(books1, books2);
-            recs.put(user2, (1.0 - jaccardDist));
+            if ((jaccardDist != 1.0) && (jaccardDist != 0.0))
+                recs.put(user2, (1.0 - jaccardDist));
         }
 
         List<Customer> similarUsers = recs.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue())
+                .sorted((Map.Entry.comparingByValue()))
                 .map(Map.Entry::getKey)
                 .toList();
 
         //take the top 3 users that have the most matching book and recommend
         Set<Book> recommendedBooks = new HashSet<>();
-        for (int i = 0; i < 3; i++) {
+        int recSize = Math.min(similarUsers.size(), 5);
+        for (int i = 0; i < recSize; i++) {
             recommendedBooks.addAll(similarUsers.get(i).getPurchaseHistory());
         }
-
         user.getPurchaseHistory().forEach(recommendedBooks::remove);
 
         return new ArrayList<>(recommendedBooks);
