@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
+        /* General Styles */
         body {
             font-family: Cambria, sans-serif;
             margin: 0;
@@ -21,95 +22,6 @@
             font-size: 2em;
         }
 
-        .catalog-section h1 {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
-
-
-        /* Carousel */
-        .book-carousel {
-            display: flex;
-            position: relative;
-            max-width: 90%; /* Adjust as needed */
-            margin: 0 auto;
-        }
-
-        .arrow {
-            background-color: cornflowerblue;
-            color: white;
-            border: none;
-            font-size: 2rem;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .arrow:hover {
-            opacity: 1;
-            background-color: cornflowerblue;
-        }
-
-        .arrow.left {
-            left: 0;
-        }
-
-        .arrow.right {
-            right: 0;
-        }
-
-        .books-container {
-            display: flex;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            gap: 10px;
-            padding: 10px 0;
-            max-width: 100%;
-            white-space: nowrap;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none; /* Hides scrollbar in Firefox */
-
-        }
-
-        .genres-container {
-            display: flex;
-            flex-wrap: wrap;
-            max-width: 100%;
-            justify-content: center;
-        }
-
-        .browse-card {
-            display: inline-block;
-            text-align: center;
-            background-color: white;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            width: 150px;
-            flex-shrink: 0; /* Prevents items from shrinking */
-            scroll-snap-align: start;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .browse-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            border: 1px solid #87ceeb; /* Slight border highlight on hover */
-            color: #0b37ad;
-            font-weight: bold;
-        }
-
-        /* Header */
         header {
             background-color: cornflowerblue;
             color: white;
@@ -137,17 +49,129 @@
             cursor: pointer;
             font-size: 1em;
         }
-        button {
-            padding: 10px 15px;
+
+        /* Catalog Sections */
+        .catalog-sections-container {
+            margin: 20px;
+        }
+
+        .catalog-section h1 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        /* Browse Cards */
+        .browse-card {
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            border: none;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            width: 150px;
+            flex-shrink: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit; /* Inherits from body */
+        }
+
+        .browse-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid #87ceeb;
+            background-color: #f0f8ff;
+            color: #0b37ad;
+            font-weight: bold;
+        }
+
+        .browse-card img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+
+        .genres-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Carousels */
+        .book-carousel {
+            display: flex;
+            position: relative;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+
+        .books-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 10px;
+            padding: 10px 0;
+            white-space: nowrap;
+            scroll-snap-type: x mandatory;
+        }
+
+        .books-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .books-container {
+            scrollbar-width: none; /* Hides scrollbar in Firefox */
+        }
+
+        /* Arrow Buttons */
+        .arrow {
             background-color: cornflowerblue;
-            color: #000000;
+            color: white;
             border: none;
             border-radius: 5px;
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
             cursor: pointer;
-            font-family: Cambria, sans-serif;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0.8;
+            transition: opacity 0.2s;
         }
-        button:hover {
-            background-color: #f0f8ff; /* Light blue color for hover effect */
+
+        .arrow:hover {
+            opacity: 1;
+        }
+
+        .arrow.left {
+            left: 0;
+        }
+
+        .arrow.right {
+            right: 0;
+        }
+
+        /* Forms Inside Browse Cards */
+        .item-display form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border: none;
+        }
+
+        .item-display button {
+            all: unset;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border-radius: inherit;
         }
 
     </style>
@@ -219,11 +243,20 @@
         <div class="book-carousel">
             <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
             <div class="books-container">
-                <button class="browse-card item-display" th:each="book : ${newReleases}">
-                    <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
-                    <p th:text="${book.getTitle()}"></p>
-                    <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                </button>
+                <form
+                        class="browse-card item-display"
+                        th:each="book : ${newReleases}"
+                        th:action="@{/book-details}"
+                        method="get">
+                    <!-- ISBN as a hidden input field -->
+                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                    <!-- Display book image and details -->
+                    <button type="submit" class="item-display-button">
+                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+                        <p th:text="${book.getTitle()}"></p>
+                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                    </button>
+                </form>
             </div>
             <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
         </div>
@@ -234,11 +267,20 @@
         <div class="book-carousel">
             <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
             <div class="books-container">
-                <button class="browse-card item-display" th:each="book : ${bestSellers}">
-                    <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
-                    <p th:text="${book.getTitle()}"></p>
-                    <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                </button>
+                <form
+                        class="browse-card item-display"
+                        th:each="book : ${bestSellers}"
+                        th:action="@{/book-details}"
+                        method="get">
+                    <!-- ISBN as a hidden input field -->
+                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                    <!-- Display book image and details -->
+                    <button type="submit" class="item-display-button">
+                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+                        <p th:text="${book.getTitle()}"></p>
+                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                    </button>
+                </form>
             </div>
             <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
         </div>

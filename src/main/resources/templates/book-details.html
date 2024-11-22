@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Amazing Bookstore</title>
+</head>
+<body>
+<p>I am a book details page with an add to cart button!</p>
+<p> I reference a book with these details</p>
+<p th:text="${book.getTitle()}">Title</p>
+<p th:text="${book.getAuthor()}">Author</p>
+<p th:text="${book.getPublisher()}">Publisher</p>
+<p th:text="${book.getGenre()}">Genre</p>
+<p th:text="${book.getNumCopiesInStock()}">Stock</p>
+</body>
+</html>

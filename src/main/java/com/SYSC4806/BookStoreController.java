@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -138,5 +139,20 @@ public class BookStoreController {
     public String showBookManagementPage(Model model) {
         model.addAttribute("genres", Book.Genre.values());
         return "book-management";
+    }
+    /**
+     * Handles the GET request to show page with the details for a selected book and allow user to add to cart.
+     *
+     * @return template name for book-details
+     */
+    @GetMapping("/book-details")
+    public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, Model model) {
+        Optional<Book> book = bookRepository.findByISBN(ISBN);
+        if (book.isPresent()) {
+            model.addAttribute("book", book.get());
+            return "book-details";
+        }
+        return "home-page";
+
     }
 }
