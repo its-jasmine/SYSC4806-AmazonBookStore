@@ -138,7 +138,7 @@ class BookStoreControllerTest {
         Book book = new Book(ISBN, "Some Title", "Some Author", "Some Publisher", 19.99, Book.Genre.Fiction, 1);
         when(bookRepository.findByISBN("1234567890")).thenReturn(Optional.of(book));
 
-        // Verifying that accessing the book management url will successfully show the book management page
+        // Verifying that accessing the book details url will successfully show the book details page
         mockMvc.perform(get("/book-details").param("ISBN", ISBN))
                 .andExpect(status().isOk())
                 .andExpect(view().name("book-details"));
