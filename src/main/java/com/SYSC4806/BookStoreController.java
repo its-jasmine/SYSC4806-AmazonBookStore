@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -86,25 +87,25 @@ public class BookStoreController {
     public String addBook(@RequestParam(name="ISBN")String ISBN, @RequestParam(name="title")String title,
                           @RequestParam(name="author")String author, @RequestParam(name="publisher")String publisher,
                           @RequestParam(name="price")double price, @RequestParam(name="genre") Book.Genre genre,
-                          @RequestParam(name="numCopies")int numCopies) { // TODO make use of form object
+                          @RequestParam(name="numCopies")int numCopies, RedirectAttributes redirectAttributes) { // TODO make use of form object
 
         // Find the book by title and author, if exists simply update copies
         Optional<Book> book = bookRepository.findByISBN(ISBN);
         Book bookToSave;
-        if (book.isPresent()){
-            Book existingBook = book.get();
-            existingBook.setNumCopiesInStock(existingBook.getNumCopiesInStock() + numCopies);
-            bookToSave = existingBook;
-        } else {
-            bookToSave = new Book(ISBN,title, author, publisher, price, genre, numCopies);
+
+        if (book.isPresent()) {
+            // If the book exists, add a flash message and redirect
+            redirectAttributes.addFlashAttribute("errorMessage", "Book already exists in the inventory.");
+            return "redirect:/book-management";
         }
 
+        bookToSave = new Book(ISBN, title, author, publisher, price, genre, numCopies);
         bookRepository.save(bookToSave);
         return "redirect:/inventory";
     }
 
     /**
-     * Handles the DELETE request to remove a book by its ID.
+     * Handles the POST request to remove a book by its ID.
      *
      * Deletes the book with the specified ID from the repository
      * and then redirects to the home page.
@@ -113,17 +114,39 @@ public class BookStoreController {
      * @return redirect to home page template
      */
     @PostMapping("/remove-books")
-    public String removeBook(@RequestParam(name="ISBN") String ISBN) {
+    public String removeBook(@RequestParam(name="ISBN") String ISBN, RedirectAttributes redirectAttributes) {
         // Find the book by title and author and delete it if exists
         Optional<Book> bookToRemove = bookRepository.findByISBN(ISBN);
         if (bookToRemove.isPresent()) {
-            Book book = bookToRemove.get();
-            if (book.getNumCopiesInStock() > 0) {
-                book.setNumCopiesInStock(book.getNumCopiesInStock() - 1);
-                bookRepository.save(book);
-            }
+            bookRepository.delete(bookToRemove.get());
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Book not found, cannot remove.");
+            return "redirect:/book-management";
         }
+        return "redirect:/inventory";
+    }
 
+    /**
+     * Handles the POST request to update a book by its ID.
+     *
+     * Updates the book with the specified ID from the repository
+     *
+     * @param ISBN The ISBN of the book to be updated
+     * @return inventory page
+     */
+    @PostMapping("/update-books")
+    public String updateBook(@RequestParam(name="ISBN") String ISBN, @RequestParam(name="numCopies")int numCopies,
+                             RedirectAttributes redirectAttributes) {
+        // Find the book by title and author and delete it if exists
+        Optional<Book> book = bookRepository.findByISBN(ISBN);
+        if (book.isPresent()) {
+            Book existingBook = book.get();
+            existingBook.setNumCopiesInStock(numCopies);
+            bookRepository.save(existingBook);
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Book not found, cannot remove.");
+            return "redirect:/book-management";
+        }
         return "redirect:/inventory";
     }
 
