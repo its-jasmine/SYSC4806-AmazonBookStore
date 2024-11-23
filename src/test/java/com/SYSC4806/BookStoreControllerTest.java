@@ -16,6 +16,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.mockito.Mockito.never;
+import static org.mockito.ArgumentMatchers.any;
+
 @ActiveProfiles("test") // Activates the "test" profile for this test class
 @WebMvcTest(BookStoreController.class)
 class BookStoreControllerTest {
@@ -95,16 +98,11 @@ class BookStoreControllerTest {
                         .param("price", price + "")
                         .param("genre", genre.name())
                         .param("numCopies", String.valueOf(numOfNewCopies)))
-                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
-                .andExpect(redirectedUrl("/inventory"));
+                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to book management
+                .andExpect(redirectedUrl("/book-management"));
 
-        // Verify that the book’s stock count was updated
-        verify(bookRepository).save(argThat(b -> b.getTitle().equals(title) &&
-                b.getAuthor().equals(author) &&
-                b.getPublisher().equals(publisher) &&
-                b.getPrice() == price &&
-                b.getGenre().equals(genre) &&
-                b.getNumCopiesInStock() == (existingNumCopies + numOfNewCopies)));
+        // Verify that no save calls were made
+        verify(bookRepository, never()).save(any(Book.class));
     }
 
     @Test
@@ -120,7 +118,7 @@ class BookStoreControllerTest {
                 .andExpect(redirectedUrl("/inventory"));
 
         // Verify that the book’s stock count was updated
-        verify(bookRepository).save(argThat(b -> b.getNumCopiesInStock() == 0));
+        verify(bookRepository).delete(book);
 
 
     }

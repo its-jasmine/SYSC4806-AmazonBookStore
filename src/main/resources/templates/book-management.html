@@ -79,12 +79,54 @@
             box-shadow: 0 0 5px rgba(100, 149, 237, 0.5); /* Subtle glow */
         }
 
+        .alert {
+            padding: 10px;
+            background-color: darkred;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .closebtn:hover {
+            color: white;
+        }
+
     </style>
 </head>
 <body>
 
-<h1>Bookstore Management</h1>
+<header>
+    <img src="/images/book-logo.png" alt="Bookstore Logo">
 
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+        <a th:href="@{/inventory}">Inventory</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <div class="cart" th:href="@{/cart}">
+            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+        </div>
+    </div>
+</header>
+<div th:if="${errorMessage}" class="alert">
+    <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <p th:text="${errorMessage}"></p>
+</div>
+<h1>Bookstore Management</h1>
 <div class="form-container">
     <h2>Add New Book</h2>
     <form id="addBookForm" action="/books" method="POST">
@@ -134,6 +176,24 @@
     </form>
 </div>
 
+<div class="form-container">
+    <h2>Update Book</h2>
+    <form id="updateBookForm" action="/update-books" method="POST">
+        <div class="form-group">
+            <label for="updateISBN">Book ISBN:</label>
+            <input type="text" id="updateISBN" name="ISBN" required>
+        </div>
+        <div class="form-group">
+            <label for="updateNumCopies">New Stock:</label>
+            <input type="number" id="updateNumCopies" name="numCopies" required>
+        </div>
+        <button type="submit">Update Stock</button>
+    </form>
+</div>
+
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
 
 </body>
 </html>
