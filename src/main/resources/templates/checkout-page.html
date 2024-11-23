@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+    <script>
+        function validateForm(event) {
+            const cardNumber = document.getElementById("cardNumber").value;
+            const expiry = document.getElementById("expirationDate").value;
+            const cvv = document.getElementById("cvv").value;
+
+            const cardNumberRegex = /^\d{12}$/; // Exactly 12 digits
+            const expiryRegex = /^(0[1-9]|1[0-2])\/([0-2][0-9]|3[01])$/; // MM/DD
+            const cvvRegex = /^\d{3}$/; // Exactly 3 digits
+
+            if (!cardNumberRegex.test(cardNumber)) {
+                alert("Card number must be exactly 12 digits.");
+                event.preventDefault();
+                return false;
+            }
+
+            if (!expiryRegex.test(expiry)) {
+                alert("Expiration date must be in MM/DD format with valid month and day.");
+                event.preventDefault();
+                return false;
+            }
+
+            if (!cvvRegex.test(cvv)) {
+                alert("CVV must be exactly 3 digits.");
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+<h1>Checkout</h1>
+
+<form action="/checkout" method="post" onsubmit="return validateForm(event)">
+    <h2>Items in Your Cart:</h2>
+    <!-- Dynamically generated list of cart items -->
+    <div>
+        <label>
+            <input type="checkbox" name="bookIds" value="1" checked> Book 1 (Quantity: 2)
+        </label><br>
+        <label>
+            <input type="checkbox" name="bookIds" value="2" checked> Book 2 (Quantity: 1)
+        </label><br>
+        <label>
+            <input type="checkbox" name="bookIds" value="3" checked> Book 3 (Quantity: 3)
+        </label><br>
+    </div>
+
+    <h2>Payment Information</h2>
+    <label>
+        Credit Card Number:
+        <input type="text" id="cardNumber" name="cardNumber" pattern="\d{12}" title="Card number must be exactly 12 digits" required>
+    </label><br>
+    <label>
+        Expiration Date (MM/DD):
+        <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/DD" title="Expiration date must be in MM/DD format" required>
+    </label><br>
+    <label>
+        CVV:
+        <input type="text" id="cvv" name="cvv" pattern="\d{3}" title="CVV must be exactly 3 digits" required>
+    </label><br>
+
+    <button type="submit">Complete Purchase</button>
+</form>
+
+<!-- Display errors if necessary -->
+<div style="color: red;">
+    <!-- Dynamically show errors -->
+    <p th:if="${error}" th:text="${error}"></p>
+</div>
+</body>
+</html>
