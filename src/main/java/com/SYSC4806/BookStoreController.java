@@ -29,6 +29,8 @@ public class BookStoreController {
     @Autowired
     private AdminRepository adminRepository;
 
+    BookRecommendation recommendation;
+
     /**
      * Handles the GET request to show the home page
      *
@@ -48,6 +50,18 @@ public class BookStoreController {
 
         books = bookRepository.findTop10ByOrderByNumCopiesSoldDesc(); // top 10 best sellers
         model.addAttribute("bestSellers", books);
+
+        if (username != null) {
+            this.recommendation = new BookRecommendation((List<Customer>) customerRepository.findAll());
+            Customer customer = customerRepository.findCustomerByUsername(username).orElseThrow(
+                    () -> new RuntimeException("Customer not found")
+            );
+            System.out.println(recommendation.getRecommendation(customer));
+            System.out.println(((List<Customer>) customerRepository.findAll()).size());
+            model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
+            model.addAttribute("recommendation", recommendation.getRecommendation(customer));
+        }
+
         return "home-page";
     }
 
