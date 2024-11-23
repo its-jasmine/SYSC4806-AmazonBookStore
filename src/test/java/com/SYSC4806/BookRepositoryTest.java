@@ -95,7 +95,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void testFindTop10ByOrderByDateAddedAsc() {
+    public void testFindTop10ByOrderByDateAddedDesc() {
         // Test parameters
         String baseTitle = "Book";
         int numberOfBooks = 11; // Total books to create
