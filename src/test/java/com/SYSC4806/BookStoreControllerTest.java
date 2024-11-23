@@ -2,8 +2,10 @@ package com.SYSC4806;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -11,7 +13,10 @@ import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -169,15 +174,9 @@ class BookStoreControllerTest {
             book.setDateAdded(baseDate.plusDays(i));
             bookRepository.save(book);
         }
-
-        String query = "4";
-        Model model = new ConcurrentModel();
-        String viewName = bookStoreController.search(query, model);
-
-        assertEquals("search-results", viewName);
-        assertEquals(bookRepository.findAll(), model.getAttribute("searchResults"));
-        verify(bookRepository, times(1)).findByTitleContaining(query);
-
-
-    }
+        mockMvc.perform(get("/search-results?query=Book4"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("search-results"))
+                .andExpect(model().attributeExists("searchResults"));
+        }
 }

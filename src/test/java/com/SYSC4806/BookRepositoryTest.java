@@ -163,4 +163,38 @@ public class BookRepositoryTest {
         // Assert
         assertFalse(book.isPresent());
     }
+
+    @Test
+    public void testFindByTitleContaining() {
+        // Test parameters
+        String baseTitle = "Book";
+        int numberOfBooks = 30; // Total books to create
+        int baseISBN = 1000000000;
+        LocalDateTime baseDate = LocalDateTime.now(); // Base date for "dateAdded"
+
+        // Prepare test data
+        for (int i = 1; i <= numberOfBooks; i++) {
+            Book book = new Book(
+                    (baseISBN+i)+"",
+                    baseTitle + i,
+                    "author",
+                    "publisher",
+                    19.99,
+                    Book.Genre.Fiction,
+                    1
+            );
+            // Set different "dateAdded" values
+            book.setDateAdded(baseDate.plusDays(i));
+            bookRepository.save(book);
+        }
+
+        List<Book> books = bookRepository.findByTitleContaining("7");
+
+        //assert
+        assertEquals(3, books.size());
+        for (Book book : books) {
+            assertTrue(book.getTitle().contains("7"));
+        }
+
+    }
 }
