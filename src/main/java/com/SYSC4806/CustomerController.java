@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 @Controller
 public class CustomerController {
     private final CustomerRepository customerRepository;
@@ -35,6 +37,10 @@ public class CustomerController {
             return "redirect:/login"; // Redirect to login if not logged in
         }
 
+        if (username != null) {
+            model.addAttribute("username", username); // Add username to model
+        }
+
         // Retrieve customer by username
         Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
         if (customer == null) {
@@ -56,23 +62,27 @@ public class CustomerController {
      * @return redirect to the cart page after removal.
      */
     @PostMapping("/cart/remove")
-    public String removeFromCart(@RequestParam("bookId") String bookISBN, @RequestParam("quantity") Integer quantity, HttpSession session) {
+    public String removeFromCart(@RequestParam("bookId") String bookId, HttpSession session) {
         String username = (String) session.getAttribute("username");
+
         if (username == null) {
             return "redirect:/login"; // Redirect to login if not logged in
         }
 
+        // Retrieve customer by username
         Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
-        if (customer != null) {
-            Book book = bookRepository.findByISBN(bookISBN).orElse(null);
-            if (book != null) {
-                customer.removeFromCart(book, quantity); // Remove or decrement quantity
-                customerRepository.save(customer); // Save updated customer
-            }
+        if (customer == null) {
+            return "redirect:/login"; // Redirect if customer not found
         }
 
-        return "redirect:/cart";
+        customer.removeFromCart(bookId);
+
+        customerRepository.save(customer); // Save the updated customer/cart
+
+
+        return "redirect:/cart"; // Redirect back to the cart page
     }
+
 
     /**
      * Add the requested book to the customer's cart
@@ -94,5 +104,38 @@ public class CustomerController {
         customerRepository.save(customer); // Persist changes to the cart
         return "redirect:/cart";
     }
+
+    @PostMapping("/cart/update")
+    public String updateCartQuantity(@RequestParam("bookId") String bookId,
+                                     @RequestParam("quantity") int quantity,
+                                     HttpSession session) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if not logged in
+        }
+
+        // Retrieve customer by username
+        Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
+        if (customer == null) {
+            return "redirect:/login"; // Redirect if customer not found
+        }
+
+        // Find the book in the cart and update its quantity
+        Map<Book, Integer> cart = customer.getCart();
+        Book bookToUpdate = cart.keySet()
+                .stream()
+                .filter(book -> book.getISBN().equals(bookId))
+                .findFirst()
+                .orElse(null);
+
+        if (bookToUpdate != null && quantity > 0) {
+            cart.put(bookToUpdate, quantity); // Update the quantity
+            customerRepository.save(customer); // Save the updated customer/cart
+        }
+
+        return "redirect:/cart"; // Redirect back to the cart page
+    }
+
 
 }

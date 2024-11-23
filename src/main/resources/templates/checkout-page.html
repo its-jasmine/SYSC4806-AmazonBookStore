@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Checkout</title>
     <script>
@@ -9,7 +9,7 @@
             const cvv = document.getElementById("cvv").value;
 
             const cardNumberRegex = /^\d{12}$/; // Exactly 12 digits
-            const expiryRegex = /^(0[1-9]|1[0-2])\/([0-2][0-9]|3[01])$/; // MM/DD
+            const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/; // MM/YY
             const cvvRegex = /^\d{3}$/; // Exactly 3 digits
 
             if (!cardNumberRegex.test(cardNumber)) {
@@ -19,7 +19,7 @@
             }
 
             if (!expiryRegex.test(expiry)) {
-                alert("Expiration date must be in MM/DD format with valid month and day.");
+                alert("Expiration date must be in MM/YY format.");
                 event.preventDefault();
                 return false;
             }
@@ -33,46 +33,109 @@
             return true;
         }
     </script>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures the body takes at least the full viewport height */
+        }
+
+        main {
+            flex-grow: 1; /* Ensures the content area grows to take available space */
+            padding-bottom: 50px; /* Adds space for footer */
+        }
+
+        footer {
+            margin-top: 20px;
+            background-color: orange;
+            text-align: center;
+            padding: 10px;
+        }
+
+        form {
+            margin-bottom: 50px; /* Adds margin to ensure space for footer */
+        }
+    </style>
 </head>
 <body>
-<h1>Checkout</h1>
+<header>
+    <img src="/images/book-logo.png" alt="Bookstore Logo">
 
-<form action="/checkout" method="post" onsubmit="return validateForm(event)">
-    <h2>Items in Your Cart:</h2>
-    <!-- Dynamically generated list of cart items -->
-    <div>
-        <label>
-            <input type="checkbox" name="bookIds" value="1" checked> Book 1 (Quantity: 2)
-        </label><br>
-        <label>
-            <input type="checkbox" name="bookIds" value="2" checked> Book 2 (Quantity: 1)
-        </label><br>
-        <label>
-            <input type="checkbox" name="bookIds" value="3" checked> Book 3 (Quantity: 3)
-        </label><br>
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+        <a th:href="@{/home}">Home</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+
+        <!-- Make the cart image clickable and navigate to the cart page -->
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
     </div>
+</header>
+
+
+<main>
+    <h1>Checkout</h1>
+
+    <h2>Items in Your Cart:</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Book Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Iterate through the cart items -->
+        <tr th:each="entry : ${cart}">
+            <td th:text="${entry.key.title}">Book Title</td>
+            <td th:text="${entry.key.author}">Author</td>
+            <td th:text="${entry.key.price}">Price</td>
+            <td th:text="${entry.value}">Quantity</td>
+            <td th:text="${entry.key.price * entry.value}">Subtotal</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Total Price: $<span th:text="${cartTotal}">0.00</span></h3>
 
     <h2>Payment Information</h2>
-    <label>
-        Credit Card Number:
-        <input type="text" id="cardNumber" name="cardNumber" pattern="\d{12}" title="Card number must be exactly 12 digits" required>
-    </label><br>
-    <label>
-        Expiration Date (MM/DD):
-        <input type="text" id="expirationDate" name="expirationDate" placeholder="MM/DD" title="Expiration date must be in MM/DD format" required>
-    </label><br>
-    <label>
-        CVV:
-        <input type="text" id="cvv" name="cvv" pattern="\d{3}" title="CVV must be exactly 3 digits" required>
-    </label><br>
+    <form action="/checkout" method="post" onsubmit="return validateForm(event)">
+        <input type="hidden" name="bookIds" th:value="${#strings.listJoin(cart.keySet(), ',')}">
+        <label>
+            Credit Card Number:
+            <input type="text" id="cardNumber" name="cardNumber" pattern="\d{12}" title="Card number must be exactly 12 digits" required>
+        </label><br>
+        <label>
+            Expiration Date (MM/YY):
+            <input type="text" id="expirationDate" name="expiry" placeholder="MM/YY" title="Expiration date must be in MM/YY format" required>
+        </label><br>
+        <label>
+            CVV:
+            <input type="text" id="cvv" name="cvv" pattern="\d{3}" title="CVV must be exactly 3 digits" required>
+        </label><br>
+        <button type="submit">Complete Purchase</button>
+    </form>
 
-    <button type="submit">Complete Purchase</button>
-</form>
+    <!-- Display errors if necessary -->
+    <div style="color: red;">
+        <p th:if="${error}" th:text="${error}"></p>
+    </div>
+</main>
 
-<!-- Display errors if necessary -->
-<div style="color: red;">
-    <!-- Dynamically show errors -->
-    <p th:if="${error}" th:text="${error}"></p>
-</div>
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+
 </body>
 </html>

@@ -14,7 +14,7 @@
     <nav th:if="${username == null}">
         <a th:href="@{/login}">Sign in</a>
         <a th:href="@{/register}">Register</a>
-        <a th:href="@{/book-management}">Manage Books</a>
+        <a th:href="@{/home-page.html}">Manage Books</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">

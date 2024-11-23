@@ -200,26 +200,27 @@
     </script>
 </head>
 <body>
-
 <header>
     <img src="/images/book-logo.png" alt="Bookstore Logo">
-    <div class="search-bar">
-        <input type="text" placeholder="Search for books...">
-        <button>Search</button>
-    </div>
 
     <nav th:if="${username == null}">
         <a th:href="@{/login}">Sign in</a>
         <a th:href="@{/register}">Register</a>
+        <a th:href="@{/home}">Home</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
         <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
-        <div class="cart" th:href="@{/cart}">
-            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
-        </div>
+
+        <!-- Make the cart image clickable and navigate to the cart page -->
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
     </div>
 </header>
+
 
 <div>
     <div class="catalog-sections-container">

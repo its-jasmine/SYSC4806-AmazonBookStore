@@ -69,19 +69,22 @@ public class Customer extends AppUser {
 
     /**
      * remove the specified book from the cart
-     * @param book the book to remove
-     * @param quantity the quantity of the book in the cart
+     * @param String the book to remove
+     *
      */
-    public void removeFromCart(Book book, int quantity) {
-        if (cart.containsKey(book)) {
-            int currentQuantity = cart.get(book);
-            if (currentQuantity <= quantity) {
-                cart.remove(book); // Remove the book if the quantity is less than or equal to the current quantity
-            } else {
-                cart.put(book, currentQuantity - quantity); // Decrease the quantity
-            }
+    public void removeFromCart(String ISBN) {
+        // Find the book in the cart by ISBN
+        Book bookToRemove = cart.keySet()
+                .stream()
+                .filter(book -> book.getISBN().equals(ISBN))
+                .findFirst()
+                .orElse(null);
+
+        if (bookToRemove != null) {
+            cart.remove(bookToRemove); // Remove the book from the cart
         }
     }
+
 
 
     /**
