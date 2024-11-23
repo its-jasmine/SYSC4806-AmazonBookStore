@@ -97,6 +97,9 @@ public class CheckoutController {
 
         boolean success = checkoutService.checkout(username, bookISBNs, cardNumber, expiry, cvv);
         if (success) {
+            Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
+            customer.checkout();
+            customerRepository.save(customer);
             return "redirect:/checkout-success";
         }
 

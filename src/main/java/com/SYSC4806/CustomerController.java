@@ -56,8 +56,7 @@ public class CustomerController {
     /**
      * Removes a book from the customer's cart.
      *
-     * @param bookISBN  The ID of the book to remove.
-     * @param quantity The current quantity of the book
+     * @param bookId The ID of the book to remove
      * @param session The current HTTP session to identify the customer.
      * @return redirect to the cart page after removal.
      */
