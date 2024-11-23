@@ -132,9 +132,9 @@ public class Main {
 //            customerRepository.save(demoCustomerAccounts[0]);
 
             //ADDING TO CART:
-            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000000").get());
-            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000000").get());
-            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000001").get());
+//            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000000").get());
+//            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000000").get());
+//            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000001").get());
             customerRepository.saveAll(Arrays.asList(demoCustomerAccounts));
 
 
