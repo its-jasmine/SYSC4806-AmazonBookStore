@@ -23,5 +23,22 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     List<Book> findTop10ByOrderByDateAddedDesc();
 
     Optional<Book> findByISBN(String ISBN);
+    List<Book> findByGenre(Book.Genre genre);
+
+    /**
+     * Find books where the title contains the specified substring (case insensitive).
+     * @param title the substring to search for in book titles.
+     * @return a list of books matching the criteria.
+     */
+    List<Book> findByTitleContainingIgnoreCase(String title);
+
+    /**
+     * Find books where the author's name contains the specified substring (case insensitive).
+     * @param author the substring to search for in author names.
+     * @return a list of books matching the criteria.
+     */
+    List<Book> findByAuthorContainingIgnoreCase(String author);
+
+
 }
 
