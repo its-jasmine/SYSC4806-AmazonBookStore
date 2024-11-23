@@ -1,22 +1,24 @@
 package com.SYSC4806;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.ui.ConcurrentModel;
+import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.argThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.mockito.Mockito.never;
 import static org.mockito.ArgumentMatchers.any;
 
 @ActiveProfiles("test") // Activates the "test" profile for this test class
@@ -33,6 +35,8 @@ class BookStoreControllerTest {
     private AdminRepository adminRepository;
     @MockBean
     private BookRepository bookRepository;
+    @InjectMocks
+    private BookStoreController bookStoreController;
 
     @Test
     void showHomePage() throws Exception{
@@ -140,5 +144,40 @@ class BookStoreControllerTest {
         mockMvc.perform(get("/book-details").param("ISBN", ISBN))
                 .andExpect(status().isOk())
                 .andExpect(view().name("book-details"));
+    }
+
+    @Test
+    public void searchBook() throws Exception {
+        // Test parameters
+        String baseTitle = "Book";
+        int numberOfBooks = 20; // Total books to create
+        int baseISBN = 1000000000;
+        LocalDateTime baseDate = LocalDateTime.now(); // Base date for "dateAdded"
+
+        // Prepare test data
+        for (int i = 1; i <= numberOfBooks; i++) {
+            Book book = new Book(
+                    (baseISBN+i)+"",
+                    baseTitle + i,
+                    "author",
+                    "publisher",
+                    19.99,
+                    Book.Genre.Fiction,
+                    1
+            );
+            // Set different "dateAdded" values
+            book.setDateAdded(baseDate.plusDays(i));
+            bookRepository.save(book);
+        }
+
+        String query = "4";
+        Model model = new ConcurrentModel();
+        String viewName = bookStoreController.search(query, model);
+
+        assertEquals("search-results", viewName);
+        assertEquals(bookRepository.findAll(), model.getAttribute("searchResults"));
+        verify(bookRepository, times(1)).findByTitleContaining(query);
+
+
     }
 }

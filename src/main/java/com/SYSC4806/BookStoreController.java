@@ -178,4 +178,16 @@ public class BookStoreController {
         return "home-page";
 
     }
+
+    /**
+     * Searches the book repository for titles that contains the given query
+     * @param query the query to search by
+     * @param model Model
+     * @return the search-results page
+     */
+    @GetMapping("search-results")
+    public String search(@RequestParam(name="query")String query, Model model) {
+        model.addAttribute("searchResults", bookRepository.findByTitleContaining(query));
+        return "search-results";
+    }
 }
