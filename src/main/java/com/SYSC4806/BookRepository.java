@@ -24,6 +24,6 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
 
     Optional<Book> findByISBN(String ISBN);
 
-    List<Book> findByTitleContaining(String title);
+    List<Book> findByTitleContainingIgnoreCase(String title);
 }
 

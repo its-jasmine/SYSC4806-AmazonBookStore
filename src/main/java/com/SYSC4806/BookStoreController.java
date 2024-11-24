@@ -187,7 +187,7 @@ public class BookStoreController {
      */
     @GetMapping("search-results")
     public String search(@RequestParam(name="query")String query, Model model) {
-        model.addAttribute("searchResults", bookRepository.findByTitleContaining(query));
+        model.addAttribute("searchResults", bookRepository.findByTitleContainingIgnoreCase(query));
         return "search-results";
     }
 }

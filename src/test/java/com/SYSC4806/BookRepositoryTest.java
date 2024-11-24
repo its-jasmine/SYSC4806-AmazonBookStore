@@ -188,7 +188,7 @@ public class BookRepositoryTest {
             bookRepository.save(book);
         }
 
-        List<Book> books = bookRepository.findByTitleContaining("7");
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase("7");
 
         //assert
         assertEquals(3, books.size());
