@@ -13,10 +13,10 @@ public class RegisterService {
         FAILED             // Registration failed
     }
 
-    final AppUserRepository userRepository;
+    final CustomerRepository customerRepository;
 
-    public RegisterService(AppUserRepository userRepository) {
-        this.userRepository = userRepository;
+    public RegisterService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
 
     /**
@@ -29,13 +29,13 @@ public class RegisterService {
      * @return Response.SUCCESS for successful registration, INVALID_USERNAME if username is in use, FAILED otherwise.
      */
     public Response register(String username, String password) {
-        Optional<AppUser> user = userRepository.findByUsername(username);
+        Optional<Customer> user = customerRepository.findCustomerByUsername(username);
         if (user.isPresent()) {
             return Response.INVALID_USERNAME;
         }
         if (username != null && password != null) {
-            Admin admin = new Admin(username, password); //TODO Change to Customer object
-            userRepository.save(admin);
+            Customer customer = new Customer(username, password); //TODO Change to Customer object
+            customerRepository.save(customer);
             return Response.SUCCESS;
         }
         return Response.FAILED;
