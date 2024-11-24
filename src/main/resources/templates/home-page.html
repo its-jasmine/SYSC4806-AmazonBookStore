@@ -197,34 +197,39 @@
                 container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
         }
+
+        function search(button) {
+            console.log("search clicked!")
+            console.log(button.previousElementSibling)
+            const input = button.previousElementSibling;
+            if (input && input.classList.contains('search-input')) {
+                const query = input.value;
+                window.location.href = `/search-results?query=${encodeURIComponent(query)}`;
+            }
+        }
     </script>
 </head>
 <body>
+
 <header>
-    <!-- Logo wrapped in anchor tag to navigate to home -->
-    <a th:href="@{/home}">
-        <img src="/images/book-logo.png" alt="Bookstore Logo">
-    </a>
+    <img src="/images/book-logo.png" alt="Bookstore Logo">
+    <div class="search-bar">
+        <input class="search-input" type="text" placeholder="Search for books...">
+        <button onclick="search(this)">Search</button>
+    </div>
 
     <nav th:if="${username == null}">
         <a th:href="@{/login}">Sign in</a>
         <a th:href="@{/register}">Register</a>
-        <a th:href="@{/home}">Home</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
         <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
-
-        <!-- Cart image wrapped in anchor tag to navigate to cart -->
-        <a th:href="@{/cart}">
-            <div class="cart">
-                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
-            </div>
-        </a>
+        <div class="cart" th:href="@{/cart}">
+            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+        </div>
     </div>
 </header>
-
-
 
 <div>
     <div class="catalog-sections-container">

@@ -23,5 +23,7 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     List<Book> findTop10ByOrderByDateAddedDesc();
 
     Optional<Book> findByISBN(String ISBN);
+
+    List<Book> findByTitleContainingIgnoreCase(String title);
 }
 

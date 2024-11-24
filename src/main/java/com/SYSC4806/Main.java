@@ -43,6 +43,7 @@ public class Main {
                 demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
                 demoBooks.add(demoBook);
             }
+            demoBooks.add(new Book((baseISBN+400+""), "Harry Potter", "J.K Rowling", "publisher", 45.98, genres[5], 17));
             demoBooks.forEach(book -> bookRepository.save(book));
 
             // Fetch all books
