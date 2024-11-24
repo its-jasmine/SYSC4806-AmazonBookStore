@@ -197,6 +197,16 @@
                 container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
             }
         }
+
+        function search(button) {
+            console.log("search clicked!")
+            console.log(button.previousElementSibling)
+            const input = button.previousElementSibling;
+            if (input && input.classList.contains('search-input')) {
+                const query = input.value;
+                window.location.href = `/search-results?query=${encodeURIComponent(query)}`;
+            }
+        }
     </script>
 </head>
 <body>
@@ -204,8 +214,8 @@
 <header>
     <img src="/images/book-logo.png" alt="Bookstore Logo">
     <div class="search-bar">
-        <input type="text" placeholder="Search for books...">
-        <button>Search</button>
+        <input class="search-input" type="text" placeholder="Search for books...">
+        <button onclick="search(this)">Search</button>
     </div>
 
     <nav th:if="${username == null}">
