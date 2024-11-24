@@ -38,20 +38,39 @@ public class LoginControllerTest {
                 .andExpect(view().name("login-page"));
     }
 
+    /**
+     * Successful Customer login redirects to the home page
+     * @throws Exception
+     */
     @Test
-    void login() throws Exception {
-        // Verifying that logging in with valid user credentials will redirect the user to the home page
-
-        when(loginService.authenticate("validUser", "validPass")).thenReturn(true); // mock successful authentication
-        when(loginService.authenticate("invalidUser", "invalidPass")).thenReturn(false); // mock failed authentication
-
+    void loginCustomer() throws Exception {
+        when(loginService.authenticate("customer1", "password1")).thenReturn(LoginService.Response.CUSTOMER_LOGIN_SUCCESS);
         mockMvc.perform(post("/login")
-                        .param("username", "validUser")
-                        .param("password", "validPass"))
+                        .param("username", "customer1")
+                        .param("password", "password1"))
                 .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
                 .andExpect(redirectedUrl("/home"));
+    }
 
+    /**
+     * Successful Admin login redirects to the inventory page
+     * @throws Exception
+     */
+    @Test
+    void loginAdmin() throws Exception {
+        // Verifying that logging in with valid admin credentials will redirect the admin to the inventory page
+        when(loginService.authenticate("admin1", "password1")).thenReturn(LoginService.Response.ADMIN_LOGIN_SUCCESS);
+        mockMvc.perform(post("/login")
+                        .param("username", "admin1")
+                        .param("password", "password1"))
+                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to the inventory
+                .andExpect(redirectedUrl("/inventory"));
+    }
+
+    @Test
+    void loginInvalidCredentials() throws Exception {
         // Verifying that logging in with invalid user credentials will redirect the user to the login page
+        when(loginService.authenticate("invalidUser", "invalidPass")).thenReturn(LoginService.Response.INVALID_CREDENTIALS);
         mockMvc.perform(post("/login")
                         .param("username", "invalidUser")
                         .param("password", "invalidPass"))
