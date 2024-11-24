@@ -42,9 +42,9 @@ class BookFilteringControllerTest {
         // Verifying that accessing the book details url will successfully show the browse by genre page
         mockMvc.perform(get("/browse-by-genre").param("genre", Book.Genre.Fiction.name()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("filtered-books-page"))
-                .andExpect(model().attributeExists("books"))
-                .andExpect(model().attribute("books", genreBooks))
+                .andExpect(view().name("search-results"))
+                .andExpect(model().attributeExists("searchResults"))
+                .andExpect(model().attribute("searchResults", genreBooks))
                 .andExpect(model().attribute("filter", Book.Genre.Fiction));
     }
 
@@ -68,11 +68,11 @@ class BookFilteringControllerTest {
         when(bookRepository.findByTitle("My Query")).thenReturn(new ArrayList<Book>());
 
         // Verifying that accessing the book details url will successfully show the search results page
-        mockMvc.perform(get("/search").param("query", "My Query"))
+        mockMvc.perform(get("/search-results").param("query", "My Query"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("filtered-books-page"))
-                .andExpect(model().attributeExists("books"))
-                .andExpect(model().attribute("books", expectedBooks))
+                .andExpect(view().name("search-results"))
+                .andExpect(model().attributeExists("searchResults"))
+                .andExpect(model().attribute("searchResults", expectedBooks))
                 .andExpect(model().attribute("filter", "My Query"));
     }
 

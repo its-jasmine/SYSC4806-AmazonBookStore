@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        header {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        header .search-bar input {
+            width: 300px;
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        header .search-bar button {
+            padding: 8px 12px;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .arrow-up {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid white;
+        }
+
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid white;
+        }
+
+    </style>
+    <script>
+        function search(button) {
+            console.log("search clicked!")
+            console.log(button.previousElementSibling)
+            const input = button.previousElementSibling;
+            if (input && input.classList.contains('search-input')) {
+                const query = input.value;
+                window.location.href = `/search-results?query=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function sortTable(n) {
+            let table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("search-table");
+            console.log(table);
+            dir = "asc";
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir === "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir === "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                } else {
+                    if (switchcount === 0 && dir === "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+        function rowClicked(row) {
+            // Extract the ISBN from the clicked row
+            const isbn = row.getAttribute("ISBN");
+
+            // Define the URL for the GET request
+            const url = `/book-details?ISBN=${isbn}`;
+
+            // Redirect or fetch data
+            window.location.href = url; // For page navigation
+        }
+    </script>
+
+</head>
+<body>
+<header>
+    <img src="/images/book-logo.png" alt="Bookstore Logo">
+    <div class="search-bar">
+        <input class="search-input" type="text" placeholder="Search for books...">
+        <button onclick="search(this)">Search</button>
+    </div>
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <div class="cart" th:href="@{/cart}">
+            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+        </div>
+    </div>
+</header>
+<div>
+    <div class="container">
+        <h1 class="num-results-heading" th:text="|${searchResults.size()} results for '${filter}'|"></h1>
+
+        <table id="search-table">
+            <thead>
+            <tr>
+                <th onclick="sortTable(0)">ISBN <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(1)">Title <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(2)">Author <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(3)">Publisher <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(4)">Genre <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(5)">Stock <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(6)">Price <span class="sort-indicator">↕</span></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="book : ${searchResults}" th:attr="ISBN=${book.getISBN()}" onclick="rowClicked(this)">
+                <td th:text="${book.getISBN()}">Title</td>
+                <td th:text="${book.getTitle()}">Title</td>
+                <td th:text="${book.getAuthor()}">Author</td>
+                <td th:text="${book.getPublisher()}">Publisher</td>
+                <td th:text="${book.getGenre()}">Genre</td>
+                <td th:text="${book.getNumCopiesInStock()}">Stock</td>
+                <td th:text="${book.getPrice()}">Price</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+
+</body>
+</html>
