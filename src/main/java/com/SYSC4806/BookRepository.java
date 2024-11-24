@@ -23,6 +23,7 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
     List<Book> findTop10ByOrderByDateAddedDesc();
 
     Optional<Book> findByISBN(String ISBN);
+
     List<Book> findByGenre(Book.Genre genre);
 
     /**
@@ -38,7 +39,5 @@ public interface BookRepository extends CrudRepository<Book, Integer> {
      * @return a list of books matching the criteria.
      */
     List<Book> findByAuthorContainingIgnoreCase(String author);
-
-
 }
 

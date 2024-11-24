@@ -165,14 +165,13 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void testFindByTitleContainingIgnoreCase() {
-        // Arrange
+    public void testFindByTitleContainingIgnoreCase_SmallResultsSize() {
+        // Simple Test case
         bookRepository.save(new Book("1234567890","Fun Cleaning", "Robert C. Martin", "Programming", 19.99,Book.Genre.Mystery, 50));
         bookRepository.save(new Book("1234567891","Clean Code Fun", "Someone Else", "Programming", 19.99,Book.Genre.NonFiction, 20));
         bookRepository.save(new Book("1234567892","Book A", "Author A", "Category A", 19.99, Book.Genre.Fiction, 50));
 
 
-        // Act
         List<Book> books = bookRepository.findByTitleContainingIgnoreCase("Clean");
 
         // Assert
@@ -181,6 +180,40 @@ public class BookRepositoryTest {
         assertEquals(2, books.size());
         assertTrue(books.get(0).getTitle().equals("Fun Cleaning"));
         assertTrue(books.get(1).getTitle().equals("Clean Code Fun"));
+    }
+
+    @Test
+    public void testFindByTitleContainingIgnoreCase_LargeResultsSize() {
+        // Test parameters
+        String baseTitle = "Book";
+        int numberOfBooks = 30; // Total books to create
+        int baseISBN = 1000000000;
+        LocalDateTime baseDate = LocalDateTime.now(); // Base date for "dateAdded"
+
+        // Prepare test data
+        for (int i = 1; i <= numberOfBooks; i++) {
+            Book book = new Book(
+                    (baseISBN+i)+"",
+                    baseTitle + i,
+                    "author",
+                    "publisher",
+                    19.99,
+                    Book.Genre.Fiction,
+                    1
+            );
+            // Set different "dateAdded" values
+            book.setDateAdded(baseDate.plusDays(i));
+            bookRepository.save(book);
+        }
+
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase("7");
+
+        //assert
+        assertEquals(3, books.size());
+        for (Book book : books) {
+            assertTrue(book.getTitle().contains("7"));
+        }
+
     }
 
     @Test

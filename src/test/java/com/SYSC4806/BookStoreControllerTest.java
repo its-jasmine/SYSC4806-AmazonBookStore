@@ -1,22 +1,29 @@
 package com.SYSC4806;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.ui.ConcurrentModel;
+import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.argThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.mockito.Mockito.never;
 import static org.mockito.ArgumentMatchers.any;
 
 @ActiveProfiles("test") // Activates the "test" profile for this test class
@@ -33,6 +40,8 @@ class BookStoreControllerTest {
     private AdminRepository adminRepository;
     @MockBean
     private BookRepository bookRepository;
+    @InjectMocks
+    private BookStoreController bookStoreController;
 
     @Test
     void showHomePage() throws Exception{

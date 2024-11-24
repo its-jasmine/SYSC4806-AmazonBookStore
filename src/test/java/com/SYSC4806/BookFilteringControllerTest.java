@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,7 +50,8 @@ class BookFilteringControllerTest {
     }
 
     @Test
-    void showSearchResultsPage() throws Exception {
+    void showSearchResultsPage_SmallResultsSize() throws Exception {
+
         Book titleBook = new Book("1234567890", "My Query", "Author 1", "Publisher 1", 19.99, Book.Genre.NonFiction, 5);
         Book authorBook = new Book("0987654321", "Different Title", "My Query", "Publisher 2", 15.99, Book.Genre.Fiction, 3);
 
@@ -74,6 +76,34 @@ class BookFilteringControllerTest {
                 .andExpect(model().attributeExists("searchResults"))
                 .andExpect(model().attribute("searchResults", expectedBooks))
                 .andExpect(model().attribute("filter", "My Query"));
+    }
+    @Test
+    public void showSearchResultsPage_LargerResultsSize() throws Exception {
+        // Test parameters
+        String baseTitle = "Book";
+        int numberOfBooks = 20; // Total books to create
+        int baseISBN = 1000000000;
+        LocalDateTime baseDate = LocalDateTime.now(); // Base date for "dateAdded"
+
+        // Prepare test data
+        for (int i = 1; i <= numberOfBooks; i++) {
+            Book book = new Book(
+                    (baseISBN+i)+"",
+                    baseTitle + i,
+                    "author",
+                    "publisher",
+                    19.99,
+                    Book.Genre.Fiction,
+                    1
+            );
+            // Set different "dateAdded" values
+            book.setDateAdded(baseDate.plusDays(i));
+            bookRepository.save(book);
+        }
+        mockMvc.perform(get("/search-results?query=Book4"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("search-results"))
+                .andExpect(model().attributeExists("searchResults"));
     }
 
 }

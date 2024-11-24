@@ -58,10 +58,10 @@ The homepage provides book information along with how many copies are available.
 
 
 ## DB schema
-<img src="src/main/resources/diagrams/class-diagram-m1.png" alt="Alt text" width="500">
+<img src="src/main/resources/diagrams/db-schema-m1.png" alt="Alt text" width="500">
 
 ## UML Class Diagram
-<img src="src/main/resources/diagrams/db-schema-m1.png" alt="Alt text" width="500">
+<img src="src/main/resources/diagrams/class-diagram-m1.png" alt="Alt text" width="500">
 
 
 ## Plan for Next Sprint
