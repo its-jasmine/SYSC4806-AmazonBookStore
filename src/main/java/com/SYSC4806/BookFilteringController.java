@@ -31,8 +31,7 @@ public class BookFilteringController {
         List<Book> booksTitle = bookRepository.findByTitleContainingIgnoreCase(query);
         List<Book> booksAuthor = bookRepository.findByAuthorContainingIgnoreCase(query);
 
-        List<Book> books = Stream.concat(booksTitle.stream(), booksAuthor.stream())
-                .collect(Collectors.toList());
+        List<Book> books = Stream.concat(booksTitle.stream(), booksAuthor.stream()).distinct().collect(Collectors.toList());
 
         model.addAttribute("searchResults", books);
         model.addAttribute("filter", query);
