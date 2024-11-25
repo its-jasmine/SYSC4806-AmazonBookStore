@@ -34,7 +34,7 @@ public class RegisterService {
             return Response.INVALID_USERNAME;
         }
         if (username != null && password != null) {
-            Customer customer = new Customer(username, password); //TODO Change to Customer object
+            Customer customer = new Customer(username, password);
             customerRepository.save(customer);
             return Response.SUCCESS;
         }
