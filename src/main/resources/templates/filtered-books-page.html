@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazing Bookstore</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: Cambria, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2em;
+        }
+        .num-results-heading {
+            font-size: 1.5em;
+        }
+
+        header {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        header .search-bar input {
+            width: 300px;
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        header .search-bar button {
+            padding: 8px 12px;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        /* grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
+        .book-results-container {
+            display: grid;
+            justify-content: center;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+        /* : As the screen width decreases:*/
+
+        @media (max-width: 800px) {
+            .book-results-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 books per row for smaller screens */
+            }
+        }
+
+        @media (max-width: 500px) {
+            .book-results-container {
+                grid-template-columns: 1fr; /* 1 book per row for very small screens */
+            }
+        }
+
+
+        /* Browse Cards */
+        .browse-card {
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            border: none;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            width: 150px;
+            flex-shrink: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit; /* Inherits from body */
+        }
+
+        .browse-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: 1px solid #87ceeb;
+            background-color: #f0f8ff;
+            color: #0b37ad;
+            font-weight: bold;
+        }
+
+        .browse-card img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+
+        /* Forms Inside Browse Cards */
+        .browse-card form  {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border: none;
+        }
+
+        .browse-card button {
+            all: unset;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border-radius: inherit;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img src="/images/book-logo.png" alt="Bookstore Logo">
+    <div class="search-bar">
+        <form class="search-form" th:action="@{/search}" method="get">
+            <input type="text" name="query" placeholder="Search for books..." required>
+            <button class="search-button" type="submit">Search</button>
+        </form>
+    </div>
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <div class="cart" th:href="@{/cart}">
+            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <h1 class="results-heading" th:text="|'${filter}' Books|"></h1>
+    <h1 class="num-results-heading" th:text="|${books.size()} Matching Results|"></h1>
+    <div class="book-results-container">
+        <form
+                class="browse-card item-display"
+                th:each="book : ${books}"
+                th:action="@{/book-details}"
+                method="get">
+            <!-- ISBN as a hidden input field -->
+            <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+            <!-- Display book image and details -->
+            <button type="submit" class="item-display-button">
+                <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+                <p th:text="${book.getTitle()}"></p>
+                <p th:text="${book.getAuthor()}"></p>
+                <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

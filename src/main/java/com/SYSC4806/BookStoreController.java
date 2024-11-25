@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -28,6 +29,8 @@ public class BookStoreController {
     BookRepository bookRepository;
     @Autowired
     private AdminRepository adminRepository;
+
+    BookRecommendation recommendation;
 
     /**
      * Handles the GET request to show the home page
@@ -48,6 +51,18 @@ public class BookStoreController {
 
         books = bookRepository.findTop10ByOrderByNumCopiesSoldDesc(); // top 10 best sellers
         model.addAttribute("bestSellers", books);
+
+        if (username != null) {
+            this.recommendation = new BookRecommendation((List<Customer>) customerRepository.findAll());
+            Optional<Customer> optionalCustomer = customerRepository.findCustomerByUsername(username);
+
+            if (optionalCustomer.isPresent()) {
+                Customer customer = optionalCustomer.get();
+                model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
+                model.addAttribute("recommendation", recommendation.getRecommendation(customer));
+            }
+        }
+
         return "home-page";
     }
 
@@ -177,17 +192,5 @@ public class BookStoreController {
         }
         return "home-page";
 
-    }
-
-    /**
-     * Searches the book repository for titles that contains the given query
-     * @param query the query to search by
-     * @param model Model
-     * @return the search-results page
-     */
-    @GetMapping("search-results")
-    public String search(@RequestParam(name="query")String query, Model model) {
-        model.addAttribute("searchResults", bookRepository.findByTitleContainingIgnoreCase(query));
-        return "search-results";
     }
 }
