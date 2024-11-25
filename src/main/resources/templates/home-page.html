@@ -212,7 +212,11 @@
 <body>
 
 <header>
-    <img src="/images/book-logo.png" alt="Bookstore Logo">
+    <!-- Logo wrapped in anchor tag to navigate to home -->
+    <a th:href="@{/home}">
+        <img src="/images/book-logo.png" alt="Bookstore Logo">
+    </a>
+
     <div class="search-bar">
         <input class="search-input" type="text" placeholder="Search for books...">
         <button onclick="search(this)">Search</button>
@@ -225,11 +229,16 @@
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
         <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
-        <div class="cart" th:href="@{/cart}">
-            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
-        </div>
+
+        <!-- Cart image wrapped in anchor tag to navigate to cart -->
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
     </div>
 </header>
+
 
 <div>
     <div class="catalog-sections-container">
