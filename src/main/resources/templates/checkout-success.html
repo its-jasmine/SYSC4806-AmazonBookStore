@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout Success</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <!-- Logo wrapped in anchor tag to navigate to home -->
+    <a th:href="@{/home}">
+        <img src="/images/book-logo.png" alt="Bookstore Logo">
+    </a>
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+        <a th:href="@{/home}">Home</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+
+        <!-- Cart image wrapped in anchor tag to navigate to cart -->
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
+    </div>
+</header>
+
+
+<h1>Thank you for your purchase!</h1>
+
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+</body>
+</html>

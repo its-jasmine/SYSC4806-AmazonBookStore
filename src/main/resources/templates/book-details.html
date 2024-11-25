@@ -2,15 +2,154 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Amazing Bookstore</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details - Amazing Bookstore</title>
+    <link rel="stylesheet" href="/css/styles.css">
+
+    <style>
+        body {
+            font-family: Cambria, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        header .search-bar input {
+            width: 300px;
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        header .search-bar button {
+            padding: 8px 12px;
+            background-color: #ffffff;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        footer {
+            background-color: cornflowerblue;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        .book-details-container {
+            margin: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-details-container img {
+            max-width: 200px;
+            border-radius: 5px;
+        }
+
+        .book-details-container h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .book-details-container p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .add-to-cart-button {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #1e4e94;
+        }
+
+        .book-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .book-info div {
+            width: 50%;
+        }
+    </style>
 </head>
 <body>
-<p>I am a book details page with an add to cart button!</p>
-<p> I reference a book with these details</p>
-<p th:text="${book.getTitle()}">Title</p>
-<p th:text="${book.getAuthor()}">Author</p>
-<p th:text="${book.getPublisher()}">Publisher</p>
-<p th:text="${book.getGenre()}">Genre</p>
-<p th:text="${book.getNumCopiesInStock()}">Stock</p>
+
+<header>
+    <a th:href="@{/home}">
+        <img src="/images/book-logo.png" alt="Bookstore Logo">
+    </a>
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+        <a th:href="@{/home}">Home</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
+    </div>
+</header>
+
+<div class="book-details-container">
+    <div class="book-info">
+        <!-- Book Image -->
+        <div>
+            <img src="https://via.placeholder.com/200" alt="Book Image">
+        </div>
+        <!-- Book Details -->
+        <div>
+            <h2 th:text="${book.getTitle()}">Book Title</h2>
+            <p><strong>Author:</strong> <span th:text="${book.getAuthor()}">Author Name</span></p>
+            <p><strong>Publisher:</strong> <span th:text="${book.getPublisher()}">Publisher Name</span></p>
+            <p><strong>Genre:</strong> <span th:text="${book.getGenre()}">Genre Name</span></p>
+            <p><strong>Stock:</strong> <span th:text="${book.getNumCopiesInStock()}">Available Stock</span></p>
+            <p><strong>Price:</strong> <span th:text="${book.getPrice()}">$ Price</span></p>
+
+            <!-- Add to Cart Button -->
+            <form th:action="@{/cart/add}" method="post">
+                <input type="hidden" name="bookId" th:value="${book.getISBN()}">
+                <button type="submit" class="add-to-cart-button">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy;  2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+
 </body>
 </html>

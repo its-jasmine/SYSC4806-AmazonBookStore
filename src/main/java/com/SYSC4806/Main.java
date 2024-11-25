@@ -43,6 +43,7 @@ public class Main {
                 demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
                 demoBooks.add(demoBook);
             }
+            demoBooks.add(new Book((baseISBN+400+""), "Harry Potter", "J.K Rowling", "publisher", 45.98, genres[5], 17));
             demoBooks.forEach(book -> bookRepository.save(book));
 
             // Fetch all books
@@ -116,6 +117,7 @@ public class Main {
                 log.info(book.toString());
             }
 
+
             adminRepository.saveAll(Arrays.asList(demoAdminAccounts));
 
 
@@ -129,6 +131,11 @@ public class Main {
             customer.setBooks(books);*/
 
 //            customerRepository.save(demoCustomerAccounts[0]);
+
+            //ADDING TO CART:
+//            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000000").get());
+//            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000000").get());
+//            demoCustomerAccounts[0].addToCart(bookRepository.findByISBN("1000000001").get());
             customerRepository.saveAll(Arrays.asList(demoCustomerAccounts));
 
 
