@@ -50,6 +50,8 @@ public class CheckoutService {
                     quantity = customer.getCart().get(book);
                     if(stock - quantity >= 0) {
                         customer.getCart().remove(book);
+                        book.setNumCopiesSold(book.getNumCopiesSold() + quantity);
+                        book.setNumCopiesInStock(stock - quantity);
                     }
                     else{
                         System.out.println("Sorry, not enough copies in stock");
@@ -58,9 +60,11 @@ public class CheckoutService {
                     customer.removeFromCart(book.getISBN());
                 } else {
                     System.out.println("Book not in cart, skipping removal: " + book);
+                    return false;
                 }
             } else {
-                System.out.println("Error: Book not found for ID: " + book.getISBN());
+                System.out.println("Error: Book not found");
+                return false;
             }
 
 

@@ -107,4 +107,6 @@ public class Customer extends AppUser {
         return cart;
     }
 
+    public void setCart(HashMap<Book, Integer> cart) {
+    }
 }
