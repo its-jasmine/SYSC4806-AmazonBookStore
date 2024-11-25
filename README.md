@@ -58,26 +58,51 @@ Customer can:
 
 ### Issue status (via Kanban) 
 **Closed issues**
-1. Login page for app users
+1. README Milestone 2
 2. Updating functionality for book management
 3. Book Browsing & Filtering
 4. Book Recommendations
 5. Book Recommendation Front-End
 6. Book Recommendation Tests
 7. Customer Book Purchase
-8. Adding navigation to all available pages in our web app
-9. README Milestone 2
+8. Add navigations to all available pages in our web app
+9. Front-end Enhancements
+10. Login page for app users 
+11. Database Transaction Testing 
+12. Updating functionality for book management 
+13. Searching and Sorting 
+14. Investigate use of Logging (Kafka, DataDog, Splunk)
 
-**Open issues** - update
-1. Investigate use of Logging (Kafka, DataDog, Splunk): 
+
+**Open issues** 
+1. Data Dog Logging Implementation
 
    - **status**: In progress
 
+2. Restricting access to inventory & book-management pages
+
+   - **status**: Backlog
+
+3. Adding a wishlist
+
+   - **status**: Backlog
+
+4. Creating more realistic sample data
+
+   - **status**: Backlog
+
+5. Add logout capabilities
+
+   - **status**: Backlog
+
+6. Book Improvements: Adding descriptions and book cover images
+
+   - **status**: Backlog
 
 ## DB schema
 <img src="src/main/resources/diagrams/db-schema-m2.png" alt="Alt text" width="500">
 Note on DTYPE attribute: The current implementation uses the default inheritance strategy InheritanceType.SINGLE_TABLE, 
-which stores the sub-class entites in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
+which stores the sub-class entities in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
 By default this DiscriminatorColumn is named DTYPE. 
 
 ## UML Class Diagram
@@ -86,12 +111,17 @@ By default this DiscriminatorColumn is named DTYPE.
 
 ## Plan for Next Sprint - update
 **Jasmine**
+- Creating more realistic sample data
 
 **Nivetha**
+- Restricting access to inventory & book-management pages
+- Book Improvements: Adding descriptions and book cover images
 
 **Rimsha**
-
+- Adding a wishlist
+- 
 **Victoria**
-
+- Data Dog Logging Implementation
+- Add logout capabilities
 
 
