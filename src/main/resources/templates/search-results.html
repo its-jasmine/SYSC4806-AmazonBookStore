@@ -105,7 +105,10 @@
 </head>
 <body>
 <header>
-    <img src="/images/book-logo.png" alt="Bookstore Logo">
+    <!-- Logo wrapped in anchor tag to navigate to home -->
+    <a th:href="@{/home}">
+        <img src="/images/book-logo.png" alt="Bookstore Logo">
+    </a>
     <div class="search-bar">
         <input class="search-input" type="text" placeholder="Search for books...">
         <button onclick="search(this)">Search</button>

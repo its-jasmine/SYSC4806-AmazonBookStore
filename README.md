@@ -49,11 +49,16 @@ Update book stock by inputting the following:
 
 **Book Inventory**: https://bookstore-project.azurewebsites.net/inventory
 
-**Search Results Page**: https://bookstore-project.azurewebsites.net/search-results?query=<query>
+**Search Results Page**: https://bookstore-project.azurewebsites.net/search-results?query=query-value
 
-**Book Details Page**: https://bookstore-project.azurewebsites.net/book-details?ISBN=<ISBN>
+**Book Details Page**: https://bookstore-project.azurewebsites.net/book-details?ISBN=isbn-value
 
 **Shopping Cart**: https://bookstore-project.azurewebsites.net/cart
+
+**Checkout**: https://bookstore-project.azurewebsites.net/checkout
+
+**Checkout Success**: https://bookstore-project.azurewebsites.net/checkout-success
+
 
 
 ### Issue status (via Kanban) 
