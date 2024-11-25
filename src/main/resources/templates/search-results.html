@@ -75,13 +75,15 @@
                     shouldSwitch = false;
                     x = rows[i].getElementsByTagName("TD")[n];
                     y = rows[i + 1].getElementsByTagName("TD")[n];
+                    let xValue = (n === 5 || n === 6) ? Number(x.innerHTML.toLowerCase()) : x.innerHTML.toLowerCase();
+                    let yValue = (n === 5 || n === 6) ? Number(y.innerHTML.toLowerCase()) : y.innerHTML.toLowerCase();
                     if (dir === "asc") {
-                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        if ( xValue > yValue) {
                             shouldSwitch = true;
                             break;
                         }
                     } else if (dir === "desc") {
-                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        if (xValue < yValue) {
                             shouldSwitch = true;
                             break;
                         }
