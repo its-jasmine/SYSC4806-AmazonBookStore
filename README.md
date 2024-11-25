@@ -26,6 +26,10 @@ Add new book by inputting the following:
 Remove book by inputting the following:
 - ISBN
 
+Update book stock by inputting the following:
+- ISBN
+- new stock value
+
 Customer can:
 - register for an account
 - log in
@@ -34,20 +38,23 @@ Customer can:
 - view book details & add to cart 
 - view cart & proceed to checkout
 
-  
 
-### Endpoints - update
+
+### Endpoints 
+**Catalog Page**: https://bookstore-project.azurewebsites.net/home
+
 **Login Page**: https://bookstore-project.azurewebsites.net/login
 
 **Register Page**: https://bookstore-project.azurewebsites.net/register
 
-**Catalog Page**: https://bookstore-project.azurewebsites.net/home
-
 **Book Inventory**: https://bookstore-project.azurewebsites.net/inventory
+
+**Search Results Page**: https://bookstore-project.azurewebsites.net/search-results?query=<query>
 
 **Book Details Page**: https://bookstore-project.azurewebsites.net/book-details?ISBN=<ISBN>
 
 **Shopping Cart**: https://bookstore-project.azurewebsites.net/cart
+
 
 ### Issue status (via Kanban) 
 **Closed issues**
@@ -68,10 +75,13 @@ Customer can:
 
 
 ## DB schema
-![image](https://github.com/user-attachments/assets/02854848-0f57-46df-922a-c69d2db17b55)
+<img src="src/main/resources/diagrams/db-schema-m2.png" alt="Alt text" width="500">
+Note on DTYPE attribute: The current implementation uses the default inheritance strategy InheritanceType.SINGLE_TABLE, 
+which stores the sub-class entites in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
+By default this DiscriminatorColumn is named DTYPE. 
 
-## UML Class Diagram -update
-<img src="src/main/resources/diagrams/class-diagram-m1.png" alt="Alt text" width="500">
+## UML Class Diagram
+<img src="src/main/resources/diagrams/class-diagram-m2.png" alt="Alt text" width="500">
 
 
 ## Plan for Next Sprint - update
