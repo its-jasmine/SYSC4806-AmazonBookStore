@@ -6,77 +6,137 @@
 
 **Azure website domain**: https://bookstore-project.azurewebsites.net/
 
-# Milestone 1 - One Operational Use Case
+# Milestone 2 - Alpha Release
 
 ## Current State of the Project
 
 ### Functionality
-**Implemented use case**: Book Management (add/remove)
 
-Bookstore Owner can upload Book information (title, author, publisher, genre) and inventory.
-
-**Book Management**: https://bookstore-project.azurewebsites.net/book-management
-
-Book Owner can: 
+<ins>Book Store Administrator can:</ins>
 
 Add new book by inputting the following:
+- ISBN
 - Book Title
 - Author
 - Publisher
 - Genre
 - Stock Quantity
+- Price
 
 Remove book by inputting the following:
-- Book Title
-- Author
+- ISBN
 
-The book inventory can be retrieved from the homepage:
+Update book stock by inputting the following:
+- ISBN
+- new stock value
 
-The homepage provides book information along with how many copies are available.
+<ins>Customer can:</ins>
+- register for an account
+- log in
+- browse and search for books
+- sort search results
+- view book details & add to cart 
+- view cart & proceed to checkout
 
-**Inventory**: https://bookstore-project.azurewebsites.net/home
 
-### Issue status (via Kanban)
+
+### Endpoints 
+**Catalog Page**: https://bookstore-project.azurewebsites.net/home
+
+**Login Page**: https://bookstore-project.azurewebsites.net/login
+
+**Register Page**: https://bookstore-project.azurewebsites.net/register
+
+**Book Inventory**: https://bookstore-project.azurewebsites.net/inventory
+
+**Search Results Page**: https://bookstore-project.azurewebsites.net/search-results?query=query-value
+
+**Book Details Page**: https://bookstore-project.azurewebsites.net/book-details?ISBN=isbn-value
+
+**Shopping Cart**: https://bookstore-project.azurewebsites.net/cart
+
+**Checkout**: https://bookstore-project.azurewebsites.net/checkout
+
+**Checkout Success**: https://bookstore-project.azurewebsites.net/checkout-success
+
+
+
+### Issue status (via Kanban) 
 **Closed issues**
-1. Setting up CI/CD 
-2. Maven Setup
-3. PR Template
-4. Creating Book class & CRUD Repository Interface
-5. Controller & Endpoints for Book Operations
-6. Front-End of Adding & Removing Books
-7. Integrating Front-End & Back-End for Admin Use Case
-8. UML class diagrams
-9. Database schema diagrams
-10. Unit Testing
-11. Bug fix for duplicate books in DB
-12. README
+1. README Milestone 2
+2. Updating functionality for book management
+3. Book Browsing & Filtering
+4. Book Recommendations
+5. Book Recommendation Front-End
+6. Book Recommendation Tests
+7. Customer Book Purchase
+8. Add navigations to all available pages in our web app
+9. Front-end Enhancements
+10. Login page for app users 
+11. Database Transaction Testing 
+12. Updating functionality for book management 
+13. Searching and Sorting 
+14. Investigate use of Logging (Kafka, DataDog, Splunk)
 
-**Open issues**
-1. Investigate use of Logging (Kafka, DataDog, Splunk): 
+
+**Open issues** 
+1. Data Dog Logging Implementation
 
    - **status**: In progress
 
+2. Restricting access to inventory & book-management pages
+
+   - **status**: Backlog
+
+3. Adding a wishlist
+
+   - **status**: Backlog
+
+4. Creating more realistic sample data
+
+   - **status**: Backlog
+
+5. Add logout capabilities
+
+   - **status**: Backlog
+
+6. Book Improvements: Adding descriptions and book cover images
+
+   - **status**: Backlog
+
+7. Add book ratings
+
+   - **status**: Backlog
+
+8. UI Improvements for Milestone 3
+
+   - **status**: Backlog
 
 ## DB schema
-<img src="src/main/resources/diagrams/db-schema-m1.png" alt="Alt text" width="500">
+<img src="src/main/resources/diagrams/db-schema-m2.png" alt="Alt text" width="500">
+Note on DTYPE attribute: The current implementation uses the default inheritance strategy InheritanceType.SINGLE_TABLE, 
+which stores the sub-class entities in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
+By default this DiscriminatorColumn is named DTYPE. 
 
 ## UML Class Diagram
-<img src="src/main/resources/diagrams/class-diagram-m1.png" alt="Alt text" width="500">
+<img src="src/main/resources/diagrams/class-diagram-m2.png" alt="Alt text" width="500">
 
 
 ## Plan for Next Sprint
 **Jasmine**
-1. Book Browsing & Filtering use case
+- Creating more realistic sample data
+- Restricting access to inventory & book-management pages
 
 **Nivetha**
-1. Book Recommendations use case
+- Book Improvements: Adding descriptions and book cover images
+- Add book ratings
 
 **Rimsha**
-1. Customer Book Purchase use case 
+- Adding a wishlist
+- Add logout capabilities
 
 **Victoria**
-1. Investigate use of Logging (Kafka, DataDog, Splunk)
-2. DataDog Logging Implementation
-3. Front-End Enhancements (homepage)
+- Data Dog Logging Implementation
+- UI improvements for Milestone 3
 
 
