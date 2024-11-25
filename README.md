@@ -12,7 +12,7 @@
 
 ### Functionality
 
-Book Store Administrator can: 
+<ins>Book Store Administrator can:</ins>
 
 Add new book by inputting the following:
 - ISBN
@@ -30,7 +30,7 @@ Update book stock by inputting the following:
 - ISBN
 - new stock value
 
-Customer can:
+<ins>Customer can:</ins>
 - register for an account
 - log in
 - browse and search for books
