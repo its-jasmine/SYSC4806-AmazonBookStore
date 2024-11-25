@@ -38,10 +38,17 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@RequestParam(name="username")String username, @RequestParam(name="password")String password, HttpSession session) {
 
-        if (loginService.authenticate(username, password)) {
-            session.setAttribute("username", username);
-            return "redirect:/home"; // TODO /inventory for admin, /home for customers
+        LoginService.Response response = loginService.authenticate(username, password);
+        switch (response) {
+            case ADMIN_LOGIN_SUCCESS -> {
+                session.setAttribute("username", username);
+                return "redirect:/inventory";
+            }
+            case CUSTOMER_LOGIN_SUCCESS -> {
+                session.setAttribute("username", username);
+                return "redirect:/home";
+            }
+            default -> {return "redirect:/login";}
         }
-        return "redirect:/login";
     }
 }
