@@ -99,6 +99,14 @@ Update book stock by inputting the following:
 
    - **status**: Backlog
 
+7. Add book ratings
+
+   - **status**: Backlog
+
+8. UI Improvements for Milestone 3
+
+   - **status**: Backlog
+
 ## DB schema
 <img src="src/main/resources/diagrams/db-schema-m2.png" alt="Alt text" width="500">
 Note on DTYPE attribute: The current implementation uses the default inheritance strategy InheritanceType.SINGLE_TABLE, 
@@ -109,19 +117,21 @@ By default this DiscriminatorColumn is named DTYPE.
 <img src="src/main/resources/diagrams/class-diagram-m2.png" alt="Alt text" width="500">
 
 
-## Plan for Next Sprint - update
+## Plan for Next Sprint
 **Jasmine**
 - Creating more realistic sample data
+- Restricting access to inventory & book-management pages
 
 **Nivetha**
-- Restricting access to inventory & book-management pages
 - Book Improvements: Adding descriptions and book cover images
+- Add book ratings
 
 **Rimsha**
 - Adding a wishlist
-- 
+- Add logout capabilities
+
 **Victoria**
 - Data Dog Logging Implementation
-- Add logout capabilities
+- UI improvements for Milestone 3
 
 
