@@ -128,8 +128,25 @@ class BookStoreControllerTest {
 
         // Verify that the book’s stock count was updated
         verify(bookRepository).delete(book);
+    }
 
+    @Test
+    void updateBookStock() throws Exception{
+        String ISBN = "1234567890";
+        String numCopies = "34";
+        // Mock a book in the repository
+        Book book = new Book(ISBN, "Some Title", "Some Author", "Some Publisher", 19.99, Book.Genre.Fiction, 1);
+        when(bookRepository.findByISBN(ISBN)).thenReturn(Optional.of(book));
 
+        mockMvc.perform(post("/update-books")
+                        .param("ISBN", ISBN)
+                        .param("numCopies", numCopies))
+                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to home
+                .andExpect(redirectedUrl("/inventory"));
+
+        // Verify that the book’s stock count was updated
+        verify(bookRepository).save(argThat(b -> b.getISBN().equals(ISBN) &&
+                b.getNumCopiesInStock() == Integer.parseInt(numCopies)));
     }
 
     @Test
