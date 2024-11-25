@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<header>
+    <!-- Logo wrapped in anchor tag to navigate to home -->
+    <a th:href="@{/home}">
+        <img src="/images/book-logo.png" alt="Bookstore Logo">
+    </a>
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/login}">Sign in</a>
+        <a th:href="@{/register}">Register</a>
+        <a th:href="@{/home}">Home</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+
+        <!-- Cart image wrapped in anchor tag to navigate to cart -->
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
+    </div>
+</header>
+
+
+<h1>Your Cart</h1>
+
+<!-- Check if the cart is empty -->
+<div th:if="${cart.isEmpty()}">
+    <p>Your cart is empty.</p>
+</div>
+
+<!-- Display cart items if there are any -->
+<div th:if="${!cart.isEmpty()}">
+    <table>
+        <thead>
+        <tr>
+            <th>Book Title</th>
+            <th>Author</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${cart}">
+            <td th:text="${entry.key.title}">Book Title</td>
+            <td th:text="${entry.key.author}">Author</td>
+            <td>
+                <form th:action="@{/cart/update}" method="post" style="display: inline;">
+                    <input type="hidden" name="bookId" th:value="${entry.key.getISBN()}" />
+                    <input type="number" name="quantity" min="1" th:value="${entry.value}" />
+                    <button type="submit">Update</button>
+                </form>
+            </td>
+            <td>
+                <!-- Form to remove a single book -->
+                <form th:action="@{/cart/remove}" method="post" style="display: inline;">
+                    <input type="hidden" name="bookId" th:value="${entry.key.getISBN()}" />
+                    <button type="submit">Remove</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+    <br>
+    <a href="/checkout">Proceed to Checkout</a>
+</div>
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+</body>
+</html>
