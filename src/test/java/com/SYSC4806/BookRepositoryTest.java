@@ -95,7 +95,7 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void testFindTop10ByOrderByDateAddedAsc() {
+    public void testFindTop10ByOrderByDateAddedDesc() {
         // Test parameters
         String baseTitle = "Book";
         int numberOfBooks = 11; // Total books to create
@@ -165,7 +165,25 @@ public class BookRepositoryTest {
     }
 
     @Test
-    public void testFindByTitleContaining() {
+    public void testFindByTitleContainingIgnoreCase_SmallResultsSize() {
+        // Simple Test case
+        bookRepository.save(new Book("1234567890","Fun Cleaning", "Robert C. Martin", "Programming", 19.99,Book.Genre.Mystery, 50));
+        bookRepository.save(new Book("1234567891","Clean Code Fun", "Someone Else", "Programming", 19.99,Book.Genre.NonFiction, 20));
+        bookRepository.save(new Book("1234567892","Book A", "Author A", "Category A", 19.99, Book.Genre.Fiction, 50));
+
+
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase("Clean");
+
+        // Assert
+        assertNotNull(books);
+        assertFalse(books.isEmpty());
+        assertEquals(2, books.size());
+        assertTrue(books.get(0).getTitle().equals("Fun Cleaning"));
+        assertTrue(books.get(1).getTitle().equals("Clean Code Fun"));
+    }
+
+    @Test
+    public void testFindByTitleContainingIgnoreCase_LargeResultsSize() {
         // Test parameters
         String baseTitle = "Book";
         int numberOfBooks = 30; // Total books to create
@@ -197,4 +215,23 @@ public class BookRepositoryTest {
         }
 
     }
+
+    @Test
+    public void testFindByAuthorContainingIgnoreCase() {
+        bookRepository.save(new Book("1234567890","Book A", "Some Author A", "Category A", 19.99, Book.Genre.Fiction, 50));
+        bookRepository.save(new Book("1234567891","Book B", "Author Amazing", "Category B", 19.99, Book.Genre.Memoirs, 90));
+        bookRepository.save(new Book("1234567892","Book C", "Author C", "Category C", 19.99, Book.Genre.Fantasy, 12));
+
+        // Act
+        List<Book> books = bookRepository.findByAuthorContainingIgnoreCase("Author A");
+
+        // Assert
+        assertNotNull(books);
+        assertFalse(books.isEmpty());
+        assertEquals(2, books.size());
+        assertTrue(books.get(0).getAuthor().equals("Some Author A"));
+        assertTrue(books.get(1).getAuthor().equals("Author Amazing"));
+    }
 }
+
+

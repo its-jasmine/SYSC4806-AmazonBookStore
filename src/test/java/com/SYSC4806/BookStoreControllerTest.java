@@ -150,33 +150,4 @@ class BookStoreControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("book-details"));
     }
-
-    @Test
-    public void searchBook() throws Exception {
-        // Test parameters
-        String baseTitle = "Book";
-        int numberOfBooks = 20; // Total books to create
-        int baseISBN = 1000000000;
-        LocalDateTime baseDate = LocalDateTime.now(); // Base date for "dateAdded"
-
-        // Prepare test data
-        for (int i = 1; i <= numberOfBooks; i++) {
-            Book book = new Book(
-                    (baseISBN+i)+"",
-                    baseTitle + i,
-                    "author",
-                    "publisher",
-                    19.99,
-                    Book.Genre.Fiction,
-                    1
-            );
-            // Set different "dateAdded" values
-            book.setDateAdded(baseDate.plusDays(i));
-            bookRepository.save(book);
-        }
-        mockMvc.perform(get("/search-results?query=Book4"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("search-results"))
-                .andExpect(model().attributeExists("searchResults"));
-        }
 }

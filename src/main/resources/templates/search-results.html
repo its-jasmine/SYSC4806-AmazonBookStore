@@ -100,6 +100,17 @@
                 }
             }
         }
+        function rowClicked(row) {
+            // Extract the ISBN from the clicked row
+            const isbn = row.getAttribute("ISBN");
+
+            // Define the URL for the GET request
+            const url = `/book-details?ISBN=${isbn}`;
+
+            // Redirect or fetch data
+            window.location.href = url; // For page navigation
+        }
+
     </script>
 
 </head>
@@ -125,31 +136,33 @@
 </header>
 <div>
     <div class="container">
-    <table id="search-table">
-        <thead>
-        <tr>
-            <th onclick="sortTable(0)">ISBN <span class="sort-indicator">↕</span></th>
-            <th onclick="sortTable(1)">Title <span class="sort-indicator">↕</span></th>
-            <th onclick="sortTable(2)">Author <span class="sort-indicator">↕</span></th>
-            <th onclick="sortTable(3)">Publisher <span class="sort-indicator">↕</span></th>
-            <th onclick="sortTable(4)">Genre <span class="sort-indicator">↕</span></th>
-            <th onclick="sortTable(5)">Stock <span class="sort-indicator">↕</span></th>
-            <th onclick="sortTable(6)">Price <span class="sort-indicator">↕</span></th>
-        </tr>
-        </thead>
+        <h1 class="num-results-heading" th:text="|${searchResults.size()} results for '${filter}'|"></h1>
 
-        <tbody>
-        <tr th:each="book : ${searchResults}">
-            <td th:text="${book.getISBN()}">Title</td>
-            <td th:text="${book.getTitle()}">Title</td>
-            <td th:text="${book.getAuthor()}">Author</td>
-            <td th:text="${book.getPublisher()}">Publisher</td>
-            <td th:text="${book.getGenre()}">Genre</td>
-            <td th:text="${book.getNumCopiesInStock()}">Stock</td>
-            <td th:text="${book.getPrice()}">Price</td>
-        </tr>
-        </tbody>
-    </table>
+        <table id="search-table">
+            <thead>
+            <tr>
+                <th onclick="sortTable(0)">ISBN <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(1)">Title <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(2)">Author <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(3)">Publisher <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(4)">Genre <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(5)">Stock <span class="sort-indicator">↕</span></th>
+                <th onclick="sortTable(6)">Price <span class="sort-indicator">↕</span></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="book : ${searchResults}" th:attr="ISBN=${book.getISBN()}" onclick="rowClicked(this)">
+                <td th:text="${book.getISBN()}">Title</td>
+                <td th:text="${book.getTitle()}">Title</td>
+                <td th:text="${book.getAuthor()}">Author</td>
+                <td th:text="${book.getPublisher()}">Publisher</td>
+                <td th:text="${book.getGenre()}">Genre</td>
+                <td th:text="${book.getNumCopiesInStock()}">Stock</td>
+                <td th:text="${book.getPrice()}">Price</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
