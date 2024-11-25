@@ -16,10 +16,11 @@ public class CheckoutService {
         this.bookRepository = bookRepository;
     }
 
-    public boolean checkout(String username, List<String> bookISBNs, String cardNumber, String expiry, String cvv) {
+    public boolean checkout(String username, List<String> books, String cardNumber, String expiry, String cvv) {
         System.out.println("Starting checkout process...");
         System.out.println("Username: " + username);
-        System.out.println("Book IDs: " + bookISBNs);
+
+        System.out.println("Books: " + books);
         System.out.println("Card Details - Card Number: " + cardNumber + ", Expiry: " + expiry + ", CVV: " + cvv);
 
         // Validate payment info (mock implementation, replace with actual validation)
@@ -38,18 +39,31 @@ public class CheckoutService {
         System.out.println("Customer retrieved successfully: " + customer);
 
         // Process the selected books and clear them from the cart
-        for (String bookId : bookISBNs) {
-            Book book = bookRepository.findByISBN(bookId).orElse(null);
-            if (book != null) {
+        for (String bookid : books) {
+            Book book = bookRepository.findByISBN(bookid).orElse(null);
+            int quantity;
+
+            if (book!= null) {
                 customer.addToHistory(book);
+                int stock = book.getNumCopiesInStock();
                 if (customer.getCart().containsKey(book)) {
-                    customer.removeFromCart(bookId);
+                    quantity = customer.getCart().get(book);
+                    if(stock - quantity >= 0) {
+                        customer.getCart().remove(book);
+                    }
+                    else{
+                        System.out.println("Sorry, not enough copies in stock");
+                        return false;
+                    }
+                    customer.removeFromCart(book.getISBN());
                 } else {
                     System.out.println("Book not in cart, skipping removal: " + book);
                 }
             } else {
-                System.out.println("Error: Book not found for ID: " + bookId);
+                System.out.println("Error: Book not found for ID: " + book.getISBN());
             }
+
+
         }
 
         // Save the updated customer state

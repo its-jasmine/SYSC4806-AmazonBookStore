@@ -7,12 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class CheckoutController {
@@ -69,7 +71,7 @@ public class CheckoutController {
     /**
      * Processes the checkout request.
      *
-     * @param bookISBNs    List of book IDs to purchase.
+     * @param bookids   List of books to purchase.
      * @param cardNumber The card number for payment.
      * @param expiry     The expiry date of the card.
      * @param cvv        The CVV code of the card.
@@ -78,12 +80,13 @@ public class CheckoutController {
      */
     @PostMapping("/checkout")
     public String handleCheckout(
-            @RequestParam("bookIds") List<String> bookISBNs,
+            @RequestParam("bookIds") List<String> bookids,
             @RequestParam("cardNumber") String cardNumber,
             @RequestParam("expiry") String expiry,
             @RequestParam("cvv") String cvv,
             HttpSession session,
-            Model model
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
         String username = (String) session.getAttribute("username");
         if (username == null) {
@@ -95,16 +98,21 @@ public class CheckoutController {
             model.addAttribute("username", username); // Add username to model
         }
 
-        boolean success = checkoutService.checkout(username, bookISBNs, cardNumber, expiry, cvv);
+
+
+        boolean success = checkoutService.checkout(username, bookids, cardNumber, expiry, cvv);
         if (success) {
             Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
-            customer.checkout();
-            customerRepository.save(customer);
+            if (customer != null) {
+                customer.checkout();
+                customerRepository.save(customer);
+            }
             return "redirect:/checkout-success";
         }
 
         model.addAttribute("error", "Checkout failed. Please check your payment details or cart.");
-        return "checkout-page";
+        redirectAttributes.addFlashAttribute("error", "Checkout failed. Please check your payment details or cart.");
+        return "redirect:/checkout?error=true";
     }
 
 

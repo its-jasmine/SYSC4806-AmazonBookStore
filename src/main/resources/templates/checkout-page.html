@@ -115,7 +115,7 @@
 
     <h2>Payment Information</h2>
     <form action="/checkout" method="post" onsubmit="return validateForm(event)">
-        <input type="hidden" name="bookIds" th:value="${#strings.listJoin(cart.keySet(), ',')}">
+        <input type="hidden" name="bookIds" th:each="book : ${cart.keySet()}" th:value="${book.ISBN}">
         <label>
             Credit Card Number:
             <input type="text" id="cardNumber" name="cardNumber" pattern="\d{12}" title="Card number must be exactly 12 digits" required>
