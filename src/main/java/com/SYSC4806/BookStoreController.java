@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -53,13 +54,13 @@ public class BookStoreController {
 
         if (username != null) {
             this.recommendation = new BookRecommendation((List<Customer>) customerRepository.findAll());
-            Customer customer = customerRepository.findCustomerByUsername(username).orElseThrow(
-                    () -> new RuntimeException("Customer not found")
-            );
-            System.out.println(recommendation.getRecommendation(customer));
-            System.out.println(((List<Customer>) customerRepository.findAll()).size());
-            model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
-            model.addAttribute("recommendation", recommendation.getRecommendation(customer));
+            Optional<Customer> optionalCustomer = customerRepository.findCustomerByUsername(username);
+
+            if (optionalCustomer.isPresent()) {
+                Customer customer = optionalCustomer.get();
+                model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
+                model.addAttribute("recommendation", recommendation.getRecommendation(customer));
+            }
         }
 
         return "home-page";
