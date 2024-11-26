@@ -1,6 +1,11 @@
 package com.SYSC4806;
 
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,10 +15,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class RegisterController {
 
-    final RegisterService registerService;
 
-    public RegisterController(RegisterService registerService) {
+    private final MeterRegistry meterRegistry;
+    private final RegisterService registerService;
+    private Counter invalidUsernameCounter;
+
+    @Autowired
+    public RegisterController(RegisterService registerService, MeterRegistry meterRegistry) {
         this.registerService = registerService;
+        this.meterRegistry = meterRegistry;
+    }
+
+    /**
+     * Initializes the invalidUsernameCounter after the dependencies are injected.
+     */
+    @PostConstruct
+    public void init() {
+        this.invalidUsernameCounter = meterRegistry.counter("register.invalid.username");
     }
 
     /**
@@ -48,6 +66,9 @@ public class RegisterController {
         switch (response) {
             case FAILED -> {return "redirect:/register";}
             case INVALID_USERNAME -> {
+                // DataDog: increment counter for invalid username
+                invalidUsernameCounter.increment();
+
                 model.addAttribute("error", "Username already exists. Please choose another one.");
                 return "register-page";
             }
