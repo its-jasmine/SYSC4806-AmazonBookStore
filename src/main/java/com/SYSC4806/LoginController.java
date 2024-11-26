@@ -1,5 +1,8 @@
 package com.SYSC4806;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,10 +14,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     private LoginService loginService;
+    private final MeterRegistry meterRegistry;
+    private Counter invalidCredentials;
 
-    public LoginController(@Autowired LoginService loginService) {
+
+    public LoginController(@Autowired LoginService loginService, MeterRegistry meterRegistry) {
         this.loginService = loginService;
+        this.meterRegistry = meterRegistry;
     }
+
+    /**
+     * Initializes the invalidCredentials counter after the dependencies are injected.
+     */
+    @PostConstruct
+    public void init() {
+        invalidCredentials = meterRegistry.counter("login.invalid.credentials");
+    }
+
 
     /**
      * Handles the GET request to display the login page.
@@ -48,7 +64,11 @@ public class LoginController {
                 session.setAttribute("username", username);
                 return "redirect:/home";
             }
-            default -> {return "redirect:/login";}
+            default -> {
+                // Datadog: increment invalid credentials counter
+                invalidCredentials.increment();
+                return "redirect:/login";
+            }
         }
     }
 }
