@@ -28,22 +28,7 @@ public class Main {
     @Profile("!test") // This bean will not run when the "test" profile is active
     public CommandLineRunner demo(BookRepository bookRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
         return (args) -> {
-            // Generating 100 random books to populate the book store
-            // Bounds were selected such that some books may have the same author, publisher, and/or genre.
-            // Book names however, are all unique (however this isn't strictly required by the system, i.e., the combination of all book values is what must be unique)
-            Random random = new Random();
-            List<Book> demoBooks = new ArrayList<>();
-            Book.Genre[] genres = Book.Genre.values();
-            int baseISBN = 1000000000;
-            double cents = 0.99;
-            Book demoBook;
-            for (int i = 0; i<100; i++) {
-                demoBook = new Book((baseISBN+i)+"","Book" + i, "author" + random.nextInt(90), "pub" + random.nextInt(5), cents + ((random.nextInt(40) + 10)),genres[random.nextInt(genres.length)], random.nextInt(100));
-                demoBook.setNumCopiesSold(random.nextInt(10000));
-                demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
-                demoBooks.add(demoBook);
-            }
-            demoBooks.add(new Book((baseISBN+400+""), "Harry Potter", "J.K Rowling", "publisher", 45.98, genres[5], 17));
+            List<Book> demoBooks = new BookGenerator().populateBooksFromOpenLibrary();
             demoBooks.forEach(book -> bookRepository.save(book));
 
             // Fetch all books

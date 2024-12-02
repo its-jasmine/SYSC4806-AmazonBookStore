@@ -160,11 +160,14 @@ class BookStoreControllerTest {
     void showBookDetailsPage() throws Exception {
         String ISBN = "1234567890";
         Book book = new Book(ISBN, "Some Title", "Some Author", "Some Publisher", 19.99, Book.Genre.Fiction, 1);
+        book.setWorkId("/works/OL45804W");
         when(bookRepository.findByISBN("1234567890")).thenReturn(Optional.of(book));
 
         // Verifying that accessing the book details url will successfully show the book details page
         mockMvc.perform(get("/book-details").param("ISBN", ISBN))
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("book"))
+                .andExpect(model().attributeExists("description"))
                 .andExpect(view().name("book-details"));
     }
 }
