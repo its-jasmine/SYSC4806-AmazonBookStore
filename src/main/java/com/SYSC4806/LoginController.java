@@ -6,6 +6,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +53,7 @@ public class LoginController {
      * @return redirect to the home page if login is successful; otherwise, redirect to the login page.
      */
     @PostMapping("/login")
-    public String login(@RequestParam(name="username")String username, @RequestParam(name="password")String password, HttpSession session) {
+    public String login(@RequestParam(name="username")String username, @RequestParam(name="password")String password, HttpSession session, Model model) {
 
         LoginService.Response response = loginService.authenticate(username, password);
         switch (response) {
@@ -67,7 +68,8 @@ public class LoginController {
             default -> {
                 // Datadog: increment invalid credentials counter
                 invalidCredentials.increment();
-                return "redirect:/login";
+                model.addAttribute("error", "Invalid credentials. Please try again!");
+                return "login-page";
             }
         }
     }
