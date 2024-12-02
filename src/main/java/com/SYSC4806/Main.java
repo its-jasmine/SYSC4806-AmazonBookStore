@@ -19,11 +19,6 @@ public class Main {
         SpringApplication.run(Main.class, args);
     }
 
-    private Book getBookById(String isbn, BookRepository bookRepository) {
-        return bookRepository.findByISBN(isbn)
-                .orElseThrow(() -> new IllegalStateException("Book with ID " + isbn + " not found"));
-    }
-
     @Bean
     @Profile("!test") // This bean will not run when the "test" profile is active
     public CommandLineRunner demo(BookRepository bookRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
@@ -45,12 +40,6 @@ public class Main {
                 log.info("");
             });
 
-            // Fetch book by title
-            log.info("Buddy found with findByName('Book1'):");
-            log.info("--------------------------------------------");
-            bookRepository.findByTitle("Book1").forEach(book -> log.info(book.toString()));
-            log.info("");
-
             // Fetch top 10 best seller books
             log.info("Top 10 Bestseller Books found with findTop10ByOrderByNumCopiesSoldDesc():");
             log.info("-------------------------------");
@@ -70,30 +59,28 @@ public class Main {
                     new Customer("customer3", "password4")
             };
 
-            try {
-                demoCustomerAccounts[0].addToHistory(getBookById("1000000001", bookRepository));
-                demoCustomerAccounts[0].addToHistory(getBookById("1000000002", bookRepository));
-                demoCustomerAccounts[0].addToHistory(getBookById("1000000004", bookRepository));
-                demoCustomerAccounts[0].addToHistory(getBookById("1000000006", bookRepository));
+            demoCustomerAccounts[0].addToHistory(demoBooks.get(1));
+            demoCustomerAccounts[0].addToHistory(demoBooks.get(2));
+            demoCustomerAccounts[0].addToHistory(demoBooks.get(4));
+            demoCustomerAccounts[0].addToHistory(demoBooks.get(6));
 
-                demoCustomerAccounts[1].addToHistory(getBookById("1000000001", bookRepository));
-                demoCustomerAccounts[1].addToHistory(getBookById("1000000003", bookRepository));
-                demoCustomerAccounts[1].addToHistory(getBookById("1000000004", bookRepository));
-                demoCustomerAccounts[1].addToHistory(getBookById("1000000006", bookRepository));
-                demoCustomerAccounts[1].addToHistory(getBookById("1000000007", bookRepository));
-                demoCustomerAccounts[1].addToHistory(getBookById("1000000009", bookRepository));
+            demoCustomerAccounts[1].addToHistory(demoBooks.get(1));
+            demoCustomerAccounts[1].addToHistory(demoBooks.get(3));
+            demoCustomerAccounts[1].addToHistory(demoBooks.get(4));
+            demoCustomerAccounts[1].addToHistory(demoBooks.get(6));
+            demoCustomerAccounts[1].addToHistory(demoBooks.get(7));
+            demoCustomerAccounts[1].addToHistory(demoBooks.get(9));
 
-                demoCustomerAccounts[2].addToHistory(getBookById("1000000002", bookRepository));
-                demoCustomerAccounts[2].addToHistory(getBookById("1000000003", bookRepository));
-                demoCustomerAccounts[2].addToHistory(getBookById("1000000006", bookRepository));
-                demoCustomerAccounts[2].addToHistory(getBookById("1000000010", bookRepository));
-            } catch (IllegalStateException e) {
-                System.out.println(e.getMessage()); // Log missing book
-            }
+            demoCustomerAccounts[2].addToHistory(demoBooks.get(2));
+            demoCustomerAccounts[2].addToHistory(demoBooks.get(3));
+            demoCustomerAccounts[2].addToHistory(demoBooks.get(6));
+            demoCustomerAccounts[2].addToHistory(demoBooks.get(10));
+
 
             //test recommendation
             BookRecommendation bookRecommendation = new BookRecommendation(Arrays.stream(demoCustomerAccounts).toList());
             log.info("These are recommendations for customer 1");
+
             for (Book book: bookRecommendation.getRecommendation(demoCustomerAccounts[0])) {
                 log.info(book.toString());
             }
