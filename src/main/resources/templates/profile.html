@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Amazing Bookstore</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .purchase-history {
+            margin-top: 20px;
+        }
+
+        .purchase-history h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: cornflowerblue; /* Dark blue for the header */
+            color: white;
+            font-weight: bold;
+        }
+
+        table tbody tr:hover {
+            background-color: #1f618d; /* Darker blue for hover effect */
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <!-- Logo wrapped in anchor tag to navigate to home -->
+    <a th:href="@{/home}">
+        <img src="/images/book-logo.png" alt="Bookstore Logo">
+    </a>
+
+    <nav th:if="${username == null}">
+        <a th:href="@{/logout}">Logout</a>
+        <a th:href="@{/register}">Register</a>
+        <a th:href="@{/home}">Home</a>
+    </nav>
+
+    <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <a th:href="@{/cart}">
+            <div class="cart">
+                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
+            </div>
+        </a>
+        <a th:href="@{/logout}" style="margin-left: 15px;">Logout</a>
+    </div>
+</header>
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h1 th:text="${customer.username}">Customer Name</h1>
+        <p>Your purchase details are listed below.</p>
+    </div>
+
+    <div class="purchase-history">
+        <h2>Purchase History</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${customer.purchaseHistory}">
+                <td th:text="${book.title}">Sample Book</td>
+                <td th:text="${book.author}">Sample Author</td>
+                <td th:text="${book.price}">$10.99</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
+</footer>
+
+</body>
+</html>

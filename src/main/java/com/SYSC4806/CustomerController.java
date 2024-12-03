@@ -136,5 +136,23 @@ public class CustomerController {
         return "redirect:/cart"; // Redirect back to the cart page
     }
 
+    @GetMapping("/profile")
+    public String getProfilePage(Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if not logged in
+        }
+        Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
+        if (customer == null) {
+            return "redirect:/login"; // Redirect if customer not found
+        }
+
+        model.addAttribute("customer", customer); // Add the customer object to the model
+        model.addAttribute("purchaseHistory", customer.getPurchaseHistory()); // Add the purchase history
+        return "profile";
+
+    }
+
 
 }
