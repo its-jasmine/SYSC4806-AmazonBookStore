@@ -64,6 +64,9 @@ public class Customer extends AppUser {
         return purchaseHistory;
     }
 
+    public void setPurchaseHistory(List<Book> purchaseHistory) {
+        this.purchaseHistory = purchaseHistory;
+    }
     /**
      * add the book to the customer's cart
      * @param book the book to add
@@ -74,7 +77,7 @@ public class Customer extends AppUser {
 
     /**
      * remove the specified book from the cart
-     * @param String the book to remove
+     * @param string the book to remove
      *
      */
     public void removeFromCart(String ISBN) {
