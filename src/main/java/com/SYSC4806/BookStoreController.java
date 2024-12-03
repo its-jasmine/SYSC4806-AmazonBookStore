@@ -33,24 +33,29 @@ public class BookStoreController {
     BookRepository bookRepository;
     @Autowired
     private AdminRepository adminRepository;
-    private final MeterRegistry meterRegistry;
-    private Timer recommendationTimer;
+    /** DataDog fields */
+//    private final MeterRegistry meterRegistry;
+//    private Timer recommendationTimer;
 
     BookRecommendation recommendation;
 
-    public BookStoreController(MeterRegistry meterRegistry) {
-        this.meterRegistry = meterRegistry;
-    }
+    /**
+     * DataDog constructor
+     */
+//    public BookStoreController(MeterRegistry meterRegistry) {
+//        this.meterRegistry = meterRegistry;
+//    }
 
     /**
+     * DataDog PostConstruct
      * Initializes the recommendationTimer after the dependencies are injected.
      */
-    @PostConstruct
-    public void init() {
-        this.recommendationTimer = Timer.builder("recommendation.query.time")
-                .description("Time taken to generate book recommendations")
-                .register(meterRegistry);
-    }
+//    @PostConstruct
+//    public void init() {
+//        this.recommendationTimer = Timer.builder("recommendation.query.time")
+//                .description("Time taken to generate book recommendations")
+//                .register(meterRegistry);
+//    }
 
     /**
      * Handles the GET request to show the home page
@@ -74,7 +79,7 @@ public class BookStoreController {
 
         if (username != null) {
             // Datadog: recommendation algorithm timer
-            recommendationTimer.record(() -> {
+            // recommendationTimer.record(() -> {
                 this.recommendation = new BookRecommendation((List<Customer>) customerRepository.findAll());
                 Optional<Customer> optionalCustomer = customerRepository.findCustomerByUsername(username);
 
@@ -83,7 +88,7 @@ public class BookStoreController {
                     model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
                     model.addAttribute("recommendation", recommendation.getRecommendation(customer));
                 }
-            });
+            //});
         }
         return "home-page";
     }

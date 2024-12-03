@@ -21,29 +21,37 @@ import java.util.stream.Stream;
  */
 @Controller
 public class BookFilteringController {
-    private final MeterRegistry meterRegistry;
+    /** DataDog fields */
+//    private final MeterRegistry meterRegistry;
 
     private final BookRepository bookRepository;
 
     private final Map<String, Counter> genreCounters = new HashMap<>();
 
-    public BookFilteringController(MeterRegistry meterRegistry, BookRepository bookRepository) {
-        this.meterRegistry = meterRegistry;
+    /**
+     * DataDog constructor
+     */
+//    public BookFilteringController(MeterRegistry meterRegistry, BookRepository bookRepository) {
+//        this.meterRegistry = meterRegistry;
+//        this.bookRepository = bookRepository;
+//    }
+    public BookFilteringController(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
     /**
+     * DataDog PostConstruct
      * Initializes the genre counters after the dependencies are injected.
      */
-    @PostConstruct
-    public void init() {
-        for (Book.Genre genre : Book.Genre.values()) {
-            genreCounters.put(genre.name(), Counter.builder("filter.usage")
-                    .tag("type", "genre")
-                    .tag("value", genre.name())
-                    .register(meterRegistry));
-        }
-    }
+//    @PostConstruct
+//    public void init() {
+//        for (Book.Genre genre : Book.Genre.values()) {
+//            genreCounters.put(genre.name(), Counter.builder("filter.usage")
+//                    .tag("type", "genre")
+//                    .tag("value", genre.name())
+//                    .register(meterRegistry));
+//        }
+//    }
 
     /**
      * Handles the GET request to show a filtered list of books in a particular genre.
@@ -73,10 +81,10 @@ public class BookFilteringController {
     @GetMapping("/browse-by-genre")
     public String showBooksInGenrePage(@RequestParam(name="genre") Book.Genre genre, Model model) {
         // DataDog: increment counter for genre
-        Counter counter = genreCounters.get(genre.name());
-        if (counter != null) {
-            counter.increment();
-        }
+//        Counter counter = genreCounters.get(genre.name());
+//        if (counter != null) {
+//            counter.increment();
+//        }
         List<Book> booksInGenre = bookRepository.findByGenre(genre);
         model.addAttribute("searchResults", booksInGenre);
         model.addAttribute("filter", genre);

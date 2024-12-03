@@ -15,22 +15,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     private LoginService loginService;
-    private final MeterRegistry meterRegistry;
-    private Counter invalidCredentials;
 
+    /** DataDog fields */
+//    private final MeterRegistry meterRegistry;
+//    private Counter invalidCredentials;
 
-    public LoginController(@Autowired LoginService loginService, MeterRegistry meterRegistry) {
+    /**
+     * DataDog constructor
+     * @param loginService
+     */
+//    public LoginController(@Autowired LoginService loginService, MeterRegistry meterRegistry) {
+//        this.loginService = loginService;
+//        this.meterRegistry = meterRegistry;
+//    }
+    public LoginController(@Autowired LoginService loginService) {
         this.loginService = loginService;
-        this.meterRegistry = meterRegistry;
     }
 
     /**
+     * DataDog PostConstruct
      * Initializes the invalidCredentials counter after the dependencies are injected.
      */
-    @PostConstruct
-    public void init() {
-        invalidCredentials = meterRegistry.counter("login.invalid.credentials");
-    }
+//    @PostConstruct
+//    public void init() {
+//        invalidCredentials = meterRegistry.counter("login.invalid.credentials");
+//    }
 
 
     /**
@@ -67,7 +76,7 @@ public class LoginController {
             }
             default -> {
                 // Datadog: increment invalid credentials counter
-                invalidCredentials.increment();
+                // invalidCredentials.increment();
                 model.addAttribute("error", "Invalid credentials. Please try again!");
                 return "login-page";
             }
