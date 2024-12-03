@@ -154,5 +154,13 @@ public class CustomerController {
 
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        // Invalidate the session to log out the user
+        session.invalidate();
+        // Redirect the user to the login page after logging out
+        return "redirect:/home";
+    }
+
 
 }
