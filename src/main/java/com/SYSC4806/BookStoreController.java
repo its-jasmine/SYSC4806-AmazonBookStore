@@ -178,19 +178,22 @@ public class BookStoreController {
         model.addAttribute("genres", Book.Genre.values());
         return "book-management";
     }
-    /**
-     * Handles the GET request to show page with the details for a selected book and allow user to add to cart.
-     *
-     * @return template name for book-details
-     */
+
     @GetMapping("/book-details")
-    public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, Model model) {
+    public String showBookDetailsPage(@RequestParam(name = "ISBN") String ISBN, Model model, HttpSession session) {
         Optional<Book> book = bookRepository.findByISBN(ISBN);
+        String username = (String) session.getAttribute("username");
+
+        if (username != null) {
+            model.addAttribute("username", username);
+        }
+
         if (book.isPresent()) {
             model.addAttribute("book", book.get());
             return "book-details";
         }
-        return "home-page";
 
+        // Redirect to the homepage if the book is not found
+        return "redirect:/home";
     }
 }

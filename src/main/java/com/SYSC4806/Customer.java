@@ -2,10 +2,7 @@ package com.SYSC4806;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Entity
 public class Customer extends AppUser {
@@ -25,6 +22,14 @@ public class Customer extends AppUser {
     @MapKeyJoinColumn(name = "book_id")
     @Column(name = "quantity")
     private Map<Book, Integer> cart = new HashMap<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private Set<Book> wishlist = new HashSet<>();
 
     /**
      * Constructor for Customer
@@ -109,4 +114,33 @@ public class Customer extends AppUser {
 
     public void setCart(HashMap<Book, Integer> cart) {
     }
+
+    /**
+     * Getter for the wishlist
+     * @return the wishlist
+     */
+    public Set<Book> getWishlist() {
+        return wishlist;
+    }
+
+    /**
+     * Setter for the wishlist
+     * @param wishlist the wishlist to set
+     */
+    public void setWishlist(Set<Book> wishlist) {
+        this.wishlist = wishlist;
+    }
+
+    public boolean addToWishlist(Book book){
+        if (wishlist.contains(book)){
+            return false;
+        }
+        this.wishlist.add(book);
+        return true;
+    }
+
+    public boolean removeFromWishlist(Book book) {
+        return this.wishlist.remove(book); // Remove the book if it exists
+    }
+
 }

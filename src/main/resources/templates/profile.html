@@ -91,7 +91,7 @@
 <div class="profile-container">
     <div class="profile-header">
         <h1 th:text="${customer.username}">Customer Name</h1>
-        <p>Your purchase details are listed below.</p>
+        <p>Your account details are listed below.</p>
     </div>
 
     <div class="purchase-history">
@@ -113,6 +113,34 @@
             </tbody>
         </table>
     </div>
+    <div class="wishlist">
+        <h2>Wishlist</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Action</th> <!-- Added a new column for actions -->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="book : ${customer.getWishlist()}">
+                <td th:text="${book.title}">Sample Book</td>
+                <td th:text="${book.author}">Sample Author</td>
+                <td th:text="${book.price}">$10.99</td>
+                <td>
+                    <!-- Remove button -->
+                    <form th:action="@{/wishlist/remove}" method="post">
+                        <input type="hidden" name="bookId" th:value="${book.ISBN}" />
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <footer>

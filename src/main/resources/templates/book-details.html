@@ -75,6 +75,12 @@
             margin-bottom: 10px;
         }
 
+        .buttons-container {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between buttons */
+        }
+
         .add-to-cart-button {
             background-color: cornflowerblue;
             color: white;
@@ -90,6 +96,20 @@
             background-color: #1e4e94;
         }
 
+        .add-to-wishlist-button {
+            background-color: transparent;
+            color: #e74c3c;
+            font-size: 2em;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s;
+            padding: 0; /* Remove default button padding */
+        }
+
+        .add-to-wishlist-button:hover {
+            color: #c0392b;
+        }
+
         .book-info {
             display: flex;
             gap: 20px;
@@ -98,10 +118,18 @@
         .book-info div {
             width: 50%;
         }
+
+        .success-message {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
-
 <header>
     <a th:href="@{/home}">
         <img src="/images/book-logo.png" alt="Bookstore Logo">
@@ -110,26 +138,23 @@
     <nav th:if="${username == null}">
         <a th:href="@{/login}">Sign in</a>
         <a th:href="@{/register}">Register</a>
-        <a th:href="@{/home}">Home</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
-        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        <a th:href="@{/profile}">
+            <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        </a>
         <a th:href="@{/cart}">
-            <div class="cart">
-                <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
-            </div>
+            <img src="/images/cart.png" alt="Shopping Cart" style="width: 50px; height: 50px; margin-right: 8px;">
         </a>
     </div>
 </header>
 
 <div class="book-details-container">
     <div class="book-info">
-        <!-- Book Image -->
         <div>
             <img src="https://via.placeholder.com/200" alt="Book Image">
         </div>
-        <!-- Book Details -->
         <div>
             <h2 th:text="${book.getTitle()}">Book Title</h2>
             <p><strong>Author:</strong> <span th:text="${book.getAuthor()}">Author Name</span></p>
@@ -138,18 +163,27 @@
             <p><strong>Stock:</strong> <span th:text="${book.getNumCopiesInStock()}">Available Stock</span></p>
             <p><strong>Price:</strong> <span th:text="${book.getPrice()}">$ Price</span></p>
 
-            <!-- Add to Cart Button -->
-            <form th:action="@{/cart/add}" method="post">
-                <input type="hidden" name="bookId" th:value="${book.getISBN()}">
-                <button type="submit" class="add-to-cart-button">Add to Cart</button>
-            </form>
+            <div class="buttons-container">
+                <form th:action="@{/cart/add}" method="post" style="margin: 0;">
+                    <input type="hidden" name="bookId" th:value="${book.getISBN()}">
+                    <button type="submit" class="add-to-cart-button">Add to Cart</button>
+                </form>
+
+                <form th:action="@{/wishlist/add}" method="post" style="margin: 0;">
+                    <input type="hidden" name="bookId" th:value="${book.getISBN()}">
+                    <button type="submit" class="add-to-wishlist-button">❤️</button>
+                </form>
+            </div>
+
+            <!-- Success and error messages -->
+            <div th:if="${success}" th:text="${success}"></div>
+            <div th:if="${error}" th:text="${error}"></div>
         </div>
     </div>
 </div>
 
 <footer>
-    <p>&copy;  2024 Amazing Bookstore. (Group 10)</p>
+    <p>&copy; Amazing Bookstore</p>
 </footer>
-
 </body>
 </html>
