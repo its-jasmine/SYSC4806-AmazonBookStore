@@ -1,12 +1,16 @@
 package com.SYSC4806;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 /**
@@ -17,8 +21,37 @@ import java.util.stream.Stream;
  */
 @Controller
 public class BookFilteringController {
-    @Autowired
-    private BookRepository bookRepository;
+    /** DataDog fields */
+//    private final MeterRegistry meterRegistry;
+
+    private final BookRepository bookRepository;
+
+    private final Map<String, Counter> genreCounters = new HashMap<>();
+
+    /**
+     * DataDog constructor
+     */
+//    public BookFilteringController(MeterRegistry meterRegistry, BookRepository bookRepository) {
+//        this.meterRegistry = meterRegistry;
+//        this.bookRepository = bookRepository;
+//    }
+    public BookFilteringController(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    /**
+     * DataDog PostConstruct
+     * Initializes the genre counters after the dependencies are injected.
+     */
+//    @PostConstruct
+//    public void init() {
+//        for (Book.Genre genre : Book.Genre.values()) {
+//            genreCounters.put(genre.name(), Counter.builder("filter.usage")
+//                    .tag("type", "genre")
+//                    .tag("value", genre.name())
+//                    .register(meterRegistry));
+//        }
+//    }
 
     /**
      * Handles the GET request to show a filtered list of books in a particular genre.
@@ -47,6 +80,11 @@ public class BookFilteringController {
      */
     @GetMapping("/browse-by-genre")
     public String showBooksInGenrePage(@RequestParam(name="genre") Book.Genre genre, Model model) {
+        // DataDog: increment counter for genre
+//        Counter counter = genreCounters.get(genre.name());
+//        if (counter != null) {
+//            counter.increment();
+//        }
         List<Book> booksInGenre = bookRepository.findByGenre(genre);
         model.addAttribute("searchResults", booksInGenre);
         model.addAttribute("filter", genre);

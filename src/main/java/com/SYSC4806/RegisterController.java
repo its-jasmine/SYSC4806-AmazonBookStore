@@ -1,6 +1,11 @@
 package com.SYSC4806;
 
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class RegisterController {
 
-    final RegisterService registerService;
+    private final RegisterService registerService;
 
+    @Autowired
     public RegisterController(RegisterService registerService) {
         this.registerService = registerService;
     }

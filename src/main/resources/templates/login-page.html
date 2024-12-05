@@ -66,6 +66,14 @@
         input[type="submit"]:hover {
             background-color: darkblue;
         }
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            text-align: left;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -82,6 +90,7 @@
     <h1>Login to Your Account</h1>
 
     <form action="/login" method="post">
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required>
 

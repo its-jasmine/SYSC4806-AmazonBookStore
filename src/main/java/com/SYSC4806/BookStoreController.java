@@ -1,5 +1,9 @@
 package com.SYSC4806;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,8 +33,29 @@ public class BookStoreController {
     BookRepository bookRepository;
     @Autowired
     private AdminRepository adminRepository;
+    /** DataDog fields */
+//    private final MeterRegistry meterRegistry;
+//    private Timer recommendationTimer;
 
     BookRecommendation recommendation;
+
+    /**
+     * DataDog constructor
+     */
+//    public BookStoreController(MeterRegistry meterRegistry) {
+//        this.meterRegistry = meterRegistry;
+//    }
+
+    /**
+     * DataDog PostConstruct
+     * Initializes the recommendationTimer after the dependencies are injected.
+     */
+//    @PostConstruct
+//    public void init() {
+//        this.recommendationTimer = Timer.builder("recommendation.query.time")
+//                .description("Time taken to generate book recommendations")
+//                .register(meterRegistry);
+//    }
 
     /**
      * Handles the GET request to show the home page
@@ -53,16 +78,18 @@ public class BookStoreController {
         model.addAttribute("bestSellers", books);
 
         if (username != null) {
-            this.recommendation = new BookRecommendation((List<Customer>) customerRepository.findAll());
-            Optional<Customer> optionalCustomer = customerRepository.findCustomerByUsername(username);
+            // Datadog: recommendation algorithm timer
+            // recommendationTimer.record(() -> {
+                this.recommendation = new BookRecommendation((List<Customer>) customerRepository.findAll());
+                Optional<Customer> optionalCustomer = customerRepository.findCustomerByUsername(username);
 
-            if (optionalCustomer.isPresent()) {
-                Customer customer = optionalCustomer.get();
-                model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
-                model.addAttribute("recommendation", recommendation.getRecommendation(customer));
-            }
+                if (optionalCustomer.isPresent()) {
+                    Customer customer = optionalCustomer.get();
+                    model.addAttribute("recSize", recommendation.getRecommendation(customer).size());
+                    model.addAttribute("recommendation", recommendation.getRecommendation(customer));
+                }
+            //});
         }
-
         return "home-page";
     }
 
