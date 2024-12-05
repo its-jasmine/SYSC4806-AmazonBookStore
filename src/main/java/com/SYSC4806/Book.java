@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.*;
+
+import static java.lang.Math.round;
 
 
 @Entity
@@ -45,8 +47,12 @@ public class Book {
 
     private String workId; // needed to retreive description from Open Library API
 
-    public Book() {}
+    @ElementCollection
+    private Map<String, Integer> reviews;
 
+    public Book() {
+        this.reviews = new HashMap<>();
+    }
     public Book(String ISBN, String title, String author, String publisher, double price, Genre genre, int numCopiesInStock) {
         this.title = title;
         this.author = author;
@@ -56,9 +62,10 @@ public class Book {
         this.numCopiesSold = 0;
         this.dateAdded = LocalDateTime.now();
         this.ISBN = validateISBN(ISBN);
-        this.price = Math.round(price * 100.0) / 100.0; // rounds value to 2 decimal places
         this.imageId = "";
         this.workId = "";
+        this.price = round(price * 100.0) / 100.0; // rounds value to 2 decimal places
+        this.reviews = new HashMap<>();
     }
 
     public void incrementNumCopiesSold() {
@@ -210,5 +217,43 @@ public class Book {
     public int hashCode() {
         return Objects.hash(title, author, publisher, genre);
     }
+
+    /**
+     * Add a review to the book
+     * @param review to add to book
+     */
+    public void addReview(String review, int rating) {
+        this.reviews.put(review, rating);
+    }
+
+    /**
+     * Add a review to the book
+     * @return reviews for the book
+     */
+    public Map<String, Integer> getReviews() {
+        return this.reviews;
+    }
+
+    /**
+     * Get the overall rating of the book based on ratings
+     * @return the overall rating
+     */
+    public String getOverallRating() {
+        if (this.reviews.isEmpty()) {
+            return "0"; // Return 0 if the map is empty to avoid division by zero
+        }
+
+        int sum = 0;
+        int count = 0;
+
+        // Iterate through the entries of the map
+        for (HashMap.Entry<String, Integer> entry : this.reviews.entrySet()) {
+            sum += entry.getValue();
+            count++;
+        }
+        return String.format("%.1f", ((double) sum / count));
+
+    }
+
 
 }
