@@ -43,6 +43,8 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex; /* Align child divs side by side */
+            gap: 20px; /* Space between the two divs */
         }
 
         .book-details-container img {
@@ -101,7 +103,9 @@
 
         /* Container Styling */
         .review-container {
-            max-width: 600px;
+            height: 400px; /* Fixed height for the container, you can adjust */
+            overflow-y: auto;
+            width: 500px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -126,7 +130,7 @@
 
         /* Input Field Styling */
         .form-group input[type="text"] {
-            width: 100%;
+            width: 80%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -163,6 +167,8 @@
         #search-table td {
             border: 1px solid #ddd;
             padding: 8px;
+            word-wrap: break-word;  /* Ensures long words will wrap to the next line */
+            white-space: normal;
         }
 
         .star {
@@ -214,7 +220,7 @@
     </div>
 </header>
 
-<div class="book-details-container">
+<div class="book-details-container" style="{display: flex; justify-content: space-between;}" >
     <div class="book-info">
         <div class="cover-and-details">
             <!-- Book Image -->
@@ -242,46 +248,46 @@
             <p th:text="${description}"></p>
         </div>
     </div>
-</div>
 
-<div class="review-container">
-    <h2>Add a Review</h2>
+    <div class="review-container">
+        <h2>Add a Review</h2>
 
-    <form id="addReviewForm" action="/add-review" method="POST">
-        <div class="rating-container">
-            <span class="star" data-value="1">&#9733;</span>
-            <span class="star" data-value="2">&#9733;</span>
-            <span class="star" data-value="3">&#9733;</span>
-            <span class="star" data-value="4">&#9733;</span>
-            <span class="star" data-value="5">&#9733;</span>
-        </div>
-        <div class="form-group">
-            <label for="addReview">Review:</label>
-            <input type="hidden" name="ISBN" th:value="${book.getISBN()}">
-            <input type="hidden" id="rating" name="rating">
-            <input type="text" id="addReview" name="review" required>
-        </div>
-        <button class="add-to-cart-button" type="submit">Add Review</button>
-    </form>
-    <table id="search-table">
-        <thead>
-        <tr>
-            <th>Reviews</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="review : ${reviews}">
-            <td>
+        <form id="addReviewForm" action="/add-review" method="POST">
+            <div class="rating-container">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <div class="form-group">
+                <label for="addReview">Review:</label>
+                <input type="hidden" name="ISBN" th:value="${book.getISBN()}">
+                <input type="hidden" id="rating" name="rating">
+                <input type="text" id="addReview" name="review" required>
+            </div>
+            <button class="add-to-cart-button" type="submit">Add Review</button>
+        </form>
+        <table id="search-table">
+            <thead>
+            <tr>
+                <th>Reviews</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="review : ${reviews}">
+                <td>
                 <span>
                     <span th:each="i : ${#numbers.sequence(1, 5)}"
-                          th:text="${i <= review.getValue() ? '★' : '☆'}"></span>
+                          th:text="${i <= review.getRating() ? '★' : '☆'}"></span>
                 </span>
-                <br>
-                <span th:text="${username != null ? username + ': ' + review.getKey() : 'Anonymous: ' + review.getKey()}"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                    <br>
+                    <span th:text="${review.getUsername()  + ': ' + review.getReview()}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <footer>
