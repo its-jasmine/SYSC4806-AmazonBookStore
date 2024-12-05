@@ -67,7 +67,6 @@ public class CheckoutController {
     }
 
 
-
     /**
      * Processes the checkout request.
      *
@@ -117,7 +116,16 @@ public class CheckoutController {
 
 
     @GetMapping("/checkout-success")
-    public String showSuccessPage() {
+    public String showSuccessPage(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if not logged in
+        }
+
+        if (username != null) {
+            model.addAttribute("username", username); // Add username to model
+        }
         return "checkout-success"; // Renders checkout-success.html
     }
 }
