@@ -307,6 +307,7 @@
 <script>
     const stars = document.querySelectorAll('.star');
     const ratingInput = document.getElementById('rating');
+    ratingInput.value = 0;
 
     stars.forEach(star => {
         star.addEventListener('click', () => {
@@ -320,7 +321,12 @@
                 stars[i].classList.add('checked');
             }
 
-            ratingInput.value = rating;
+            if (ratingInput.value !== "") {
+                ratingInput.value = rating;
+            } else {
+                ratingInput.value = "0";
+            }
+
         });
     });
 </script>
