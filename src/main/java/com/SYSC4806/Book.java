@@ -47,11 +47,16 @@ public class Book {
 
     private String workId; // needed to retreive description from Open Library API
 
-    @ElementCollection
-    private Map<String, Integer> reviews;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "book_reviews",
+            joinColumns = @JoinColumn(name = "review_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Review> reviews;
 
     public Book() {
-        this.reviews = new HashMap<>();
+        this.reviews = new ArrayList<>();
     }
     public Book(String ISBN, String title, String author, String publisher, double price, Genre genre, int numCopiesInStock) {
         this.title = title;
@@ -65,7 +70,7 @@ public class Book {
         this.imageId = "";
         this.workId = "";
         this.price = round(price * 100.0) / 100.0; // rounds value to 2 decimal places
-        this.reviews = new HashMap<>();
+        this.reviews = new ArrayList<>();
     }
 
     public void incrementNumCopiesSold() {
@@ -222,15 +227,15 @@ public class Book {
      * Add a review to the book
      * @param review to add to book
      */
-    public void addReview(String review, int rating) {
-        this.reviews.put(review, rating);
+    public void addReview(String review, int rating, String username) {
+        this.reviews.add(new Review(rating, username, review));
     }
 
     /**
      * Add a review to the book
      * @return reviews for the book
      */
-    public Map<String, Integer> getReviews() {
+    public List<Review> getReviews() {
         return this.reviews;
     }
 
@@ -247,8 +252,8 @@ public class Book {
         int count = 0;
 
         // Iterate through the entries of the map
-        for (HashMap.Entry<String, Integer> entry : this.reviews.entrySet()) {
-            sum += entry.getValue();
+        for (Review review : reviews) {
+            sum += review.getRating();
             count++;
         }
         return String.format("%.1f", ((double) sum / count));
