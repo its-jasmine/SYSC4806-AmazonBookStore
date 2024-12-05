@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .cart-empty-message, .cart-container{
+            text-align: center;
+        }
+        .proceed-checkout-button {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .proceed-checkout-button:hover {
+            background-color: #1e4e94;
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -34,12 +53,12 @@
 <h1>Your Cart</h1>
 
 <!-- Check if the cart is empty -->
-<div th:if="${cart.isEmpty()}">
+<div class="cart-empty-message" th:if="${cart.isEmpty()}">
     <p>Your cart is empty.</p>
 </div>
 
 <!-- Display cart items if there are any -->
-<div th:if="${!cart.isEmpty()}">
+<div class="cart-container" th:if="${!cart.isEmpty()}">
     <table>
         <thead>
         <tr>
@@ -72,7 +91,10 @@
 
     </table>
     <br>
-    <a href="/checkout">Proceed to Checkout</a>
+    <form th:action="@{/checkout}" method="get">
+        <button type="submit" class="proceed-checkout-button">Proceed to Checkout</button>
+    </form>
+
 </div>
 <footer>
     <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>

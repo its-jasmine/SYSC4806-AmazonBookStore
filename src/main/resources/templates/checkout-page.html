@@ -24,6 +24,17 @@
                 return false;
             }
 
+            // Check if expiration date is valid
+            const [month, year] = expiry.split("/").map(Number);
+            const currentYear = new Date().getFullYear() % 100; // Get last two digits of current year
+            const currentMonth = new Date().getMonth() + 1; // Month is zero-indexed
+
+            if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                alert("Card has expired.");
+                event.preventDefault();
+                return false;
+            }
+
             if (!cvvRegex.test(cvv)) {
                 alert("CVV must be exactly 3 digits.");
                 event.preventDefault();
@@ -35,6 +46,94 @@
     </script>
     <link rel="stylesheet" href="/css/styles.css">
     <style>
+        /* General Reset */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header img {
+            max-height: 50px;
+        }
+
+        header a {
+            color: white;
+            margin-right: 10px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #1e4e94;
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -89,6 +188,7 @@
     <h1>Checkout</h1>
 
     <h2>Items in Your Cart:</h2>
+
     <table>
         <thead>
         <tr>
@@ -113,23 +213,25 @@
 
     <h3>Total Price: $<span th:text="${cartTotal}">0.00</span></h3>
 
-    <h2>Payment Information</h2>
-    <form action="/checkout" method="post" onsubmit="return validateForm(event)">
-        <input type="hidden" name="bookIds" th:each="book : ${cart.keySet()}" th:value="${book.ISBN}">
-        <label>
-            Credit Card Number:
-            <input type="text" id="cardNumber" name="cardNumber" pattern="\d{12}" title="Card number must be exactly 12 digits" required>
-        </label><br>
-        <label>
-            Expiration Date (MM/YY):
-            <input type="text" id="expirationDate" name="expiry" placeholder="MM/YY" title="Expiration date must be in MM/YY format" required>
-        </label><br>
-        <label>
-            CVV:
-            <input type="text" id="cvv" name="cvv" pattern="\d{3}" title="CVV must be exactly 3 digits" required>
-        </label><br>
-        <button type="submit">Complete Purchase</button>
-    </form>
+    <div class="card">
+        <h2>Payment Information</h2>
+        <form action="/checkout" method="post" onsubmit="return validateForm(event)">
+            <input type="hidden" name="bookIds" th:each="book : ${cart.keySet()}" th:value="${book.ISBN}">
+            <label>
+                Credit Card Number:
+                <input type="text" id="cardNumber" name="cardNumber" pattern="\d{12}" title="Card number must be exactly 12 digits" required>
+            </label><br>
+            <label>
+                Expiration Date (MM/YY):
+                <input type="text" id="expirationDate" name="expiry" placeholder="MM/YY" title="Expiration date must be in MM/YY format" required>
+            </label><br>
+            <label>
+                CVV:
+                <input type="text" id="cvv" name="cvv" pattern="\d{3}" title="CVV must be exactly 3 digits" required>
+            </label><br>
+            <button type="submit">Complete Purchase</button>
+        </form>
+    </div>
 
     <!-- Display errors if necessary -->
     <div style="color: red;">
