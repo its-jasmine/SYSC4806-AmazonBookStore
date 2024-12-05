@@ -214,7 +214,13 @@ public class BookStoreController {
     public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, Model model) {
         Optional<Book> book = bookRepository.findByISBN(ISBN);
         if (book.isPresent()) {
-            model.addAttribute("book", book.get());
+            Book bookObj = book.get();
+
+            // only add description if API returned an actual value
+            String description = OpenLibraryAPIService.fetchDescription(bookObj.getWorkId());
+            if (!(description.isEmpty())) model.addAttribute("description", description);
+
+            model.addAttribute("book", bookObj);
             return "book-details";
         }
         return "home-page";
