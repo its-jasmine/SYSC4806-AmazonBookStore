@@ -189,6 +189,90 @@
             overflow: hidden; /* Hide the overflow */
             color: #FFD700; /* Gold color for filled stars */
         }
+        /* Container Styling */
+        .review-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        /* Heading Styling */
+        .review-container h2 {
+            text-align: center;
+        }
+
+        /* Form Group Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Label Styling */
+        .form-group label {
+            font-weight: bold;
+        }
+
+        /* Input Field Styling */
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Button Styling */
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: cornflowerblue;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Table Styling */
+        #search-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        /* Table Header Styling */
+        #search-table th {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Table Body Cell Styling */
+        #search-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .star {
+            font-size: 30px; /* Size of the stars */
+            cursor: pointer;
+            color: #ccc; /* Default star color */
+        }
+
+        .star.checked {
+            color: gold; /* Color of selected stars */
+        }
+
+        .star.half:before {
+            content: '\2605'; /* Full star character */
+            position: absolute;
+            left: 0;
+            width: 50%; /* Half the width for half star effect */
+            overflow: hidden; /* Hide the overflow */
+            color: #FFD700; /* Gold color for filled stars */
+        }
 
         .rating-container {
             display: flex; /* Align stars in a row */
@@ -290,6 +374,46 @@
     </div>
 </div>
 
+<div class="review-container">
+    <h2>Add a Review</h2>
+
+    <form id="addReviewForm" action="/add-review" method="POST">
+        <div class="rating-container">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <div class="form-group">
+            <label for="addReview">Review:</label>
+            <input type="hidden" name="ISBN" th:value="${book.getISBN()}">
+            <input type="hidden" id="rating" name="rating">
+            <input type="text" id="addReview" name="review" required>
+        </div>
+        <button class="add-to-cart-button" type="submit">Add Review</button>
+    </form>
+    <table id="search-table">
+        <thead>
+        <tr>
+            <th>Reviews</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="review : ${reviews}">
+            <td>
+                <span>
+                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                          th:text="${i <= review.getValue() ? '★' : '☆'}"></span>
+                </span>
+                <br>
+                <span th:text="${username != null ? username + ': ' + review.getKey() : 'Anonymous: ' + review.getKey()}"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
 <footer>
     <p>&copy;  2024 Amazing Bookstore. (Group 10)</p>
 </footer>
@@ -316,7 +440,6 @@
             } else {
                 ratingInput.value = "0";
             }
-
         });
     });
 </script>
