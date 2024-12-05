@@ -200,11 +200,13 @@ public class BookStoreController {
     }
 
     @PostMapping("/add-review")
-    public String addReview(@RequestParam(name="rating")int rating, @RequestParam(name="review")String review, @RequestParam(name="ISBN")String ISBN) {
+    public String addReview(@RequestParam(name="rating")int rating, @RequestParam(name="review")String review, @RequestParam(name="ISBN")String ISBN, HttpSession session, Model model) {
+        String username = (session.getAttribute("username") != null) ? (String) session.getAttribute("username") : "Anonymous";
+
         Optional<Book> book = bookRepository.findByISBN(ISBN);
         if (book.isPresent()) {
             Book existingBook = book.get();
-            existingBook.addReview(review, rating);
+            existingBook.addReview(review, rating, username);
             bookRepository.save(existingBook);
         } else {
             return "redirect:/home-page";

@@ -41,10 +41,11 @@ public class Main {
                 demoBook = new Book((baseISBN+i)+"","Book" + i, "author" + random.nextInt(90), "pub" + random.nextInt(5), cents + ((random.nextInt(40) + 10)),genres[random.nextInt(genres.length)], random.nextInt(100));
                 demoBook.setNumCopiesSold(random.nextInt(10000));
                 demoBook.setDateAdded(LocalDateTime.now().plusDays(random.nextInt(365)));
+                demoBook.addReview("Test Review", 4, "customer4");
                 demoBooks.add(demoBook);
             }
             Book book3 = new Book((baseISBN+400+""), "Harry Potter", "J.K Rowling", "publisher", 45.98, genres[5], 17);
-            book3.addReview("Test Review", 4);
+            book3.addReview("Test Review", 4, "customer4");
             demoBooks.add(book3);
 
             demoBooks.forEach(book -> bookRepository.save(book));
