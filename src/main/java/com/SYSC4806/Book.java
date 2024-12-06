@@ -54,7 +54,6 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     private List<Review> reviews;
-
     public Book() {
         this.reviews = new ArrayList<>();
     }
