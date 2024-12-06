@@ -76,3 +76,9 @@ h1 {
     font-size: 2.5rem;
     margin-bottom: 30px;
 }
+h2{
+    color: royalblue;
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
