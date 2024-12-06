@@ -195,7 +195,7 @@
             <td th:text="${entry.key.author}">Author</td>
             <td th:text="|$${entry.key.price}|">Price</td>
             <td th:text="${entry.value}">Quantity</td>
-            <td th:text="|$${entry.key.price * entry.value}|">Subtotal</td>
+            <td th:text="|$${#numbers.formatDecimal(entry.key.price * entry.value, 1, 2)}|">Subtotal</td>
         </tr>
         </tbody>
     </table>
