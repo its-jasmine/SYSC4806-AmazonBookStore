@@ -107,7 +107,8 @@ Update book stock by inputting the following:
    - **status**: Backlog
 
 ## DB schema
-![image](https://github.com/user-attachments/assets/e539619c-cb4b-42ac-8977-af4b9b3489f3)
+<img src="src/main/resources/diagrams/db-schema-m3.png" alt="Alt text" width="500">
+
 
 Note on DTYPE attribute: The current implementation uses the default inheritance strategy InheritanceType.SINGLE_TABLE, 
 which stores the sub-class entities in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
