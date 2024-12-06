@@ -113,6 +113,9 @@
 
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <nav>
+            <a th:href="@{/inventory}">Inventory</a>
+        </nav>
         <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
 
         <!-- Cart image wrapped in anchor tag to navigate to cart -->
