@@ -8,28 +8,6 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-        /* General Styles */
-        body {
-            font-family: Cambria, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 2em;
-        }
-
-        header {
-            background-color: cornflowerblue;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
 
         header .logo {
             font-size: 1.5em;
@@ -55,16 +33,12 @@
             margin: 20px;
         }
 
-        .catalog-section h1 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
 
         /* Browse Cards */
         .browse-card {
             text-align: center;
             background-color: white;
-            border-radius: 10px;
+            border-radius: 20px;
             border: none;
             padding: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -72,6 +46,7 @@
             width: 150px;
             flex-shrink: 0;
             transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
             font-family: inherit; /* Inherits from body */
         }
 
@@ -87,6 +62,10 @@
         .browse-card img {
             max-width: 100px;
             border-radius: 5px;
+        }
+        .browse-card p {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .genres-container {
@@ -243,11 +222,9 @@
 
 <div>
     <div class="catalog-sections-container">
-
         <h1>Featured Categories</h1>
-
         <div class="catalog-section">
-            <h1>Browse By Genre</h1>
+            <h2>Browse By Genre</h2>
             <div class="genres-container">
                 <form
                         class="browse-card"
@@ -258,89 +235,85 @@
                     <input type="hidden" name="genre" th:value="${genre}" />
                     <!-- Display book image and details -->
                     <button type="submit" class="browse-by-genre-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${genre}" />
+                        <!-- <img src="https://via.placeholder.com/100" th:alt="${genre}" /> -->
                         <p th:text="${genre}"></p>
                     </button>
                 </form>
             </div>
         </div>
 
-    </div>
-
-    <div class="catalog-section">
-        <h1>New Releases</h1>
-        <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
-            <div class="books-container">
-                <form
-                        class="browse-card item-display"
-                        th:each="book : ${newReleases}"
-                        th:action="@{/book-details}"
-                        method="get">
-                    <!-- ISBN as a hidden input field -->
-                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
-                    <!-- Display book image and details -->
-                    <button type="submit" class="item-display-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
-                        <p th:text="${book.getTitle()}"></p>
-                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                    </button>
-                </form>
+        <div class="catalog-section">
+            <h2>New Releases</h2>
+            <div class="book-carousel">
+                <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
+                <div class="books-container">
+                    <form
+                            class="browse-card item-display"
+                            th:each="book : ${newReleases}"
+                            th:action="@{/book-details}"
+                            method="get">
+                        <!-- ISBN as a hidden input field -->
+                        <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                        <!-- Display book image and details -->
+                        <button type="submit" class="item-display-button">
+                            <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
+                            <p th:text="${book.getTitle()}"></p>
+                            <p class="price" th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|"></p>
+                        </button>
+                    </form>
+                </div>
+                <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
             </div>
-            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
+        </div>
+
+        <div class="catalog-section">
+            <h2>Bestsellers</h2>
+            <div class="book-carousel">
+                <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
+                <div class="books-container">
+                    <form
+                            class="browse-card item-display"
+                            th:each="book : ${bestSellers}"
+                            th:action="@{/book-details}"
+                            method="get">
+                        <!-- ISBN as a hidden input field -->
+                        <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                        <!-- Display book image and details -->
+                        <button type="submit" class="item-display-button">
+                            <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
+                            <p th:text="${book.getTitle()}"></p>
+                            <p class="price" th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|"></p>
+                        </button>
+                    </form>
+                </div>
+                <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
+            </div>
+        </div>
+
+        <div th:if="${username != null and recSize > 0}" class="catalog-section">
+            <h2>Recommended for you</h2>
+            <div class="book-carousel">
+                <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
+                <div class="books-container">
+                    <form
+                            class="browse-card item-display"
+                            th:each="book : ${recommendation}"
+                            th:action="@{/book-details}"
+                            method="get">
+                        <!-- ISBN as a hidden input field -->
+                        <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                        <!-- Display book image and details -->
+                        <button type="submit" class="item-display-button">
+                            <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
+                            <p th:text="${book.getTitle()}"></p>
+                            <p class="price" th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|"></p>
+                        </button>
+                    </form>
+                </div>
+                <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
+            </div>
         </div>
     </div>
-
-    <div class="catalog-section">
-        <h1>Bestsellers</h1>
-        <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
-            <div class="books-container">
-                <form
-                        class="browse-card item-display"
-                        th:each="book : ${bestSellers}"
-                        th:action="@{/book-details}"
-                        method="get">
-                    <!-- ISBN as a hidden input field -->
-                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
-                    <!-- Display book image and details -->
-                    <button type="submit" class="item-display-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
-                        <p th:text="${book.getTitle()}"></p>
-                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                    </button>
-                </form>
-            </div>
-            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
-        </div>
-    </div>
-
-    <div th:if="${username != null and recSize > 0}" class="catalog-section">
-        <h1>Recommended for you</h1>
-        <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
-            <div class="books-container">
-                <form
-                        class="browse-card item-display"
-                        th:each="book : ${recommendation}"
-                        th:action="@{/book-details}"
-                        method="get">
-                    <!-- ISBN as a hidden input field -->
-                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
-                    <!-- Display book image and details -->
-                    <button type="submit" class="item-display-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
-                        <p th:text="${book.getTitle()}"></p>
-                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                    </button>
-                </form>
-            </div>
-            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
-        </div>
-    </div>
-
-    <div></div>
-
 </div>
 <footer>
     <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>

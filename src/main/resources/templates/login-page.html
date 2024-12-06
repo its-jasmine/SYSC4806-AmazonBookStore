@@ -6,15 +6,6 @@
     <title>Login - Amazing Bookstore</title>
     <link rel="stylesheet" href="/css/styles.css">
     <style>
-
-        nav a {
-            color: royalblue;
-        }
-
-        header {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
         .container {
             max-width: 500px;
             margin: 40px auto;
@@ -26,9 +17,6 @@
 
         h1 {
             color: royalblue;
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
         }
 
         form {
@@ -66,6 +54,14 @@
         input[type="submit"]:hover {
             background-color: darkblue;
         }
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            margin-top: 5px;
+            text-align: left;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -75,6 +71,9 @@
     <a th:href="@{/home}">
         <img src="/images/book-logo.png" alt="Bookstore Logo">
     </a>
+    <nav>
+        <a th:href="@{/register}">Register</a>
+    </nav>
 
 </header>
 
@@ -82,6 +81,7 @@
     <h1>Login to Your Account</h1>
 
     <form action="/login" method="post">
+        <div th:if="${error}" class="error-message" th:text="${error}"></div>
         <label for="username">Username</label>
         <input type="text" id="username" name="username" required>
 

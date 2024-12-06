@@ -6,7 +6,7 @@
 
 **Azure website domain**: https://bookstore-project.azurewebsites.net/
 
-# Milestone 2 - Alpha Release
+# Milestone 3 - Final demo
 
 ## Current State of the Project
 
@@ -37,6 +37,9 @@ Update book stock by inputting the following:
 - sort search results
 - view book details & add to cart 
 - view cart & proceed to checkout
+- add reviews for books
+- can rate books
+- can add books to wishlist
 
 
 
@@ -63,80 +66,34 @@ Update book stock by inputting the following:
 
 ### Issue status (via Kanban) 
 **Closed issues**
-1. README Milestone 2
-2. Updating functionality for book management
-3. Book Browsing & Filtering
-4. Book Recommendations
-5. Book Recommendation Front-End
-6. Book Recommendation Tests
-7. Customer Book Purchase
-8. Add navigations to all available pages in our web app
-9. Front-end Enhancements
-10. Login page for app users 
-11. Database Transaction Testing 
-12. Updating functionality for book management 
-13. Searching and Sorting 
-14. Investigate use of Logging (Kafka, DataDog, Splunk)
+1. Data Dog Logging Implementation
+2. Book Improvements: Adding descriptions and book cover images
+3. Add logout capabilities
+4. Create more realistic sample data
+5. Adding a wishlist
+6. Restricting access to inventory & book-management pages
+7. Add book ratings
+8. UI Improvements for Milestone 3
+9. Add Profile Page
+10. Code base cleanup
+11. Make sure login/register are both visible when a user that is not logged in attempts to add to cart
+ 
 
 
 **Open issues** 
-1. Data Dog Logging Implementation
-
-   - **status**: In progress
-
-2. Restricting access to inventory & book-management pages
-
-   - **status**: Backlog
-
-3. Adding a wishlist
-
-   - **status**: Backlog
-
-4. Creating more realistic sample data
-
-   - **status**: Backlog
-
-5. Add logout capabilities
-
-   - **status**: Backlog
-
-6. Book Improvements: Adding descriptions and book cover images
-
-   - **status**: Backlog
-
-7. Add book ratings
-
-   - **status**: Backlog
-
-8. UI Improvements for Milestone 3
-
-   - **status**: Backlog
+N/A
 
 ## DB schema
-<img src="src/main/resources/diagrams/db-schema-m2.png" alt="Alt text" width="500">
+<img src="src/main/resources/diagrams/db-schema-m3.png" alt="Alt text" width="500">
+
+
 Note on DTYPE attribute: The current implementation uses the default inheritance strategy InheritanceType.SINGLE_TABLE, 
 which stores the sub-class entities in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
 By default this DiscriminatorColumn is named DTYPE. 
 
-## UML Class Diagram
-<img src="src/main/resources/diagrams/class-diagram-m2.png" alt="Alt text" width="500">
+## Class Diagram
+<img src="src/main/resources/diagrams/class-diagram-m3.png" alt="Alt text" width="500">
 
 
-## Plan for Next Sprint
-**Jasmine**
-- Creating more realistic sample data
-- Restricting access to inventory & book-management pages
-
-**Nivetha**
-- Book Improvements: Adding descriptions and book cover images
-- Add book ratings
-
-**Rimsha**
-- Adding a wishlist
-- Add logout capabilities
-
-**Victoria**
-- Data Dog Logging Implementation
-- UI improvements for Milestone 3
 
 

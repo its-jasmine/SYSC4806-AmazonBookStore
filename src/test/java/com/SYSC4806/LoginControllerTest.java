@@ -74,8 +74,8 @@ public class LoginControllerTest {
         mockMvc.perform(post("/login")
                         .param("username", "invalidUser")
                         .param("password", "invalidPass"))
-                .andExpect(status().is3xxRedirection()) // we are expecting a redirection to login
-                .andExpect(redirectedUrl("/login"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("login-page"));
     }
 
 }

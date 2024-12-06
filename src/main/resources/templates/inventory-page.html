@@ -14,13 +14,16 @@
         <img src="/images/book-logo.png" alt="Bookstore Logo">
     </a>
 
-    <nav th:if="${username == null}">
-        <a th:href="@{/login}">Sign in</a>
-        <a th:href="@{/register}">Register</a>
-        <a th:href="@{/home}">Home</a>
-    </nav>
+<!--    <nav th:if="${username == null}">-->
+<!--        <a th:href="@{/login}">Sign in</a>-->
+<!--        <a th:href="@{/register}">Register</a>-->
+<!--        <a th:href="@{/home}">Home</a>-->
+<!--    </nav>-->
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <nav>
+            <a th:href="@{/book-management}">Book Management</a>
+        </nav>
         <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
 
         <!-- Cart image wrapped in anchor tag to navigate to cart -->
@@ -56,7 +59,7 @@
             <td th:text="${book.getPublisher()}">Publisher</td>
             <td th:text="${book.getGenre()}">Genre</td>
             <td th:text="${book.getNumCopiesInStock()}">Stock</td>
-            <td th:text="${book.getPrice()}">Price</td>
+            <td th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|">Price</td>
 
         </tr>
         </tbody>

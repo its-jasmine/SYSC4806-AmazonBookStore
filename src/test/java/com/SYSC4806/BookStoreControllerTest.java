@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.ConcurrentModel;
@@ -150,21 +151,115 @@ class BookStoreControllerTest {
     }
 
     @Test
-    void showBookManagementPage() throws Exception {
-        // Verifying that accessing the book management url will successfully show the book management page
-        mockMvc.perform(get("/book-management"))
+    void showBookManagementPage_Admin() throws Exception {
+        AppUser adminUser = new Admin("admin", "adminPassword");
+        when(appUserRepository.findByUsername(adminUser.getUsername())).thenReturn(Optional.of(adminUser));
+        mockMvc.perform(get("/book-management")
+                        .sessionAttr("username", adminUser.getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("book-management"));
     }
+
+    @Test
+    void showBookManagementPage_Customer() throws Exception {
+        AppUser customerUser = new Customer("customer", "customerPassword");
+        when(appUserRepository.findByUsername(customerUser.getUsername())).thenReturn(Optional.of(customerUser));
+        mockMvc.perform(get("/book-management")
+                        .sessionAttr("username", customerUser.getUsername()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home"));
+    }
+
+    @Test
+    void showInventoryPage_NoUser() throws Exception {
+        mockMvc.perform(get("/inventory"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    void showInventoryPage_Admin() throws Exception {
+        AppUser adminUser = new Admin("admin", "adminPassword");
+        when(appUserRepository.findByUsername(adminUser.getUsername())).thenReturn(Optional.of(adminUser));
+        mockMvc.perform(get("/inventory")
+                        .sessionAttr("username", adminUser.getUsername()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("inventory-page"));
+    }
+
+    @Test
+    void showInventoryPage_Customer() throws Exception {
+        AppUser customerUser = new Customer("customer", "customerPassword");
+        when(appUserRepository.findByUsername(customerUser.getUsername())).thenReturn(Optional.of(customerUser));
+        mockMvc.perform(get("/inventory")
+                        .sessionAttr("username", customerUser.getUsername()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home"));
+    }
+
+    @Test
+    void showBookManagementPage_NoUser() throws Exception {
+        mockMvc.perform(get("/book-management"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
     @Test
     void showBookDetailsPage() throws Exception {
         String ISBN = "1234567890";
         Book book = new Book(ISBN, "Some Title", "Some Author", "Some Publisher", 19.99, Book.Genre.Fiction, 1);
+        book.setWorkId("/works/OL45804W");
         when(bookRepository.findByISBN("1234567890")).thenReturn(Optional.of(book));
 
         // Verifying that accessing the book details url will successfully show the book details page
         mockMvc.perform(get("/book-details").param("ISBN", ISBN))
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("book"))
+                .andExpect(model().attributeExists("description"))
                 .andExpect(view().name("book-details"));
     }
+
+    @Test
+    public void testAddReview_BookExists() throws Exception {
+        Book testBook = new Book();
+        // Arrange
+        String isbn = "1234567890"; // Example ISBN
+        int rating = 5;
+        String review = "Great book!";
+        when(bookRepository.findByISBN(isbn)).thenReturn(Optional.of(testBook));
+
+        // Act & Assert
+        mockMvc.perform(post("/add-review")
+                        .param("rating", String.valueOf(rating))
+                        .param("review", review)
+                        .param("ISBN", isbn)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/book-details?ISBN=" + isbn));
+
+        // Verify that the repository's save method was called
+        verify(bookRepository, times(1)).save(testBook);
+    }
+
+    @Test
+    public void testAddReview_BookDoesNotExist() throws Exception {
+        // Arrange
+        String isbn = "1234567890"; // Example ISBN
+        int rating = 5;
+        String review = "Great book!";
+        when(bookRepository.findByISBN(isbn)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        mockMvc.perform(post("/add-review")
+                        .param("rating", String.valueOf(rating))
+                        .param("review", review)
+                        .param("ISBN", isbn)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home-page"));
+
+        // Verify that the repository's save method was not called
+        verify(bookRepository, times(0)).save(any(Book.class));
+    }
+
 }

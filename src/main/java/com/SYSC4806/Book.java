@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.*;
+
+import static java.lang.Math.round;
 
 
 @Entity
@@ -40,9 +42,21 @@ public class Book {
     private int numCopiesInStock;
     private int numCopiesSold;
     private LocalDateTime dateAdded;
-    public Book() {}
 
+    private String imageId; // need to retreve the cover image from Open Library API
 
+    private String workId; // needed to retreive description from Open Library API
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "book_reviews",
+            joinColumns = @JoinColumn(name = "review_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<Review> reviews;
+    public Book() {
+        this.reviews = new ArrayList<>();
+    }
     public Book(String ISBN, String title, String author, String publisher, double price, Genre genre, int numCopiesInStock) {
         this.title = title;
         this.author = author;
@@ -52,7 +66,10 @@ public class Book {
         this.numCopiesSold = 0;
         this.dateAdded = LocalDateTime.now();
         this.ISBN = validateISBN(ISBN);
-        this.price = Math.round(price * 100.0) / 100.0; // rounds value to 2 decimal places
+        this.imageId = "";
+        this.workId = "";
+        this.price = round(price * 100.0) / 100.0; // rounds value to 2 decimal places
+        this.reviews = new ArrayList<>();
     }
 
     public void incrementNumCopiesSold() {
@@ -93,12 +110,12 @@ public class Book {
         return normalizedIsbn;
     }
 
+
     // ############################################### Setters & Getters ###############################################
 
     public String getISBN() {
         return ISBN;
     }
-
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
@@ -130,20 +147,20 @@ public class Book {
     public Genre getGenre() {
         return genre;
     }
+
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
+
     public int getNumCopiesInStock() {
         return numCopiesInStock;
     }
     public void setNumCopiesInStock(int numCopies) {
         this.numCopiesInStock = numCopies;
     }
-
     public int getNumCopiesSold() {
         return numCopiesSold;
     }
-
     public void setNumCopiesSold(int numCopiesSold) {
         this.numCopiesSold = numCopiesSold;
     }
@@ -162,6 +179,22 @@ public class Book {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getWorkId() {
+        return workId;
+    }
+
+    public void setWorkId(String workId) {
+        this.workId = workId;
     }
 
     /**
@@ -188,5 +221,43 @@ public class Book {
     public int hashCode() {
         return Objects.hash(title, author, publisher, genre);
     }
+
+    /**
+     * Add a review to the book
+     * @param review to add to book
+     */
+    public void addReview(String review, int rating, String username) {
+        this.reviews.add(new Review(rating, username, review));
+    }
+
+    /**
+     * Add a review to the book
+     * @return reviews for the book
+     */
+    public List<Review> getReviews() {
+        return this.reviews;
+    }
+
+    /**
+     * Get the overall rating of the book based on ratings
+     * @return the overall rating
+     */
+    public String getOverallRating() {
+        if (this.reviews.isEmpty()) {
+            return "0"; // Return 0 if the map is empty to avoid division by zero
+        }
+
+        int sum = 0;
+        int count = 0;
+
+        // Iterate through the entries of the map
+        for (Review review : reviews) {
+            sum += review.getRating();
+            count++;
+        }
+        return String.format("%.1f", ((double) sum / count));
+
+    }
+
 
 }
