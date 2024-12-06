@@ -104,14 +104,26 @@ public class BookStoreController {
      */
     @GetMapping("/inventory")
     public String showInventoryPage(Model model, HttpSession session) {
-        Iterable<Book> books = bookRepository.findAll();
-        model.addAttribute("books",books);
-
         String username = (String) session.getAttribute("username");
+
         if (username != null) {
-            model.addAttribute("username", username); // Add username to model
+            Optional<AppUser> user = userRepository.findByUsername(username);
+            if (user.isPresent()) {
+                AppUser appUser = user.get();
+
+                if (appUser instanceof Customer) {
+                    return "redirect:/home";
+                }
+
+                if (appUser instanceof Admin) {
+                    model.addAttribute("username", username);
+                    Iterable<Book> books = bookRepository.findAll();
+                    model.addAttribute("books", books);
+                    return "inventory-page";
+                }
+            }
         }
-        return "inventory-page";
+        return "redirect:/login";
     }
 
     /**
@@ -201,10 +213,25 @@ public class BookStoreController {
      * @return template name for book-management
      */
     @GetMapping("/book-management")
-    public String showBookManagementPage(Model model) {
-        model.addAttribute("genres", Book.Genre.values());
-        return "book-management";
+    public String showBookManagementPage(Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            Optional<AppUser> user = userRepository.findByUsername(username);
+            if (user.isPresent()) {
+                AppUser appUser = user.get();
+                if (appUser instanceof Customer) {
+                    return "redirect:/home";
+                }
+                if (appUser instanceof Admin ){
+                    model.addAttribute("username", username);
+                    model.addAttribute("genres", Book.Genre.values());
+                    return "book-management";
+                }
+            }
+        }
+        return "redirect:/login";
     }
+
     /**
      * Handles the GET request to show page with the details for a selected book and allow user to add to cart.
      *

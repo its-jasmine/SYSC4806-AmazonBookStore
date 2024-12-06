@@ -110,13 +110,11 @@
         <img src="/images/book-logo.png" alt="Bookstore Logo">
     </a>
 
-    <nav th:if="${username == null}">
-        <a th:href="@{/login}">Sign in</a>
-        <a th:href="@{/register}">Register</a>
-        <a th:href="@{/inventory}">Inventory</a>
-    </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
+        <nav>
+            <a th:href="@{/inventory}">Inventory</a>
+        </nav>
         <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
 
         <!-- Cart image wrapped in anchor tag to navigate to cart -->
