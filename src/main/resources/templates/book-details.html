@@ -53,13 +53,14 @@
         }
 
         .book-details-container {
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            gap: 20px; /* Space between children */
             margin: 20px;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex; /* Align child divs side by side */
-            gap: 20px; /* Space between the two divs */
         }
 
         .book-details-container img {
@@ -114,15 +115,13 @@
             flex-direction: column;
         }
         .book-description {
-            max-width: 40%;
+            max-width: 80%;
             margin: auto;
         }
 
         /* Container Styling */
         .review-container {
-            height: 400px; /* Fixed height for the container, you can adjust */
-            overflow-y: auto;
-            width: 500px;
+            width: 800px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -238,7 +237,7 @@
     </div>
 </header>
 
-<div class="book-details-container" style="{display: flex; justify-content: space-between;}" >
+<div class="book-details-container" >
     <div class="book-info">
         <div class="cover-and-details">
             <!-- Book Image -->
@@ -262,24 +261,7 @@
                 </form>
             </div>
         </div>
-        <!-- Book Details -->
-        <div>
-            <h2 th:text="${book.getTitle()}">Book Title</h2>
-            <p><strong>Author:</strong> <span th:text="${book.getAuthor()}">Author Name</span></p>
-            <p><strong>Publisher:</strong> <span th:text="${book.getPublisher()}">Publisher Name</span></p>
-            <p><strong>Genre:</strong> <span th:text="${book.getGenre()}">Genre Name</span></p>
-            <p><strong>Stock:</strong> <span th:text="${book.getNumCopiesInStock()}">Available Stock</span></p>
-            <p><strong>Price:</strong> <span th:text="${book.getPrice()}">$ Price</span></p>
 
-            <!-- Add rating -->
-            <div>
-                <p><strong>Rating:</strong> <span th:text="${book.getOverallRating() == '0' ? 'N/A' : book.getOverallRating()}"></span></p>
-            </div>
-            <!-- Add to Cart Button -->
-            <form th:action="@{/cart/add}" method="post">
-                <input type="hidden" name="bookId" th:value="${book.getISBN()}">
-                <button type="submit" class="add-to-cart-button">Add to Cart</button>
-            </form>
         <div th:if="${description}" class="book-description">
             <p th:text="${description}"></p>
         </div>
