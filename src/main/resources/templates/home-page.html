@@ -88,6 +88,10 @@
             max-width: 100px;
             border-radius: 5px;
         }
+        .browse-card p {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         .genres-container {
             display: flex;
@@ -257,7 +261,7 @@
                     <input type="hidden" name="genre" th:value="${genre}" />
                     <!-- Display book image and details -->
                     <button type="submit" class="browse-by-genre-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${genre}" />
+                        <!-- <img src="https://via.placeholder.com/100" th:alt="${genre}" /> -->
                         <p th:text="${genre}"></p>
                     </button>
                 </form>
@@ -280,7 +284,7 @@
                     <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
                     <!-- Display book image and details -->
                     <button type="submit" class="item-display-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+                        <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
                         <p th:text="${book.getTitle()}"></p>
                         <p class="price" th:text="|$ ${book.getPrice()}|"></p>
                     </button>
@@ -304,7 +308,7 @@
                     <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
                     <!-- Display book image and details -->
                     <button type="submit" class="item-display-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+                        <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
                         <p th:text="${book.getTitle()}"></p>
                         <p class="price" th:text="|$ ${book.getPrice()}|"></p>
                     </button>
@@ -328,7 +332,7 @@
                     <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
                     <!-- Display book image and details -->
                     <button type="submit" class="item-display-button">
-                        <img src="https://via.placeholder.com/100" th:alt="${book.getTitle()}" />
+                        <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
                         <p th:text="${book.getTitle()}"></p>
                         <p class="price" th:text="|$ ${book.getPrice()}|"></p>
                     </button>

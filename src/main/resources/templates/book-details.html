@@ -92,13 +92,30 @@
             background-color: #1e4e94;
         }
 
-        .book-info {
+        .cover-and-details {
             display: flex;
             gap: 150px;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Optional: Center vertically */
+            gap: 20px; /* Space between the book cover and details */
+            width: 100%; /* Take up the full width of the parent container */
+            padding: 20px; /* Optional: Add some padding for spacing */
+
         }
 
-        .book-info div {
-            width: 50%;
+        .cover-and-details .book-cover {
+            flex: 1; /* Allow the cover to take up available space */
+            max-width: 300px; /* Optional: Limit the width of the image */
+        }
+
+        .cover-and-details .details {
+            max-width: 600px; /* Optional: Limit the width of the details */
+            display: flex;
+            flex-direction: column;
+        }
+        .book-description {
+            max-width: 40%;
+            margin: auto;
         }
 
         /* Container Styling */
@@ -223,9 +240,26 @@
 
 <div class="book-details-container" style="{display: flex; justify-content: space-between;}" >
     <div class="book-info">
-        <!-- Book Image -->
-        <div>
-            <img src="https://via.placeholder.com/200" alt="Book Image">
+        <div class="cover-and-details">
+            <!-- Book Image -->
+            <div class="book-cover">
+                <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-L.jpg'" th:alt= "${book.getTitle()}">
+            </div>
+            <!-- Book Details -->
+            <div class="details">
+                <h2 th:text="${book.getTitle()}">Book Title</h2>
+                <p><strong>Author:</strong> <span th:text="${book.getAuthor()}">Author Name</span></p>
+                <p><strong>Publisher:</strong> <span th:text="${book.getPublisher()}">Publisher Name</span></p>
+                <p><strong>Genre:</strong> <span th:text="${book.getGenre()}">Genre Name</span></p>
+                <p><strong>Stock:</strong> <span th:text="${book.getNumCopiesInStock()}">Available Stock</span></p>
+                <p><strong>Price:</strong> <span th:text="${book.getPrice()}">$ Price</span></p>
+
+                <!-- Add to Cart Button -->
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="bookId" th:value="${book.getISBN()}">
+                    <button type="submit" class="add-to-cart-button">Add to Cart</button>
+                </form>
+            </div>
         </div>
         <!-- Book Details -->
         <div>
@@ -245,6 +279,8 @@
                 <input type="hidden" name="bookId" th:value="${book.getISBN()}">
                 <button type="submit" class="add-to-cart-button">Add to Cart</button>
             </form>
+        <div th:if="${description}" class="book-description">
+            <p th:text="${description}"></p>
         </div>
     </div>
 

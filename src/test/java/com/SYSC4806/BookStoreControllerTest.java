@@ -151,21 +151,71 @@ class BookStoreControllerTest {
     }
 
     @Test
-    void showBookManagementPage() throws Exception {
-        // Verifying that accessing the book management url will successfully show the book management page
-        mockMvc.perform(get("/book-management"))
+    void showBookManagementPage_Admin() throws Exception {
+        AppUser adminUser = new Admin("admin", "adminPassword");
+        when(appUserRepository.findByUsername(adminUser.getUsername())).thenReturn(Optional.of(adminUser));
+        mockMvc.perform(get("/book-management")
+                        .sessionAttr("username", adminUser.getUsername()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("book-management"));
     }
+
+    @Test
+    void showBookManagementPage_Customer() throws Exception {
+        AppUser customerUser = new Customer("customer", "customerPassword");
+        when(appUserRepository.findByUsername(customerUser.getUsername())).thenReturn(Optional.of(customerUser));
+        mockMvc.perform(get("/book-management")
+                        .sessionAttr("username", customerUser.getUsername()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home"));
+    }
+
+    @Test
+    void showInventoryPage_NoUser() throws Exception {
+        mockMvc.perform(get("/inventory"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
+    @Test
+    void showInventoryPage_Admin() throws Exception {
+        AppUser adminUser = new Admin("admin", "adminPassword");
+        when(appUserRepository.findByUsername(adminUser.getUsername())).thenReturn(Optional.of(adminUser));
+        mockMvc.perform(get("/inventory")
+                        .sessionAttr("username", adminUser.getUsername()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("inventory-page"));
+    }
+
+    @Test
+    void showInventoryPage_Customer() throws Exception {
+        AppUser customerUser = new Customer("customer", "customerPassword");
+        when(appUserRepository.findByUsername(customerUser.getUsername())).thenReturn(Optional.of(customerUser));
+        mockMvc.perform(get("/inventory")
+                        .sessionAttr("username", customerUser.getUsername()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/home"));
+    }
+
+    @Test
+    void showBookManagementPage_NoUser() throws Exception {
+        mockMvc.perform(get("/book-management"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
     @Test
     void showBookDetailsPage() throws Exception {
         String ISBN = "1234567890";
         Book book = new Book(ISBN, "Some Title", "Some Author", "Some Publisher", 19.99, Book.Genre.Fiction, 1);
+        book.setWorkId("/works/OL45804W");
         when(bookRepository.findByISBN("1234567890")).thenReturn(Optional.of(book));
 
         // Verifying that accessing the book details url will successfully show the book details page
         mockMvc.perform(get("/book-details").param("ISBN", ISBN))
                 .andExpect(status().isOk())
+                .andExpect(model().attributeExists("book"))
+                .andExpect(model().attributeExists("description"))
                 .andExpect(view().name("book-details"));
     }
 

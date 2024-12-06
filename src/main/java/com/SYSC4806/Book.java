@@ -55,6 +55,14 @@ public class Book {
         this.reviews = new ArrayList<>();
     }
 
+    private String imageId; // need to retreve the cover image from Open Library API
+
+    private String workId; // needed to retreive description from Open Library API
+
+    public Book() {
+        this.reviews = new ArrayList<>();
+    }
+
     public Book(String ISBN, String title, String author, String publisher, double price, Genre genre, int numCopiesInStock) {
         this.title = title;
         this.author = author;
@@ -66,6 +74,8 @@ public class Book {
         this.ISBN = validateISBN(ISBN);
         this.price = round(price * 100.0) / 100.0; // rounds value to 2 decimal places
         this.reviews = new ArrayList<>();
+        this.imageId = "";
+        this.workId = "";
     }
 
     public void incrementNumCopiesSold() {
@@ -106,12 +116,12 @@ public class Book {
         return normalizedIsbn;
     }
 
+
     // ############################################### Setters & Getters ###############################################
 
     public String getISBN() {
         return ISBN;
     }
-
     public void setISBN(String ISBN) {
         this.ISBN = ISBN;
     }
@@ -143,20 +153,20 @@ public class Book {
     public Genre getGenre() {
         return genre;
     }
+
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
+
     public int getNumCopiesInStock() {
         return numCopiesInStock;
     }
     public void setNumCopiesInStock(int numCopies) {
         this.numCopiesInStock = numCopies;
     }
-
     public int getNumCopiesSold() {
         return numCopiesSold;
     }
-
     public void setNumCopiesSold(int numCopiesSold) {
         this.numCopiesSold = numCopiesSold;
     }
@@ -175,6 +185,22 @@ public class Book {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
+    }
+
+    public String getWorkId() {
+        return workId;
+    }
+
+    public void setWorkId(String workId) {
+        this.workId = workId;
     }
 
     /**
