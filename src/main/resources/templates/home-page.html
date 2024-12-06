@@ -257,7 +257,7 @@
                         <button type="submit" class="item-display-button">
                             <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
                             <p th:text="${book.getTitle()}"></p>
-                            <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                            <p class="price" th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|"></p>
                         </button>
                     </form>
                 </div>
@@ -281,7 +281,7 @@
                         <button type="submit" class="item-display-button">
                             <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
                             <p th:text="${book.getTitle()}"></p>
-                            <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                            <p class="price" th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|"></p>
                         </button>
                     </form>
                 </div>
@@ -305,7 +305,7 @@
                         <button type="submit" class="item-display-button">
                             <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
                             <p th:text="${book.getTitle()}"></p>
-                            <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                            <p class="price" th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|"></p>
                         </button>
                     </form>
                 </div>

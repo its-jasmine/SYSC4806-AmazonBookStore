@@ -59,7 +59,7 @@
             <td th:text="${book.getPublisher()}">Publisher</td>
             <td th:text="${book.getGenre()}">Genre</td>
             <td th:text="${book.getNumCopiesInStock()}">Stock</td>
-            <td th:text="|$${book.getPrice()}|">Price</td>
+            <td th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|">Price</td>
 
         </tr>
         </tbody>
