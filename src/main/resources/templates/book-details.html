@@ -7,21 +7,6 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-        body {
-            font-family: Cambria, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-
-        header {
-            background-color: cornflowerblue;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
 
         header .logo {
             font-size: 1.5em;
@@ -125,7 +110,6 @@
     <nav th:if="${username == null}">
         <a th:href="@{/login}">Sign in</a>
         <a th:href="@{/register}">Register</a>
-        <a th:href="@{/home}">Home</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
@@ -152,7 +136,7 @@
                 <p><strong>Publisher:</strong> <span th:text="${book.getPublisher()}">Publisher Name</span></p>
                 <p><strong>Genre:</strong> <span th:text="${book.getGenre()}">Genre Name</span></p>
                 <p><strong>Stock:</strong> <span th:text="${book.getNumCopiesInStock()}">Available Stock</span></p>
-                <p><strong>Price:</strong> <span th:text="${book.getPrice()}">$ Price</span></p>
+                <p><strong>Price:</strong> <span th:text="|$ ${#numbers.formatDecimal(book.getPrice(), 1, 2) }|">$ Price</span></p>
 
                 <!-- Add to Cart Button -->
                 <form th:action="@{/cart/add}" method="post">

@@ -52,20 +52,20 @@ public class CheckoutController {
         }
 
         Map<Book, Integer> cart = customer.getCart();
-        double totalPrice = cart.entrySet().stream()
+        double subTotal = cart.entrySet().stream()
                 .mapToDouble(entry -> entry.getKey().getPrice() * entry.getValue())
                 .sum();
+        double tax = subTotal * 0.13;
+        double total = subTotal + tax;
 
         // Use BigDecimal for precise rounding
-        BigDecimal formattedPrice = new BigDecimal(totalPrice).setScale(2, RoundingMode.HALF_UP);
-        totalPrice = formattedPrice.doubleValue();
-
-        model.addAttribute("cartTotal", totalPrice);
         model.addAttribute("cart", cart); // Pass the cart to the view
-        model.addAttribute("cartTotal", totalPrice); // Pass the total price to the view
+        model.addAttribute("cartSubTotal", new BigDecimal(subTotal).setScale(2, RoundingMode.HALF_UP)); // Pass the total price to the view
+        model.addAttribute("tax", new BigDecimal(tax).setScale(2, RoundingMode.HALF_UP));
+        model.addAttribute("cartTotal", new BigDecimal(total).setScale(2, RoundingMode.HALF_UP));
+
         return "checkout-page";
     }
-
 
 
     /**
@@ -117,7 +117,16 @@ public class CheckoutController {
 
 
     @GetMapping("/checkout-success")
-    public String showSuccessPage() {
+    public String showSuccessPage(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if not logged in
+        }
+
+        if (username != null) {
+            model.addAttribute("username", username); // Add username to model
+        }
         return "checkout-success"; // Renders checkout-success.html
     }
 }

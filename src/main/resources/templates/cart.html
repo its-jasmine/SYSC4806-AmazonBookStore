@@ -4,6 +4,95 @@
     <meta charset="UTF-8">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        .cart-empty-message, .cart-container{
+            text-align: center;
+        }
+        .proceed-checkout-button {
+            background-color: cornflowerblue;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .proceed-checkout-button:hover {
+            background-color: #1e4e94;
+        }
+        /* General form styling */
+        .cart-item-form {
+            display: inline;
+            align-items: center;
+        }
+
+        /* Styling for the quantity control container */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Styling for buttons */
+        .decrement-btn,
+        .increment-btn {
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .decrement-btn:hover,
+        .increment-btn:hover {
+            background-color: #ddd;
+        }
+
+        /* Styling for the quantity input */
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            background-color: #fff;
+        }
+
+        /* Styling for the update button */
+        .remove-button {
+            margin-left: 10px;
+            padding: 5px 15px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .remove-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function updateQuantityValue(button, change) {
+            const form = button.closest('form');
+            const quantityDisplay = form.querySelector('.quantity-display');
+            const hiddenInput = form.querySelector('.quantity-input');
+
+            // Calculate the new quantity
+            let currentQuantity = parseInt(quantityDisplay.textContent);
+            let newQuantity = currentQuantity + change;
+
+            if (newQuantity < 1) newQuantity = 1; // Ensure quantity doesn't go below 1
+            hiddenInput.value = newQuantity; // Set the value in the hidden input
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -15,7 +104,6 @@
     <nav th:if="${username == null}">
         <a th:href="@{/login}">Sign in</a>
         <a th:href="@{/register}">Register</a>
-        <a th:href="@{/home}">Home</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
@@ -34,12 +122,12 @@
 <h1>Your Cart</h1>
 
 <!-- Check if the cart is empty -->
-<div th:if="${cart.isEmpty()}">
+<div class="cart-empty-message" th:if="${cart.isEmpty()}">
     <p>Your cart is empty.</p>
 </div>
 
 <!-- Display cart items if there are any -->
-<div th:if="${!cart.isEmpty()}">
+<div class="cart-container" th:if="${!cart.isEmpty()}">
     <table>
         <thead>
         <tr>
@@ -54,17 +142,37 @@
             <td th:text="${entry.key.title}">Book Title</td>
             <td th:text="${entry.key.author}">Author</td>
             <td>
-                <form th:action="@{/cart/update}" method="post" style="display: inline;">
+                <form th:action="@{/cart/update}" method="post" class="cart-item-form">
                     <input type="hidden" name="bookId" th:value="${entry.key.getISBN()}" />
-                    <input type="number" name="quantity" min="1" th:value="${entry.value}" />
-                    <button type="submit">Update</button>
+                    <input type="hidden" name="quantity" value="" class="quantity-input" />
+                    <div class="quantity-controls">
+                        <button
+                                type="submit"
+                                name="action"
+                                value="decrement"
+                                class="decrement-btn"
+                                onclick="updateQuantityValue(this, -1)"
+                        >
+                            -
+                        </button>
+                        <span th:text="${entry.value}" class="quantity-display"></span>
+                        <button
+                                type="submit"
+                                name="action"
+                                value="increment"
+                                class="increment-btn"
+                                onclick="updateQuantityValue(this, 1)"
+                        >
+                            +
+                        </button>
+                    </div>
                 </form>
             </td>
             <td>
                 <!-- Form to remove a single book -->
                 <form th:action="@{/cart/remove}" method="post" style="display: inline;">
                     <input type="hidden" name="bookId" th:value="${entry.key.getISBN()}" />
-                    <button type="submit">Remove</button>
+                    <button class="remove-button" type="submit">Remove</button>
                 </form>
             </td>
         </tr>
@@ -72,7 +180,10 @@
 
     </table>
     <br>
-    <a href="/checkout">Proceed to Checkout</a>
+    <form th:action="@{/checkout}" method="get">
+        <button type="submit" class="proceed-checkout-button">Proceed to Checkout</button>
+    </form>
+
 </div>
 <footer>
     <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
