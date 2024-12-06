@@ -38,13 +38,14 @@
         }
 
         .book-details-container {
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            gap: 20px; /* Space between children */
             margin: 20px;
             padding: 20px;
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex; /* Align child divs side by side */
-            gap: 20px; /* Space between the two divs */
         }
 
         .book-details-container img {
@@ -79,7 +80,6 @@
 
         .cover-and-details {
             display: flex;
-<<<<<<< HEAD
             justify-content: center; /* Center horizontally */
             align-items: center; /* Optional: Center vertically */
             gap: 20px; /* Space between the book cover and details */
@@ -98,15 +98,13 @@
             flex-direction: column;
         }
         .book-description {
-            max-width: 40%;
+            max-width: 80%;
             margin: auto;
         }
 
         /* Container Styling */
         .review-container {
-            height: 400px; /* Fixed height for the container, you can adjust */
-            overflow-y: auto;
-            width: 500px;
+            width: 800px;
             margin: auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -176,9 +174,6 @@
             font-size: 30px; /* Size of the stars */
             cursor: pointer;
             color: #ccc; /* Default star color */
-=======
-            gap: 150px;
->>>>>>> 8334605 (changed layout + fixed error with username)
         }
 
         .star.checked {
@@ -312,7 +307,7 @@
     </div>
 </header>
 
-<div class="book-details-container" style="{display: flex; justify-content: space-between;}" >
+<div class="book-details-container" >
     <div class="book-info">
         <div class="cover-and-details">
             <!-- Book Image -->
