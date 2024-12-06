@@ -239,11 +239,13 @@ public class BookStoreController {
      */
     @GetMapping("/book-details")
     public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, HttpSession session, Model model) {
-        String username = (String) session.getAttribute("username");
-        if (username != null) {
-            model.addAttribute("username", username); // Add username to model
-        }
         Optional<Book> book = bookRepository.findByISBN(ISBN);
+        String username = (String) session.getAttribute("username");
+
+        if (username != null) {
+            model.addAttribute("username", username);
+        }
+
         if (book.isPresent()) {
             model.addAttribute("reviews", book.get().getReviews());
             Book bookObj = book.get();
@@ -256,8 +258,9 @@ public class BookStoreController {
             model.addAttribute("reviews", book.get().getReviews());
             return "book-details";
         }
-        return "home-page";
 
+        // Redirect to the homepage if the book is not found
+        return "redirect:/home";
     }
 
     @PostMapping("/add-review")

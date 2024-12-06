@@ -23,6 +23,7 @@ public class Main {
     @Profile("!test") // This bean will not run when the "test" profile is active
     public CommandLineRunner demo(BookRepository bookRepository, CustomerRepository customerRepository, AdminRepository adminRepository) {
         return (args) -> {
+
             List<Book> demoBooks = new BookGenerator().populateBooksFromOpenLibrary();
             demoBooks.forEach(book -> bookRepository.save(book));
 

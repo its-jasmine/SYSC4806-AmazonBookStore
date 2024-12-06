@@ -207,8 +207,9 @@
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
-        <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
-
+        <a th:href = "@{/profile}">
+            <span class="greeting">Hello, <span th:text="${username}">Username</span></span>
+        </a>
         <!-- Cart image wrapped in anchor tag to navigate to cart -->
         <a th:href="@{/cart}">
             <div class="cart">

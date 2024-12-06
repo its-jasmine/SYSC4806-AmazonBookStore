@@ -7,8 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class CustomerController {
@@ -135,6 +137,103 @@ public class CustomerController {
 
         return "redirect:/cart"; // Redirect back to the cart page
     }
+
+    @GetMapping("/profile")
+    public String getProfilePage(Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if not logged in
+        }
+        Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
+        if (customer == null) {
+            return "redirect:/login"; // Redirect if customer not found
+        }
+
+        model.addAttribute("customer", customer); // Add the customer object to the model
+        model.addAttribute("purchaseHistory", customer.getPurchaseHistory()); // Add the purchase history
+        model.addAttribute("wishlist", customer.getWishlist()); //Add the wishlist
+        return "profile";
+
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        // Invalidate the session to log out the user
+        session.invalidate();
+        // Redirect the user to the login page after logging out
+        return "redirect:/home";
+    }
+
+    @PostMapping("/wishlist/add")
+    public String addToWishlist(@RequestParam("bookId") String bookISBN, HttpSession session, RedirectAttributes redirectAttributes) {
+        Optional<Book> book = bookRepository.findByISBN(bookISBN);
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if the user is not logged in
+        }
+
+        if (book.isPresent()) {
+            Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
+
+            if (customer == null) {
+                return "redirect:/login"; // Redirect if customer not found
+            }
+
+            // Add the book to the customer's wishlist
+            if(customer.addToWishlist(book.get())){
+                // Save the updated customer back to the database
+                customerRepository.save(customer);
+
+                // Add success message as a flash attribute
+                redirectAttributes.addFlashAttribute("success", "Item added to wishlist successfully!");
+                return "redirect:/book-details?ISBN=" + bookISBN; // Redirect to the book details page
+            }
+            else{
+                // Add success message as a flash attribute
+                redirectAttributes.addFlashAttribute("success", "Item already in wishlist!");
+                return "redirect:/book-details?ISBN=" + bookISBN; // Redirect to the book details page
+            }
+
+
+        }
+
+        // Add error message as a flash attribute if the book is not found
+        redirectAttributes.addFlashAttribute("error", "Book not found.");
+        return "redirect:/home"; // Redirect to the home page if the book doesn't exist
+    }
+
+    @PostMapping("/wishlist/remove")
+    public String removeFromWishlist(@RequestParam("bookId") String bookISBN, HttpSession session, RedirectAttributes redirectAttributes) {
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            return "redirect:/login"; // Redirect to login if the user is not logged in
+        }
+
+        Optional<Book> book = bookRepository.findByISBN(bookISBN);
+        if (book.isPresent()) {
+            Customer customer = customerRepository.findCustomerByUsername(username).orElse(null);
+
+            if (customer == null) {
+                return "redirect:/login"; // Redirect if customer not found
+            }
+
+            // Remove the book from the customer's wishlist
+            if (customer.removeFromWishlist(book.get())) {
+                customerRepository.save(customer); // Save changes to the database
+                redirectAttributes.addFlashAttribute("success", "Item removed from wishlist successfully!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Item was not found in your wishlist!");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Book not found.");
+        }
+
+        return "redirect:/profile"; // Redirect back to the profile page
+    }
+
 
 
 }
