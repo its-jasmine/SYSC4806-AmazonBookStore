@@ -245,6 +245,7 @@ public class BookStoreController {
         }
         Optional<Book> book = bookRepository.findByISBN(ISBN);
         if (book.isPresent()) {
+            model.addAttribute("reviews", book.get().getReviews());
             Book bookObj = book.get();
 
             // only add description if API returned an actual value

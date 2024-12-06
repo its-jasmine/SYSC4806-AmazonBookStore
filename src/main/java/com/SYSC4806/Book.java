@@ -43,10 +43,6 @@ public class Book {
     private int numCopiesSold;
     private LocalDateTime dateAdded;
 
-    private String imageId; // need to retreve the cover image from Open Library API
-
-    private String workId; // needed to retreive description from Open Library API
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "book_reviews",
@@ -54,6 +50,10 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
     private List<Review> reviews;
+
+    private String imageId; // need to retreve the cover image from Open Library API
+
+    private String workId; // needed to retreive description from Open Library API
 
     public Book() {
         this.reviews = new ArrayList<>();

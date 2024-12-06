@@ -94,11 +94,13 @@
 
         .cover-and-details {
             display: flex;
+            gap: 150px;
             justify-content: center; /* Center horizontally */
             align-items: center; /* Optional: Center vertically */
             gap: 20px; /* Space between the book cover and details */
             width: 100%; /* Take up the full width of the parent container */
             padding: 20px; /* Optional: Add some padding for spacing */
+
         }
 
         .cover-and-details .book-cover {
@@ -260,6 +262,24 @@
                 </form>
             </div>
         </div>
+        <!-- Book Details -->
+        <div>
+            <h2 th:text="${book.getTitle()}">Book Title</h2>
+            <p><strong>Author:</strong> <span th:text="${book.getAuthor()}">Author Name</span></p>
+            <p><strong>Publisher:</strong> <span th:text="${book.getPublisher()}">Publisher Name</span></p>
+            <p><strong>Genre:</strong> <span th:text="${book.getGenre()}">Genre Name</span></p>
+            <p><strong>Stock:</strong> <span th:text="${book.getNumCopiesInStock()}">Available Stock</span></p>
+            <p><strong>Price:</strong> <span th:text="${book.getPrice()}">$ Price</span></p>
+
+            <!-- Add rating -->
+            <div>
+                <p><strong>Rating:</strong> <span th:text="${book.getOverallRating() == '0' ? 'N/A' : book.getOverallRating()}"></span></p>
+            </div>
+            <!-- Add to Cart Button -->
+            <form th:action="@{/cart/add}" method="post">
+                <input type="hidden" name="bookId" th:value="${book.getISBN()}">
+                <button type="submit" class="add-to-cart-button">Add to Cart</button>
+            </form>
         <div th:if="${description}" class="book-description">
             <p th:text="${description}"></p>
         </div>
