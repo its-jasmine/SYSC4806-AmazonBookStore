@@ -66,45 +66,22 @@ Update book stock by inputting the following:
 
 ### Issue status (via Kanban) 
 **Closed issues**
-1. README Milestone 2
-2. Updating functionality for book management
-3. Book Browsing & Filtering
-4. Book Recommendations
-5. Book Recommendation Front-End
-6. Book Recommendation Tests
-7. Customer Book Purchase
-8. Add navigations to all available pages in our web app
-9. Front-end Enhancements
-10. Login page for app users 
-11. Database Transaction Testing 
-12. Updating functionality for book management 
-13. Searching and Sorting 
-14. Investigate use of Logging (Kafka, DataDog, Splunk)
-15. Data Dog Logging Implementation
-16. Front-End Enhancements
-17. Book Recommendation Front-End
-18. Add navigations to all available pages within our web app
-19. Login page for app users
-20. Database Transactions Testing
-21. Updating functionality for book management
-22. Searching and Sorting
-23. Add book ratings
-24. Create more realistic sample data
-25. Restricting access to inventory & book-management pages
-26. Make sure login/register are both visible when a user that is not logged in attempts to add to cart
-27. Add Profile Page
-28. Adding a wishlist
-29. Creating more realistic sample data
-30. Add logout capabilities
-31. Book Improvements: Adding descriptions and book cover images
-32. Add book ratings
-33. UI Improvements for Milestone 3
+1. Data Dog Logging Implementation
+2. Book Improvements: Adding descriptions and book cover images
+3. Add logout capabilities
+4. Create more realistic sample data
+5. Adding a wishlist
+6. Restricting access to inventory & book-management pages
+7. Add book ratings
+8. UI Improvements for Milestone 3
+9. Add Profile Page
+10. Code base cleanup
+11. Make sure login/register are both visible when a user that is not logged in attempts to add to cart
+ 
 
 
 **Open issues** 
-8. UI Improvements for Milestone 3
-
-   - **status**: Backlog
+N/A
 
 ## DB schema
 <img src="src/main/resources/diagrams/db-schema-m3.png" alt="Alt text" width="500">
