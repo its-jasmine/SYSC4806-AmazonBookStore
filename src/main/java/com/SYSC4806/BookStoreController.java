@@ -238,14 +238,14 @@ public class BookStoreController {
      * @return template name for book-details
      */
     @GetMapping("/book-details")
-    public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, Model model, HttpSession session) {
+    public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, HttpSession session, Model model) {
         String username = (String) session.getAttribute("username");
         if (username != null) {
             model.addAttribute("username", username); // Add username to model
         }
-
         Optional<Book> book = bookRepository.findByISBN(ISBN);
         if (book.isPresent()) {
+            model.addAttribute("reviews", book.get().getReviews());
             Book bookObj = book.get();
 
             // only add description if API returned an actual value
@@ -253,9 +253,26 @@ public class BookStoreController {
             if (!(description.isEmpty())) model.addAttribute("description", description);
 
             model.addAttribute("book", bookObj);
+            model.addAttribute("reviews", book.get().getReviews());
             return "book-details";
         }
         return "home-page";
 
     }
+
+    @PostMapping("/add-review")
+    public String addReview(@RequestParam(name="rating")int rating, @RequestParam(name="review")String review, @RequestParam(name="ISBN")String ISBN, HttpSession session, Model model) {
+        String username = (session.getAttribute("username") != null) ? (String) session.getAttribute("username") : "Anonymous";
+
+        Optional<Book> book = bookRepository.findByISBN(ISBN);
+        if (book.isPresent()) {
+            Book existingBook = book.get();
+            existingBook.addReview(review, rating, username);
+            bookRepository.save(existingBook);
+        } else {
+            return "redirect:/home-page";
+        }
+        return "redirect:/book-details?ISBN=" + ISBN;
+    }
+
 }
