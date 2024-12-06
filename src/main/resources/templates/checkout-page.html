@@ -46,20 +46,6 @@
     </script>
     <link rel="stylesheet" href="/css/styles.css">
     <style>
-        /* General Reset */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header img {
-            max-height: 50px;
-        }
 
         header a {
             color: white;
@@ -92,6 +78,9 @@
             margin: 20px;
             width: 90%;
             max-width: 600px;
+        }
+        .checkout-summary {
+            text-align: center;
         }
 
         table {
@@ -204,14 +193,29 @@
         <tr th:each="entry : ${cart}">
             <td th:text="${entry.key.title}">Book Title</td>
             <td th:text="${entry.key.author}">Author</td>
-            <td th:text="${entry.key.price}">Price</td>
+            <td th:text="|$${entry.key.price}|">Price</td>
             <td th:text="${entry.value}">Quantity</td>
-            <td th:text="${entry.key.price * entry.value}">Subtotal</td>
+            <td th:text="|$${entry.key.price * entry.value}|">Subtotal</td>
         </tr>
         </tbody>
     </table>
 
-    <h3>Total Price: $<span th:text="${cartTotal}">0.00</span></h3>
+    <div class="checkout-summary card">
+        <h2>Order Summary</h2>
+        <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>$<span th:text="${cartSubTotal}">0.00</span></span>
+        </div>
+        <div class="summary-row">
+            <span>Tax:</span>
+            <span>$<span th:text="${tax}">0.00</span></span>
+        </div>
+        <div class="summary-row total">
+            <strong>Total:</strong>
+            <strong>$<span th:text="${cartTotal}">0.00</span></strong>
+        </div>
+    </div>
+
 
     <div class="card">
         <h2>Payment Information</h2>
