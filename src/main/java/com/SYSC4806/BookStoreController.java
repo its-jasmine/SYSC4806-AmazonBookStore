@@ -238,7 +238,12 @@ public class BookStoreController {
      * @return template name for book-details
      */
     @GetMapping("/book-details")
-    public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, Model model) {
+    public String showBookDetailsPage(@RequestParam(name="ISBN")String ISBN, Model model, HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            model.addAttribute("username", username); // Add username to model
+        }
+
         Optional<Book> book = bookRepository.findByISBN(ISBN);
         if (book.isPresent()) {
             Book bookObj = book.get();
