@@ -114,7 +114,8 @@ Note on DTYPE attribute: The current implementation uses the default inheritance
 which stores the sub-class entities in one table, with a DiscriminatorColumn with values to distinguish between the entity types.
 By default this DiscriminatorColumn is named DTYPE. 
 
-![image](https://github.com/user-attachments/assets/141bd320-e3e8-4b5e-9d8a-7532de84c1c2)
+## Class Diagram
+<img src="src/main/resources/diagrams/class-diagram-m3.png" alt="Alt text" width="500">
 
 
 
