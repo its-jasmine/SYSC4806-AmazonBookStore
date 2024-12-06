@@ -63,7 +63,7 @@
         }
 
         /* Styling for the update button */
-        .update-btn {
+        .remove-button {
             margin-left: 10px;
             padding: 5px 15px;
             font-size: 14px;
@@ -75,7 +75,7 @@
             transition: background-color 0.2s;
         }
 
-        .update-btn:hover {
+        .remove-button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -173,7 +173,7 @@
                 <!-- Form to remove a single book -->
                 <form th:action="@{/cart/remove}" method="post" style="display: inline;">
                     <input type="hidden" name="bookId" th:value="${entry.key.getISBN()}" />
-                    <button type="submit">Remove</button>
+                    <button class="remove-button" type="submit">Remove</button>
                 </form>
             </td>
         </tr>

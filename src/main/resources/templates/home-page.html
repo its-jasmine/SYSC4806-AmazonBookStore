@@ -246,9 +246,7 @@
 
 <div>
     <div class="catalog-sections-container">
-
         <h1>Featured Categories</h1>
-
         <div class="catalog-section">
             <h1>Browse By Genre</h1>
             <div class="genres-container">
@@ -268,82 +266,78 @@
             </div>
         </div>
 
-    </div>
-
-    <div class="catalog-section">
-        <h1>New Releases</h1>
-        <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
-            <div class="books-container">
-                <form
-                        class="browse-card item-display"
-                        th:each="book : ${newReleases}"
-                        th:action="@{/book-details}"
-                        method="get">
-                    <!-- ISBN as a hidden input field -->
-                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
-                    <!-- Display book image and details -->
-                    <button type="submit" class="item-display-button">
-                        <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
-                        <p th:text="${book.getTitle()}"></p>
-                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                    </button>
-                </form>
+        <div class="catalog-section">
+            <h1>New Releases</h1>
+            <div class="book-carousel">
+                <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
+                <div class="books-container">
+                    <form
+                            class="browse-card item-display"
+                            th:each="book : ${newReleases}"
+                            th:action="@{/book-details}"
+                            method="get">
+                        <!-- ISBN as a hidden input field -->
+                        <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                        <!-- Display book image and details -->
+                        <button type="submit" class="item-display-button">
+                            <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
+                            <p th:text="${book.getTitle()}"></p>
+                            <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                        </button>
+                    </form>
+                </div>
+                <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
             </div>
-            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
+        </div>
+
+        <div class="catalog-section">
+            <h1>Bestsellers</h1>
+            <div class="book-carousel">
+                <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
+                <div class="books-container">
+                    <form
+                            class="browse-card item-display"
+                            th:each="book : ${bestSellers}"
+                            th:action="@{/book-details}"
+                            method="get">
+                        <!-- ISBN as a hidden input field -->
+                        <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                        <!-- Display book image and details -->
+                        <button type="submit" class="item-display-button">
+                            <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
+                            <p th:text="${book.getTitle()}"></p>
+                            <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                        </button>
+                    </form>
+                </div>
+                <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
+            </div>
+        </div>
+
+        <div th:if="${username != null and recSize > 0}" class="catalog-section">
+            <h1>Recommended for you</h1>
+            <div class="book-carousel">
+                <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
+                <div class="books-container">
+                    <form
+                            class="browse-card item-display"
+                            th:each="book : ${recommendation}"
+                            th:action="@{/book-details}"
+                            method="get">
+                        <!-- ISBN as a hidden input field -->
+                        <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
+                        <!-- Display book image and details -->
+                        <button type="submit" class="item-display-button">
+                            <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
+                            <p th:text="${book.getTitle()}"></p>
+                            <p class="price" th:text="|$ ${book.getPrice()}|"></p>
+                        </button>
+                    </form>
+                </div>
+                <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
+            </div>
         </div>
     </div>
-
-    <div class="catalog-section">
-        <h1>Bestsellers</h1>
-        <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
-            <div class="books-container">
-                <form
-                        class="browse-card item-display"
-                        th:each="book : ${bestSellers}"
-                        th:action="@{/book-details}"
-                        method="get">
-                    <!-- ISBN as a hidden input field -->
-                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
-                    <!-- Display book image and details -->
-                    <button type="submit" class="item-display-button">
-                        <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
-                        <p th:text="${book.getTitle()}"></p>
-                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                    </button>
-                </form>
-            </div>
-            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
-        </div>
-    </div>
-
-    <div th:if="${username != null and recSize > 0}" class="catalog-section">
-        <h1>Recommended for you</h1>
-        <div class="book-carousel">
-            <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
-            <div class="books-container">
-                <form
-                        class="browse-card item-display"
-                        th:each="book : ${recommendation}"
-                        th:action="@{/book-details}"
-                        method="get">
-                    <!-- ISBN as a hidden input field -->
-                    <input type="hidden" name="ISBN" th:value="${book.getISBN()}" />
-                    <!-- Display book image and details -->
-                    <button type="submit" class="item-display-button">
-                        <img th:src="'https://covers.openlibrary.org/b/id/' + ${book.getImageId()} + '-M.jpg'" th:alt="${book.getTitle()}" />
-                        <p th:text="${book.getTitle()}"></p>
-                        <p class="price" th:text="|$ ${book.getPrice()}|"></p>
-                    </button>
-                </form>
-            </div>
-            <button class="arrow right" onclick="scrollRightCarousel(this)">&#8250;</button>
-        </div>
-    </div>
-
-    <div></div>
-
 </div>
 <footer>
     <p>&copy; 2024 Amazing Bookstore. (Group 10)</p>
