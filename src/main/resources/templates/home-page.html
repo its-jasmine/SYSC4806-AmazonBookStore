@@ -8,28 +8,6 @@
     <link rel="stylesheet" href="/css/styles.css">
 
     <style>
-        /* General Styles */
-        body {
-            font-family: Cambria, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f9f9f9;
-        }
-
-        h1 {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 2em;
-        }
-
-        header {
-            background-color: cornflowerblue;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
 
         header .logo {
             font-size: 1.5em;
@@ -55,16 +33,12 @@
             margin: 20px;
         }
 
-        .catalog-section h1 {
-            font-size: 1.5em;
-            margin-bottom: 10px;
-        }
 
         /* Browse Cards */
         .browse-card {
             text-align: center;
             background-color: white;
-            border-radius: 10px;
+            border-radius: 20px;
             border: none;
             padding: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -72,6 +46,7 @@
             width: 150px;
             flex-shrink: 0;
             transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 30px;
             font-family: inherit; /* Inherits from body */
         }
 
@@ -248,7 +223,7 @@
     <div class="catalog-sections-container">
         <h1>Featured Categories</h1>
         <div class="catalog-section">
-            <h1>Browse By Genre</h1>
+            <h2>Browse By Genre</h2>
             <div class="genres-container">
                 <form
                         class="browse-card"
@@ -267,7 +242,7 @@
         </div>
 
         <div class="catalog-section">
-            <h1>New Releases</h1>
+            <h2>New Releases</h2>
             <div class="book-carousel">
                 <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
                 <div class="books-container">
@@ -291,7 +266,7 @@
         </div>
 
         <div class="catalog-section">
-            <h1>Bestsellers</h1>
+            <h2>Bestsellers</h2>
             <div class="book-carousel">
                 <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
                 <div class="books-container">
@@ -315,7 +290,7 @@
         </div>
 
         <div th:if="${username != null and recSize > 0}" class="catalog-section">
-            <h1>Recommended for you</h1>
+            <h2>Recommended for you</h2>
             <div class="book-carousel">
                 <button class="arrow left" onclick="scrollLeftCarousel(this)">&#8249;</button>
                 <div class="books-container">
