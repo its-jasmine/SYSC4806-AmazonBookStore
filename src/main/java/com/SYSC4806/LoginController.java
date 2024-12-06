@@ -1,8 +1,5 @@
 package com.SYSC4806;
 
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
-    private LoginService loginService;
+    private final LoginService loginService;
 
     /** DataDog fields */
 //    private final MeterRegistry meterRegistry;

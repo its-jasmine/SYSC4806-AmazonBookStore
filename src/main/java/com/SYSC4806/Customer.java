@@ -21,7 +21,7 @@ public class Customer extends AppUser {
     )
     @MapKeyJoinColumn(name = "book_id")
     @Column(name = "quantity")
-    private Map<Book, Integer> cart = new HashMap<>();
+    private final Map<Book, Integer> cart = new HashMap<>();
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
@@ -77,7 +77,7 @@ public class Customer extends AppUser {
 
     /**
      * remove the specified book from the cart
-     * @param string the book to remove
+     * @param ISBN the book to remove
      *
      */
     public void removeFromCart(String ISBN) {

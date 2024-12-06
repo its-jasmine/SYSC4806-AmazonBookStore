@@ -27,7 +27,7 @@ public class Book {
         Fantasy,
         Romance,
         Memoirs,
-        SelfHelp;
+        SelfHelp
     }
     @Id
     private String ISBN;

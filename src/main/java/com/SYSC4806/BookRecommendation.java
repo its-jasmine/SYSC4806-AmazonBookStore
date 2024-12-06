@@ -6,7 +6,7 @@ import java.util.*;
 
 @Service
 public class BookRecommendation {
-    private List<Customer> users;
+    private final List<Customer> users;
 
     /**
      * Constructor for BookRecommendation

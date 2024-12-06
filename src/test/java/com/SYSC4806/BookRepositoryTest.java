@@ -178,8 +178,8 @@ public class BookRepositoryTest {
         assertNotNull(books);
         assertFalse(books.isEmpty());
         assertEquals(2, books.size());
-        assertTrue(books.get(0).getTitle().equals("Fun Cleaning"));
-        assertTrue(books.get(1).getTitle().equals("Clean Code Fun"));
+        assertEquals("Fun Cleaning", books.get(0).getTitle());
+        assertEquals("Clean Code Fun", books.get(1).getTitle());
     }
 
     @Test
@@ -229,8 +229,8 @@ public class BookRepositoryTest {
         assertNotNull(books);
         assertFalse(books.isEmpty());
         assertEquals(2, books.size());
-        assertTrue(books.get(0).getAuthor().equals("Some Author A"));
-        assertTrue(books.get(1).getAuthor().equals("Author Amazing"));
+        assertEquals("Some Author A", books.get(0).getAuthor());
+        assertEquals("Author Amazing", books.get(1).getAuthor());
     }
 }
 
