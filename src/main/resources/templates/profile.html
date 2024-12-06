@@ -73,8 +73,6 @@
 
     <nav th:if="${username == null}">
         <a th:href="@{/logout}">Logout</a>
-        <a th:href="@{/register}">Register</a>
-        <a th:href="@{/home}">Home</a>
     </nav>
 
     <div th:if="${username != null}" style="display: flex; align-items: center;">
